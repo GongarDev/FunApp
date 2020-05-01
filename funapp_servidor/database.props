@@ -1,0 +1,7 @@
+#Fichero de configuración de la BD
+puerto_sgbd=3306
+host_sgbd=localhost
+db=funapp
+usuario=root
+contrasenia=root
+
