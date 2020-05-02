@@ -27,7 +27,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
     private Gson gson;
     private MessageDigest md;
     private Usuario usuario;
-    
+
     private view.JPRegistrarse jPRegistrarse;
 
     public VentanaPrincipal() {
@@ -149,7 +149,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
+
     public void vistaRegistrarse() {
         this.jPInicioSesion.setVisible(false);
         this.jPRegistrarse = new view.JPRegistrarse();
@@ -162,6 +162,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
 
     public void vistaInicioSesion() {
         this.jPInicioSesion.setVisible(true);
+        this.jPRegistrarse.setVisible(false);
         this.setSize(391, 445);
         getContentPane().add(jPInicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 391, 445));
         this.jPRegistrarse = null;

@@ -386,7 +386,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
                             Integer.parseInt(this.jTFTelefonoUsuario.getText()), 0, this.jTFSeudonimo.getText(),
                             this.jTFCorreo.getText(), this.jDCFechaNacimiento.getSelectedDate().getTime(),
                             Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                            String.copyValueOf(this.jPFContrasenia.getPassword()),
+                            this.parent.encriptacion(String.copyValueOf(this.jPFContrasenia.getPassword())),
                             null
                     );
 
@@ -396,6 +396,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
                     this.parent.setEstadoSesion((Integer) this.parent.getGson().fromJson(this.mensaje, Integer.class));
                     if (this.parent.getEstadoSesion() == SIN_SESION) {
                         JOptionPane.showMessageDialog(null, "Se ha registrado con éxito, ahora podrás iniciar sesión.");
+                        this.parent.getCliente().close();
                         this.parent.vistaInicioSesion();
                     } else if (this.parent.getEstadoSesion() == REGISTRARSE_FALLIDO) {
                         JOptionPane.showMessageDialog(null, "Fallo al registrarse. Por favor, inténtelo más tarde.");
