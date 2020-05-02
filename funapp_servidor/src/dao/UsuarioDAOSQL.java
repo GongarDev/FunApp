@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import model.Credenciales;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
@@ -149,8 +150,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                         resultado.getInt(2),
                         resultado.getString(3),
                         resultado.getString(4),
-                        resultado.getDate(5),
-                        resultado.getDate(6),
+                        new Date(resultado.getDate(5).getTime()),
+                        new Date(resultado.getDate(6).getTime()),
                         resultado.getString(7),
                         resultado.getString(8)
                 );
@@ -208,8 +209,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                         resultado.getInt(5),
                         resultado.getString(6),
                         resultado.getString(7),
-                        resultado.getDate(8),
-                        resultado.getDate(9),
+                        new Date(resultado.getDate(8).getTime()),
+                        new Date(resultado.getDate(9).getTime()),
                         resultado.getString(10),
                         resultado.getString(11)
                 );
@@ -246,7 +247,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         try {
             abrirConexion();
             sentencia = this.conexion.prepareStatement(
-                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, código_qr) "
+                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, codigo_qr) "
                     + "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
             sentencia.setString(1, usuario.getSeudonimo());
@@ -313,7 +314,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         try {
             abrirConexion();
             sentencia = this.conexion.prepareStatement(
-                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, código_qr) "
+                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, codigo_qr) "
                     + "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
             sentencia.setString(1, usuario.getSeudonimo());
