@@ -1,6 +1,7 @@
 package view;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
         this.salida = null;
         this.entrada = null;
         this.estadoSesion = SIN_SESION;
-        this.gson = new Gson();
+        this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
 
         setLocationRelativeTo(null);
     }

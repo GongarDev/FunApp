@@ -234,7 +234,10 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
                         JOptionPane.showMessageDialog(null, "El correo o contraseña no coincide con ningún usuario");
                         this.mensaje = (String) this.parent.getEntrada().readUTF();
                         this.parent.setUsuario(this.parent.getGson().fromJson(this.mensaje, Usuario.class));
+                        this.parent.setEstadoSesion(SIN_SESION);
                         this.parent.getCliente().close();
+                        this.parent.getSalida().close();
+                        this.parent.getEntrada().close();
                     }                    
                 }
 
