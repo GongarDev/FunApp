@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_inicio">
+
+    <fragment
+        android:id="@+id/navigation_inicio"
+        android:name="com.example.funapp.ui.inicio.InicioFragment"
+        android:label="@string/title_inicio"
+        tools:layout="@layout/fragment_inicio" />
+
+    <fragment
+        android:id="@+id/navigation_notificaciones"
+        android:name="com.example.funapp.ui.notificaciones.NotificacionesFragment"
+        android:label="@string/title_notificaciones"
+        tools:layout="@layout/fragment_notificaciones" />
+
+    <fragment
+        android:id="@+id/navigation_explorar"
+        android:name="com.example.funapp.ui.explorar.ExplorarFragment"
+        android:label="@string/title_explorar"
+        tools:layout="@layout/fragment_explorar" />
+
+    <fragment
+        android:id="@+id/navigation_suscripciones"
+        android:name="com.example.funapp.ui.suscripciones.SuscripcionesFragment"
+        android:label="@string/title_suscripciones"
+        tools:layout="@layout/fragment_suscripciones" />
+
+    <fragment
+        android:id="@+id/navigation_mapa"
+        android:name="com.example.funapp.ui.mapa.MapaFragment"
+        android:label="@string/title_mapa"
+        tools:layout="@layout/fragment_mapa" />
+
+
+</navigation>
