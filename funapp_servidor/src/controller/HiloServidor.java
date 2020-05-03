@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class HiloServidor extends Thread implements Protocolo {
             this.entrada = new DataInputStream(socket.getInputStream());
             this.estadoSesion = SIN_SESION;
             this.controlador = new Controlador();
-            this.gson = new Gson();
+            this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
             this.usuario = null;
         } catch (IOException e) {
             System.out.println("ERROR DE E/S en HiloCliente");
@@ -97,6 +98,7 @@ public class HiloServidor extends Thread implements Protocolo {
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
             }
+        
             
             while(this.estadoSesion == SESION_ABIERTA_ESTANDAR ||
                     this.estadoSesion == SESION_ABIERTA_RESPONSABLE){

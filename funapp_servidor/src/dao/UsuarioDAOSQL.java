@@ -5,7 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Credenciales;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
@@ -145,13 +151,18 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             resultado = sentencia.executeQuery();
 
             while (resultado.next()) {
+                
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha_nac = sdf.parse(resultado.getDate(5).toString());
+                Date fecha_ingreso = sdf.parse(resultado.getDate(6).toString());
                 estandar = new UsuarioEstandar(
                         resultado.getBoolean(1),
                         resultado.getInt(2),
                         resultado.getString(3),
                         resultado.getString(4),
-                        new Date(resultado.getDate(5).getTime()),
-                        new Date(resultado.getDate(6).getTime()),
+                        fecha_nac,
+                        fecha_ingreso,
                         resultado.getString(7),
                         resultado.getString(8)
                 );
@@ -159,6 +170,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ParseException ex) {
+            Logger.getLogger(UsuarioDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (resultado != null) {
@@ -201,6 +214,12 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             resultado = sentencia.executeQuery();
 
             while (resultado.next()) {
+                
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha_nac = sdf.parse(resultado.getDate(8).toString());
+                Date fecha_ingreso = sdf.parse(resultado.getDate(9).toString());
+                System.out.println(fecha_nac);
                 responsable = new UsuarioResponsable(
                         resultado.getString(1),
                         resultado.getString(2),
@@ -209,8 +228,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                         resultado.getInt(5),
                         resultado.getString(6),
                         resultado.getString(7),
-                        new Date(resultado.getDate(8).getTime()),
-                        new Date(resultado.getDate(9).getTime()),
+                        fecha_nac,
+                        fecha_ingreso,
                         resultado.getString(10),
                         resultado.getString(11)
                 );
@@ -218,6 +237,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ParseException ex) {
+            Logger.getLogger(UsuarioDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if (resultado != null) {
