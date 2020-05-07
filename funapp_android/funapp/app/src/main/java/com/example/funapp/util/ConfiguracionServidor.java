@@ -1,8 +1,10 @@
 package com.example.funapp.util;
 
-import java.io.FileInputStream;
+import android.content.Context;
+import android.content.res.AssetManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfiguracionServidor {
@@ -10,15 +12,17 @@ public class ConfiguracionServidor {
     private String puerto_servidor;
     private String ip_servidor;
 
-    public void importar() {
+    public void importar(Context context) {
 
-        Properties importar = new Properties();
+        Properties properties = new Properties();
 
         try {
 
-            importar.load(new FileInputStream("servidor.props"));
-            this.puerto_servidor = importar.getProperty("puerto_servidor");
-            this.ip_servidor = importar.getProperty("ip_servidor");
+            AssetManager assetManager = context.getAssets();
+            InputStream inputStream = assetManager.open("servidor.props");
+            properties.load(inputStream);
+            this.puerto_servidor = properties.getProperty("puerto_servidor");
+            this.ip_servidor = properties.getProperty("ip_servidor");
 
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();

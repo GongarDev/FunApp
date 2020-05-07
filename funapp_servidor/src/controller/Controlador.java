@@ -17,8 +17,12 @@ public class Controlador {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
     }
 
-    public boolean existeUsuario(Credenciales credenciales) {
-        return this.usuarioDAOSQL.existeUsuario(credenciales);
+    public boolean existeUsuario(String correo) {
+        return this.usuarioDAOSQL.existeUsuario(correo);
+    }
+    
+        public boolean existeNombreUsuario(String seudonimo) {
+        return this.usuarioDAOSQL.existeUsuario(seudonimo);
     }
 
     public UsuarioEstandar buscarUsEstandar(Credenciales credenciales) {

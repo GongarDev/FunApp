@@ -10,7 +10,9 @@ import model.UsuarioResponsable;
  */
 public interface UsuarioDAO {
 
-    public boolean existeUsuario(Credenciales credenciales);
+    public boolean existeUsuario(String correo);
+    
+    public boolean existeNombreUsuario(String seudonimo);
     
     public UsuarioEstandar consultarUsEstandar(Credenciales credenciales);
 

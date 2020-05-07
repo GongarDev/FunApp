@@ -12,7 +12,16 @@
     <string name="iniciar_sesion">Iniciar sesión</string>
     <string name="registrase">Registrarse</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">El correo no es correcto</string>
-    <string name="invalid_password">La contraseña debe contener mas de 5 caracteres</string>
-    <string name="login_failed">"Login failed"</string>
+
+    <string name="invalid_username">El nombre debe contener al menos 5 caracteres</string>
+    <string name="invalid_email">El correo no es correcto</string>
+    <string name="invalid_password">La contraseña debe contener más de 5 caracteres</string>
+    <string name="invalid_confirm_password">La contraseña no coincide</string>
+    <string name="invalid_birthday">Debes ser mayor de edad</string>
+    <string name="login_failed">"Error en el login"</string>
+    <string name="registrarse_failed">"Error al registrarse"</string>
+    <string name="titulo_pickers">Obtener fecha y hora</string>
+    <string name="hint_Fechanacimiento">Fecha de nacimiento</string>
+    <string name="formato_fecha">dd/mm/yyyy</string>
+    <string name="formato_hora">hh:mm</string>
 </resources>

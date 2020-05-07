@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +84,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
     }
 
     @Override
-    public boolean existeUsuario(Credenciales credenciales) {
+    public boolean existeUsuario(String correo) {
 
         PreparedStatement sentencia = null;
         ResultSet resultado = null;
@@ -96,10 +96,52 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                     "SELECT email "
                     + "FROM usuario "
                     + "WHERE email=? "
-                    + " AND contrasenia=? ");
+                    + " ");
 
-            sentencia.setString(1, credenciales.getEmail());
-            sentencia.setString(2, credenciales.getContrasenia());
+            sentencia.setString(1, correo);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                existe = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+
+        return existe;
+    }
+
+    @Override
+    public boolean existeNombreUsuario(String seudonimo) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean existe = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT seudonimo "
+                    + "FROM usuario "
+                    + "WHERE seudonimo=? "
+                    + " ");
+
+            sentencia.setString(1, seudonimo);
             resultado = sentencia.executeQuery();
 
             while (resultado.next()) {
@@ -151,7 +193,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             resultado = sentencia.executeQuery();
 
             while (resultado.next()) {
-                
+
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                 Date fecha_nac = sdf.parse(resultado.getDate(5).toString());
@@ -214,7 +256,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             resultado = sentencia.executeQuery();
 
             while (resultado.next()) {
-                
+
                 String pattern = "dd-MM-yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                 Date fecha_nac = sdf.parse(resultado.getDate(8).toString());
@@ -264,6 +306,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         ResultSet resultado = null;
         int id = 0;
         boolean insertado = false;
+        Date fechaIngreso = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        usuario.setFecha_ingreso(fechaIngreso);
 
         try {
             abrirConexion();
@@ -331,6 +375,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         ResultSet resultado = null;
         int id = 0;
         boolean insertado = false;
+        Date fechaIngreso = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        usuario.setFecha_ingreso(fechaIngreso);
 
         try {
             abrirConexion();

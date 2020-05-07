@@ -15,4 +15,6 @@ public interface Protocolo {
     public static final Integer CERRAR_SESION = 6;
     public static final Integer SESION_FALLIDA = 7;  
     public static final Integer REGISTRARSE_FALLIDO = 8;
+    public static final Integer REGISTRARSE_EXISTE_USUARIO = 9;
+    public static final Integer REGISTRARSE_EXISTE_SEUDONIMO = 10;
 }

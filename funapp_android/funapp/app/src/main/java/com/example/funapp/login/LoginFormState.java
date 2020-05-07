@@ -3,7 +3,7 @@ package com.example.funapp.login;
 import androidx.annotation.Nullable;
 
 /**
- * Data validation state of the login form.
+ * Validar los datos de los campos de login.
  */
 class LoginFormState {
     @Nullable

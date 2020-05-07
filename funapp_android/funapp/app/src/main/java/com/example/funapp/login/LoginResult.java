@@ -2,7 +2,7 @@ package com.example.funapp.login;
 
 import androidx.annotation.Nullable;
 
-import java.net.Socket;
+import com.example.funapp.models.Usuario;
 
 /**
  * Authentication result : success (user details) or error message.
@@ -13,7 +13,9 @@ class LoginResult {
     @Nullable
     private Integer error;
     @Nullable
-    private Socket socket;
+    private Integer estadoSesion;
+    @Nullable
+    private Usuario usuario;
 
     LoginResult(@Nullable Integer error) {
         this.error = error;
@@ -24,9 +26,10 @@ class LoginResult {
 
     }
 
-    LoginResult(@Nullable LoggedInUserView success, Socket socket) {
+    LoginResult(@Nullable LoggedInUserView success, Usuario usuario,Integer estadoSesion) {
         this.success = success;
-        this.socket = socket;
+        this.usuario = usuario;
+        this.estadoSesion = estadoSesion;
     }
 
     @Nullable
@@ -38,5 +41,8 @@ class LoginResult {
     }
 
     @Nullable
-    Socket getSocket() { return socket; }
+    Usuario getUsuario() { return usuario; }
+
+    @Nullable
+    Integer getEstadoSesion() { return estadoSesion; }
 }

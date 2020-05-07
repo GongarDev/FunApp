@@ -385,7 +385,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
                             this.jTFDNI.getText(), this.jTFNombreReal.getText(), this.jTFApellidos.getText(),
                             Integer.parseInt(this.jTFTelefonoUsuario.getText()), 0, this.jTFSeudonimo.getText(),
                             this.jTFCorreo.getText(), this.jDCFechaNacimiento.getSelectedDate().getTime(),
-                            Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                            null,
                             this.parent.encriptacion(String.copyValueOf(this.jPFContrasenia.getPassword())),
                             null
                     );
@@ -398,8 +398,15 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
                         JOptionPane.showMessageDialog(null, "Se ha registrado con éxito, ahora podrás iniciar sesión.");
                         this.parent.getCliente().close();
                         this.parent.vistaInicioSesion();
+                    } else if (this.parent.getEstadoSesion() == REGISTRARSE_EXISTE_USUARIO) {
+                        JOptionPane.showMessageDialog(null, "Ya existe un usuario registrado con ese correo electrónico.");
+                        this.parent.getCliente().close();
+                    } else if (this.parent.getEstadoSesion() == REGISTRARSE_EXISTE_SEUDONIMO) {
+                        JOptionPane.showMessageDialog(null, "El nombre de usuario introducio no está disponible.");
+                        this.parent.getCliente().close();
                     } else if (this.parent.getEstadoSesion() == REGISTRARSE_FALLIDO) {
                         JOptionPane.showMessageDialog(null, "Fallo al registrarse. Por favor, inténtelo más tarde.");
+                        this.parent.getCliente().close();
                     }
                 }
             } catch (IOException ex) {

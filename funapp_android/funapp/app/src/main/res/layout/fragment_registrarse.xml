@@ -9,7 +9,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:fitsSystemWindows="true"
-    tools:context=".login.registrarse.RegistrarseFragment">
+    tools:context=".registrarse.RegistrarseFragment">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -30,7 +30,7 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextContrasenia2" />
+        app:layout_constraintTop_toBottomOf="@+id/etConfirmarContrasenia" />
 
     <EditText
         android:id="@+id/etContrasenia"
@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/etSeudonimo" />
 
     <EditText
-        android:id="@+id/editTextContrasenia2"
+        android:id="@+id/etConfirmarContrasenia"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
@@ -98,17 +98,21 @@
         app:layout_constraintTop_toBottomOf="@+id/tvCuenta" />
 
     <EditText
-        android:id="@+id/etDate"
+        android:id="@+id/etFechaNacimiento"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:clickable="true"
         android:ems="10"
         android:focusable="false"
+        android:hint="@string/hint_Fechanacimiento"
         android:inputType="date"
         android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/ibFecha"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etCorreo" />
 
@@ -125,7 +129,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/switchResponsable"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDate" />
+        app:layout_constraintTop_toBottomOf="@+id/etFechaNacimiento" />
 
     <Switch
         android:id="@+id/switchResponsable"
@@ -155,6 +159,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRegistrarseResponsable" />
+
+    <ImageButton
+        android:id="@+id/ibFecha"
+        android:layout_width="36dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:background="@color/color2"
+        android:src="@mipmap/baseline_event_white_36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/etFechaNacimiento"
+        app:layout_constraintTop_toBottomOf="@+id/etCorreo"
+        tools:ignore="ContentDescription" />
+
+    <ProgressBar
+        android:id="@+id/loadingRegistrarse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/etContrasenia"
+        app:layout_constraintStart_toStartOf="@+id/etContrasenia"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

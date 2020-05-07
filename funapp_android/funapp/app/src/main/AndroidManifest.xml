@@ -27,7 +27,7 @@
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".login.registrarse.RegistrarseActivity"
+            android:name=".registrarse.RegistrarseActivity"
             android:theme="@style/RegistrarseTheme"
             android:label="@string/registrase"
             android:parentActivityName=".login.LoginActivity">

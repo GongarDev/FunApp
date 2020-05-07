@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -27,9 +26,11 @@ import android.widget.Toast;
 
 import com.example.funapp.R;
 import com.example.funapp.activities.MainActivity;
-import com.example.funapp.login.registrarse.RegistrarseActivity;
+import com.example.funapp.registrarse.RegistrarseActivity;
+import com.example.funapp.util.Protocolo;
+import com.example.funapp.util.SocketHandler;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Protocolo {
 
     private LoginViewModel loginViewModel;
 
@@ -40,10 +41,12 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        SocketHandler.setContext(this);
+
         final EditText usernameEditText = findViewById(R.id.loginCorreo);
         final EditText passwordEditText = findViewById(R.id.loginContrasenia);
         final Button loginButton = findViewById(R.id.buttonIniciarSesion);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final ProgressBar loadingProgressBar = findViewById(R.id.loadingLogin);
         final Button registrarseButton = findViewById(R.id.buttonRegistrate);
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -77,11 +80,23 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (loginResult.getSuccess() != null) {
 
-                    Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intentAcceder);
-                    updateUiWithUser(loginResult.getSuccess());
-                    setResult(Activity.RESULT_OK);
-                    finish();
+                    if(loginResult.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
+                        updateUiWithUser(loginResult.getSuccess());
+                        Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
+                        intentAcceder.putExtra("usuario", loginResult.getUsuario());
+                        startActivity(intentAcceder);
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    } else if(loginResult.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
+                        updateUiWithUser(loginResult.getSuccess());
+                        Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
+                        intentAcceder.putExtra("usuario", loginResult.getUsuario());
+                        startActivity(intentAcceder);
+                        setResult(Activity.RESULT_OK);
+                        finish();
+                    } else if(loginResult.getEstadoSesion() == SESION_FALLIDA) {
+                        updateUiWithUser(loginResult.getSuccess());
+                    }
                 }
             }
         });

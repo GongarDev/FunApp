@@ -52,20 +52,8 @@ public class HiloServidor extends Thread implements Protocolo {
             if (this.estadoSesion == INICIAR_SESION) {
 
                 this.mensaje = (String) this.entrada.readUTF();
-                Credenciales credenciales = this.gson.fromJson(this.mensaje, Credenciales.class);
 
-                this.usuario = (UsuarioEstandar) this.controlador.buscarUsEstandar(credenciales);
-
-                if (this.usuario != null) {
-                    this.estadoSesion = SESION_ABIERTA_ESTANDAR;
-                } else {
-                    this.usuario = (UsuarioResponsable) this.controlador.buscarUsResponsable(credenciales);
-                    if (this.usuario != null) {
-                        this.estadoSesion = SESION_ABIERTA_RESPONSABLE;
-                    } else {
-                        this.estadoSesion = SESION_FALLIDA;
-                    }
-                }
+                iniciarSesion();
 
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
@@ -75,38 +63,72 @@ public class HiloServidor extends Thread implements Protocolo {
             } else if (this.estadoSesion == REGISTRARSE_RESPONSABLE) {
 
                 this.mensaje = (String) this.entrada.readUTF();
-                UsuarioResponsable usuario = this.gson.fromJson(this.mensaje, UsuarioResponsable.class);
-                boolean insertado = this.controlador.insertarUsResponsable(usuario);
-                if (insertado) {
-                    this.estadoSesion = SIN_SESION;
-                } else {
-                    this.estadoSesion = REGISTRARSE_FALLIDO;
-                }
+
+                altaUsuario();
+
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
 
             } else if (this.estadoSesion == REGISTRARSE_ESTANDAR) {
 
-                this.mensaje = (String) this.entrada.readUTF();
-                UsuarioEstandar usuario = this.gson.fromJson(this.mensaje, UsuarioEstandar.class);
-                boolean insertado = this.controlador.insertarUsEstandar(usuario);
-                if (insertado) {
-                    this.estadoSesion = SIN_SESION;
-                } else {
-                    this.estadoSesion = REGISTRARSE_FALLIDO;
-                }
+                this.mensaje = (String) this.entrada.readUTF(); 
+                
+                altaUsuario();
+
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
             }
-        
-            
-            while(this.estadoSesion == SESION_ABIERTA_ESTANDAR ||
-                    this.estadoSesion == SESION_ABIERTA_RESPONSABLE){
-                
+
+            while (this.estadoSesion == SESION_ABIERTA_ESTANDAR
+                    || this.estadoSesion == SESION_ABIERTA_RESPONSABLE) {
+
             }
 
         } catch (IOException ex) {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void iniciarSesion() {
+
+        Credenciales credenciales = this.gson.fromJson(this.mensaje, Credenciales.class);
+        this.usuario = (UsuarioEstandar) this.controlador.buscarUsEstandar(credenciales);
+        if (this.usuario != null) {
+            this.estadoSesion = SESION_ABIERTA_ESTANDAR;
+        } else {
+            this.usuario = (UsuarioResponsable) this.controlador.buscarUsResponsable(credenciales);
+            if (this.usuario != null) {
+                this.estadoSesion = SESION_ABIERTA_RESPONSABLE;
+            } else {
+                this.estadoSesion = SESION_FALLIDA;
+            }
+        }
+    }
+
+    public void altaUsuario() {
+
+        if (this.estadoSesion == REGISTRARSE_RESPONSABLE) {
+            UsuarioResponsable usuario = this.gson.fromJson(this.mensaje, UsuarioResponsable.class);
+            if (this.controlador.existeUsuario(usuario.getEmail())) {
+                this.estadoSesion = REGISTRARSE_EXISTE_USUARIO;
+            } else if (this.controlador.existeNombreUsuario(usuario.getSeudonimo())) {
+                this.estadoSesion = REGISTRARSE_EXISTE_SEUDONIMO;
+            } else if (this.controlador.insertarUsResponsable(usuario)) {
+                this.estadoSesion = SIN_SESION;
+            } else {
+                this.estadoSesion = REGISTRARSE_FALLIDO;
+            }
+        } else if (this.estadoSesion == REGISTRARSE_ESTANDAR) {
+            UsuarioEstandar usuario = this.gson.fromJson(this.mensaje, UsuarioEstandar.class);
+            if (this.controlador.existeUsuario(usuario.getEmail())) {
+                this.estadoSesion = REGISTRARSE_EXISTE_USUARIO;
+            } else if (this.controlador.existeNombreUsuario(usuario.getSeudonimo())) {
+                this.estadoSesion = REGISTRARSE_EXISTE_SEUDONIMO;
+            } else if (this.controlador.insertarUsEstandar(usuario)) {
+                this.estadoSesion = SIN_SESION;
+            } else {
+                this.estadoSesion = REGISTRARSE_FALLIDO;
+            }
         }
     }
 }
