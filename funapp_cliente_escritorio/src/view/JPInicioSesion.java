@@ -1,10 +1,13 @@
 package view;
 
+import com.google.gson.reflect.TypeToken;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -12,8 +15,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import model.Credenciales;
+import model.Tematica;
 import model.Usuario;
-import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 import util.Protocolo;
 import util.TextPrompt;
@@ -52,6 +55,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         jLImagen3 = new javax.swing.JLabel();
         jPFcontrasenia = new javax.swing.JPasswordField();
         jLGestion = new javax.swing.JLabel();
+        jBCerrar = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(399, 408));
         setMinimumSize(new java.awt.Dimension(399, 408));
@@ -101,54 +105,68 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         jLGestion.setFont(new java.awt.Font("Ubuntu", 3, 12)); // NOI18N
         jLGestion.setText("Gestión de eventos");
 
+        jBCerrar.setBorderPainted(false);
+        jBCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCerrarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPPrincipalLayout = new javax.swing.GroupLayout(jPPrincipal);
         jPPrincipal.setLayout(jPPrincipalLayout);
         jPPrincipalLayout.setHorizontalGroup(
             jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPPrincipalLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(jBIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPPrincipalLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
+                            .addComponent(jCBRecuerdame)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLImagenSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jBRestContrasenia))
+                        .addComponent(jTFUsuario, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
+                            .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLRegistrate)
+                                .addGroup(jPPrincipalLayout.createSequentialGroup()
+                                    .addGap(17, 17, 17)
+                                    .addComponent(jBRegistrate, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(18, 18, 18)
+                            .addComponent(jLImagen3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jSeparator, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPFcontrasenia))
                     .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jBIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
-                                .addComponent(jLImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLGestion)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
-                                .addComponent(jCBRecuerdame)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLImagenSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jBRestContrasenia))
-                            .addComponent(jTFUsuario, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPPrincipalLayout.createSequentialGroup()
-                                .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLRegistrate)
-                                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                                        .addGap(17, 17, 17)
-                                        .addComponent(jBRegistrate, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addComponent(jLImagen3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jSeparator, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPFcontrasenia))))
-                .addGap(50, 50, 50))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                                .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPPrincipalLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLGestion)
+                                .addGap(58, 58, 58))))))
         );
         jPPrincipalLayout.setVerticalGroup(
             jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPPrincipalLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addComponent(jLGestion)
-                        .addGap(2, 2, 2)
-                        .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLGestion)))
+                .addGap(27, 27, 27)
                 .addComponent(jTFUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPFcontrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -223,22 +241,24 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
                     this.mensaje = (String) this.parent.getEntrada().readUTF();
                     this.parent.setEstadoSesion((Integer) this.parent.getGson().fromJson(this.mensaje, Integer.class));
 
-                    if (this.parent.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
-                        this.mensaje = (String) this.parent.getEntrada().readUTF();
-                        this.parent.setUsuario((UsuarioEstandar) this.parent.getGson().fromJson(this.mensaje, UsuarioEstandar.class));
-                    } else if (this.parent.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
+                    if (this.parent.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
                         this.mensaje = (String) this.parent.getEntrada().readUTF();
                         this.parent.setUsuario((UsuarioResponsable) this.parent.getGson().fromJson(this.mensaje, UsuarioResponsable.class));
-                        JOptionPane.showMessageDialog(null, "Correcto");
-                    } else if(this.parent.getEstadoSesion() == SESION_FALLIDA){
-                        JOptionPane.showMessageDialog(null, "El correo o contraseña no coincide con ningún usuario");
+                        this.mensaje = (String) this.parent.getEntrada().readUTF();
+                        this.parent.setTematicas(
+                                (ArrayList) this.parent.getGson().fromJson(
+                                        this.mensaje, new TypeToken<ArrayList<Tematica>>(){}.getType()));
+                        this.parent.vistaSesionAbierta();
+                    } else if (this.parent.getEstadoSesion() == SESION_FALLIDA
+                            || this.parent.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
+                        JOptionPane.showMessageDialog(null, "El correo o contraseña no coincide con ningún usuario responsable.");
                         this.mensaje = (String) this.parent.getEntrada().readUTF();
                         this.parent.setUsuario(this.parent.getGson().fromJson(this.mensaje, Usuario.class));
                         this.parent.setEstadoSesion(SIN_SESION);
                         this.parent.getCliente().close();
                         this.parent.getSalida().close();
                         this.parent.getEntrada().close();
-                    }                    
+                    }
                 }
 
             } catch (IOException ex) {
@@ -258,10 +278,12 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
     }//GEN-LAST:event_jBIniciarSesionActionPerformed
 
     private void jBRegistrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRegistrateActionPerformed
-        
         this.parent.vistaRegistrarse();
-        
     }//GEN-LAST:event_jBRegistrateActionPerformed
+
+    private void jBCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCerrarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jBCerrarActionPerformed
 
     private void iniciarLayout() {
         //Color de fondo
@@ -327,6 +349,17 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         this.jBIniciarSesion.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         this.jBIniciarSesion.setFocusPainted(false);
 
+        //Boton cerrar
+        Image imgCerrar = new ImageIcon(getClass().getResource("/imagenes/cerrar.png")).getImage();
+        Image imgCerrarResc = imgCerrar.getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH);
+        this.jBCerrar.setIcon(new ImageIcon(imgCerrarResc));
+        this.jBCerrar.setBackground(Color.decode("#012e33"));
+        this.jBCerrar.setForeground(Color.decode("#ffffff"));
+        this.jBCerrar.setContentAreaFilled(false);
+        this.jBCerrar.setOpaque(true);
+        this.jBCerrar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        this.jBCerrar.setFocusPainted(false);
+
         //Separador
         this.jSeparator.setBackground(Color.decode("#d64d55"));
         this.jSeparator.setForeground(Color.decode("#d64d55"));
@@ -348,7 +381,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         this.jLImagen3.setBackground(Color.decode("#012e33"));
         this.jLImagen3.setOpaque(true);
         this.jLImagen3.setHorizontalAlignment(SwingConstants.CENTER);
-        
+
     }
 
     public void setParent(VentanaPrincipal parent) {
@@ -357,6 +390,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCerrar;
     private javax.swing.JButton jBIniciarSesion;
     private javax.swing.JButton jBRegistrate;
     private javax.swing.JButton jBRestContrasenia;
