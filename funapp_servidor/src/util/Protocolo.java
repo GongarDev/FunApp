@@ -17,4 +17,8 @@ public interface Protocolo {
     public static final Integer REGISTRARSE_FALLIDO = 8;
     public static final Integer REGISTRARSE_EXISTE_USUARIO = 9;
     public static final Integer REGISTRARSE_EXISTE_SEUDONIMO = 10;
+    public static final Integer INSERTAR_EVENTO = 11;
+    public static final Integer INSERTAR_EXITO = 12;
+    public static final Integer INSERTAR_FALLIDO = 13;
+    
 }

@@ -1,7 +1,10 @@
 package controller;
 
+import dao.EventoDAOSQL;
 import dao.UsuarioDAOSQL;
+import java.util.List;
 import model.Credenciales;
+import model.Evento;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 
@@ -12,9 +15,11 @@ import model.UsuarioResponsable;
 public class Controlador {
 
     UsuarioDAOSQL usuarioDAOSQL;
-
+    EventoDAOSQL eventoDAOSQL;
+    
     public Controlador() {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
+        this.eventoDAOSQL = new EventoDAOSQL();
     }
 
     public boolean existeUsuario(String correo) {
@@ -52,5 +57,13 @@ public class Controlador {
         }
 
         return usuario;
+    }
+    
+    public boolean insertarEvento(Evento evento) {
+        return this.eventoDAOSQL.insertarEvento(evento);
+    }
+    
+    public List listaTematica(){     
+        return this.eventoDAOSQL.listaTematica();
     }
 }

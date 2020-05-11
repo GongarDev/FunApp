@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Credenciales;
+import model.Evento;
 import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
@@ -60,7 +61,8 @@ public class HiloServidor extends Thread implements Protocolo {
                 this.mensaje = gson.toJson(this.usuario);
                 this.salida.writeUTF(this.mensaje);
 
-            } else if (this.estadoSesion == REGISTRARSE_RESPONSABLE) {
+            } else if (this.estadoSesion == REGISTRARSE_RESPONSABLE
+                    || this.estadoSesion == REGISTRARSE_ESTANDAR) {
 
                 this.mensaje = (String) this.entrada.readUTF();
 
@@ -69,19 +71,22 @@ public class HiloServidor extends Thread implements Protocolo {
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
 
-            } else if (this.estadoSesion == REGISTRARSE_ESTANDAR) {
-
-                this.mensaje = (String) this.entrada.readUTF(); 
-                
-                altaUsuario();
-
-                this.mensaje = gson.toJson(this.estadoSesion);
-                this.salida.writeUTF(this.mensaje);
             }
 
-            while (this.estadoSesion == SESION_ABIERTA_ESTANDAR
-                    || this.estadoSesion == SESION_ABIERTA_RESPONSABLE) {
+            while (this.estadoSesion != SIN_SESION && this.estadoSesion != CERRAR_SESION) {
 
+                this.mensaje = gson.toJson(this.controlador.listaTematica());
+                this.salida.writeUTF(this.mensaje);
+
+                estadoJson = (String) this.entrada.readUTF();
+                this.estadoSesion = gson.fromJson(estadoJson, Integer.class);
+
+                if (this.estadoSesion == INSERTAR_EVENTO) {
+                    this.mensaje = (String) this.entrada.readUTF();
+                    insertarEvento();
+                    this.mensaje = gson.toJson(this.estadoSesion);
+                    this.salida.writeUTF(this.mensaje);
+                }
             }
 
         } catch (IOException ex) {
@@ -129,6 +134,17 @@ public class HiloServidor extends Thread implements Protocolo {
             } else {
                 this.estadoSesion = REGISTRARSE_FALLIDO;
             }
+        }
+    }
+
+    public void insertarEvento() {
+
+        Evento evento = this.gson.fromJson(this.mensaje, Evento.class);
+        boolean insertado = this.controlador.insertarEvento(evento);
+        if (insertado) {
+            this.estadoSesion = INSERTAR_EXITO;
+        }else{
+            this.estadoSesion = INSERTAR_FALLIDO;
         }
     }
 }
