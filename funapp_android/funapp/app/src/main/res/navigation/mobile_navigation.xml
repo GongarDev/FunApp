@@ -35,5 +35,35 @@
         android:label="@string/title_mapa"
         tools:layout="@layout/fragment_mapa" />
 
+    <fragment
+        android:id="@+id/navigation_micodigoqr"
+        android:name="com.example.funapp.ui.micodigoqr.MiCodigoQRFragment"
+        android:label="@string/codigo_qr"
+        tools:layout="@layout/fragment_micodigoqr" />
+
+    <fragment
+        android:id="@+id/navigation_amigos"
+        android:name="com.example.funapp.ui.amigos.AmigosFragment"
+        android:label="@string/amigos"
+        tools:layout="@layout/fragment_amigos" />
+
+    <fragment
+        android:id="@+id/navigation_historial"
+        android:name="com.example.funapp.ui.historial.HistorialFragment"
+        android:label="@string/historial"
+        tools:layout="@layout/fragment_historial" />
+
+
+    <fragment
+        android:id="@+id/navigation_cuenta"
+        android:name="com.example.funapp.ui.cuenta.CuentaFragment"
+        android:label="@string/cuenta"
+        tools:layout="@layout/fragment_cuenta" />
+
+    <fragment
+        android:id="@+id/navigation_mis_eventos"
+        android:name="com.example.funapp.ui.miseventos.MisEventosFragment"
+        android:label="@string/mis_eventos"
+        tools:layout="@layout/fragment_miseventos" />
 
 </navigation>

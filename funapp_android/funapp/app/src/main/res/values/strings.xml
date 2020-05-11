@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">FunApp</string>
     <string name="title_inicio">Inicio</string>
-    <string name="title_notificaciones">Notificaciones</string>
+    <string name="title_notificaciones">Avisos</string>
     <string name="title_explorar">Explorar</string>
-    <string name="title_suscripciones">Suscripciones</string>
+    <string name="title_suscripciones">Suscritos</string>
     <string name="title_mapa">Mapa</string>
     <string name="todo">TODO</string>
     <string name="title_activity_login">Iniciar Sesión</string>
@@ -24,4 +24,14 @@
     <string name="hint_Fechanacimiento">Fecha de nacimiento</string>
     <string name="formato_fecha">dd/mm/yyyy</string>
     <string name="formato_hora">hh:mm</string>
+
+    <string name="codigo_qr">Mi código QR</string>
+    <string name="amigos">Amigos</string>
+    <string name="historial">Historial de eventos</string>
+    <string name="cuenta">Mi cuenta</string>
+    <string name="mis_eventos">Mis eventos</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+
+    <string name="usuario">Usuario</string>
+
 </resources>

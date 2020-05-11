@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navigation_inicio"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_inicio" />
+        android:title="@string/title_inicio"
+        app:itemIconTint="@color/colorPrimaryDark"
+        android:menuCategory="secondary"/>
 
     <item
         android:id="@+id/navigation_notificaciones"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notificaciones" />
+        android:title="@string/title_notificaciones"
+        app:itemIconTint="@color/colorPrimaryDark"
+        android:menuCategory="secondary"/>
 
     <item
         android:id="@+id/navigation_explorar"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_explorar" />
+        android:icon="@drawable/explorar"
+        android:title="@string/title_explorar"
+        app:itemIconTint="@color/colorPrimaryDark"
+        android:menuCategory="secondary"/>
 
     <item
         android:id="@+id/navigation_suscripciones"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_suscripciones" />
+        android:icon="@drawable/suscripciones"
+        android:title="@string/title_suscripciones"
+        app:itemIconTint="@color/colorPrimaryDark"
+        android:menuCategory="secondary"/>
 
     <item
         android:id="@+id/navigation_mapa"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_mapa" />
+        android:icon="@drawable/mapa"
+        android:title="@string/title_mapa"
+        app:itemIconTint="@color/colorPrimaryDark"
+        android:menuCategory="secondary"/>
 
 </menu>

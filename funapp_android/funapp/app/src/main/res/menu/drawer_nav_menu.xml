@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_micodigoqr"
+        android:icon="@drawable/codigo_qr"
+        android:title="@string/codigo_qr"
+        app:itemIconTint="@color/colorPrimary" />
+
+    <item
+        android:id="@+id/navigation_amigos"
+        android:icon="@drawable/amigos"
+        android:title="@string/amigos"
+        app:itemIconTint="@color/colorPrimary" />
+
+    <item
+        android:id="@+id/navigation_historial"
+        android:icon="@drawable/historial"
+        android:title="@string/historial"
+        app:itemIconTint="@color/colorPrimary" />
+
+    <item
+        android:id="@+id/navigation_cuenta"
+        android:icon="@drawable/cuenta"
+        android:title="@string/cuenta"
+        app:itemIconTint="@color/colorPrimary" />
+
+    <item
+        android:id="@+id/navigation_mis_eventos"
+        android:icon="@drawable/mis_eventos"
+        android:title="@string/mis_eventos"
+        app:itemIconTint="@color/colorPrimary" />
+
+    <item
+        android:id="@+id/navigation_cerrarsesion"
+        android:icon="@drawable/cerrar_sesion"
+        android:title="@string/cerrar_sesion"
+        app:itemIconTint="@color/colorPrimary" />
+
+</menu>
