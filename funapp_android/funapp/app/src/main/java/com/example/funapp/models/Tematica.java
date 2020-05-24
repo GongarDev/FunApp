@@ -17,6 +17,11 @@ public class Tematica implements Serializable {
         this.edad_legal = edad_legal;
     }
 
+    public Tematica(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+
     public int getId_tematica() {
         return id_tematica;
     }
@@ -51,6 +56,6 @@ public class Tematica implements Serializable {
 
     @Override
     public String toString() {
-        return nombre + "," + descripcion + ", edad legal=" + edad_legal;
+        return nombre + " - " + descripcion + ", a partir de " + edad_legal + " años";
     }
 }

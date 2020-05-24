@@ -206,7 +206,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
             }
             //Estos valores deben ir en ese orden, de lo contrario no mostrara la fecha actual
             /**
-             *También puede cargar los valores que usted desee
+             *También puede cargar los valores que quiera
              */
         },anio, mes, dia);
         //Muestro el widget

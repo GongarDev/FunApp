@@ -1,14 +1,23 @@
 package com.example.funapp.models;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 public class Evento implements Serializable {
 
     private int id_evento;
     private String nombre;
+    private String descripcion;
     private Date fecha_publicacion;
     private Date fecha_evento;
     private LocalTime hora_inicio;
@@ -16,10 +25,12 @@ public class Evento implements Serializable {
     private HashSet<Ubicacion> ubicaciones;
     private Tematica tematica;
     private UsuarioResponsable usuario;
+    private boolean activo;
 
-    public Evento(int id_evento, String nombre, Date fecha_publicacion, Date fecha_evento, LocalTime hora_inicio, LocalTime hora_fin, HashSet<Ubicacion> ubicaciones, Tematica tematica, UsuarioResponsable usuario) {
+    public Evento(int id_evento, String nombre, String descripcion, Date fecha_publicacion, Date fecha_evento, LocalTime hora_inicio, LocalTime hora_fin, HashSet<Ubicacion> ubicaciones, Tematica tematica, UsuarioResponsable usuario, boolean activo) {
         this.id_evento = id_evento;
         this.nombre = nombre;
+        this.descripcion = descripcion;
         this.fecha_publicacion = fecha_publicacion;
         this.fecha_evento = fecha_evento;
         this.hora_inicio = hora_inicio;
@@ -27,6 +38,7 @@ public class Evento implements Serializable {
         this.ubicaciones = ubicaciones;
         this.tematica = tematica;
         this.usuario = usuario;
+        this.activo = activo;
     }
 
     public int getId_evento() {
@@ -43,6 +55,14 @@ public class Evento implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public Date getFecha_publicacion() {
@@ -81,6 +101,13 @@ public class Evento implements Serializable {
         return ubicaciones;
     }
 
+    public ArrayList<Ubicacion> getUbicacionesList() {
+        if (!getUbicaciones().isEmpty())
+            return new ArrayList<Ubicacion>(getUbicaciones());
+        else
+            return new ArrayList<Ubicacion>();
+    }
+
     public void setUbicaciones(HashSet<Ubicacion> ubicaciones) {
         this.ubicaciones = ubicaciones;
     }
@@ -101,4 +128,21 @@ public class Evento implements Serializable {
         this.usuario = usuario;
     }
 
+    public boolean isActivo() {
+        return activo;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LocalDate getFecha_publicacion_LocalDate() {
+        return getFecha_publicacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public LocalDate getFecha_evento_LocalDate() {
+        return getFecha_evento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 }

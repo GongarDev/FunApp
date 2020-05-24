@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
                         updateUiWithUser(loginResult.getSuccess());
                         Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
                         intentAcceder.putExtra("usuario", loginResult.getUsuario());
+                        intentAcceder.putExtra("tipoUsuario", SESION_ABIERTA_RESPONSABLE);
                         startActivity(intentAcceder);
                         setResult(Activity.RESULT_OK);
                         finish();
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
                         updateUiWithUser(loginResult.getSuccess());
                         Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
                         intentAcceder.putExtra("usuario", loginResult.getUsuario());
+                        intentAcceder.putExtra("tipoUsuario", SESION_ABIERTA_ESTANDAR);
                         startActivity(intentAcceder);
                         setResult(Activity.RESULT_OK);
                         finish();

@@ -64,6 +64,10 @@
         android:id="@+id/navigation_mis_eventos"
         android:name="com.example.funapp.ui.miseventos.MisEventosFragment"
         android:label="@string/mis_eventos"
-        tools:layout="@layout/fragment_miseventos" />
+        tools:layout="@layout/fragment_mis_eventos" />
+
+    <fragment
+        android:id="@+id/navigation_cerrarsesion"
+        android:name="com.example.funapp.ui.cerrarsesion.CerrarSesionFragment"/>
 
 </navigation>

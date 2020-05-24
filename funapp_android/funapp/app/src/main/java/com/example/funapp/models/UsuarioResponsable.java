@@ -7,9 +7,9 @@ public class UsuarioResponsable extends Usuario {
     private String dni;
     private String nombre;
     private String apellido;
-    private int telefono;
+    private String telefono;
 
-    public UsuarioResponsable(String dni, String nombre, String apellido, int telefono, int id_usuario, String seudonimo, String email, Date fecha_nac, Date fecha_ingreso, String contrasenia, String codigo_qr) {
+    public UsuarioResponsable(String dni, String nombre, String apellido, String telefono, int id_usuario, String seudonimo, String email, Date fecha_nac, Date fecha_ingreso, String contrasenia, String codigo_qr) {
         super(id_usuario, seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, codigo_qr);
         this.dni = dni;
         this.nombre = nombre;
@@ -41,11 +41,11 @@ public class UsuarioResponsable extends Usuario {
         this.apellido = apellido;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 }

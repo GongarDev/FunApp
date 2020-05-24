@@ -53,7 +53,7 @@ public class RegistrarseDataSource implements Protocolo {
                 SocketHandler.getSalida().writeUTF(this.mensaje);
                 Date fechaNacDate = new SimpleDateFormat("dd-MM-yyyy").parse(fechaNacimiento);
                 UsuarioResponsable usuarioResponsable = new UsuarioResponsable(
-                        null, null, null, 0, 0, seudonimo,
+                        null, null, null, null, 0, seudonimo,
                         correo, fechaNacDate, null, encriptacion(contrasenia), null
                 );
                 this.mensaje = this.gson.toJson(usuarioResponsable);

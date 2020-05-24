@@ -1,54 +1,68 @@
 package com.example.funapp.ui.miseventos;
 
+import android.app.Application;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import com.example.funapp.models.Tematica;
+import com.example.funapp.models.Evento;
+import com.example.funapp.util.Protocolo;
 import com.example.funapp.util.SocketHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MisEventosViewModel extends ViewModel {
+public class MisEventosViewModel extends AndroidViewModel implements Protocolo {
 
-    private MutableLiveData<String> mText;
-    private static MutableLiveData<List<Tematica>> tematicasList;
+    private MutableLiveData<List<Evento>> eventosList;
+
     private String mensaje;
     private Gson gson;
+    private Integer estadoSesion;
 
-    public MisEventosViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Esto es el fragment MisEventos");
-        this.gson = new Gson();
+    public MisEventosViewModel(@NonNull Application application) {
+        super(application);
+        this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
-
-    public LiveData<List<Tematica>> getTematicasList() {
-
-        if (tematicasList==null){
-            tematicasList= new MutableLiveData<>();
-            cargarTematicas();
+    public LiveData<List<Evento>> getEventos(int id_usuario) {
+        if (eventosList==null){
+            eventosList= new MutableLiveData<>();
+            cargarEventos(id_usuario);
         }
-        return tematicasList;
+        return eventosList;
     }
 
-    public void cargarTematicas() {
+    public void cargarEventos(int id_usuario){
 
         try {
+            this.mensaje = this.gson.toJson(VER_EVENTOS_RESPONSABLE);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = (String) SocketHandler.getEntrada().readUTF();
-            this.tematicasList.setValue(
+            this.eventosList.setValue(
                     (ArrayList) this.gson.fromJson(
-                            this.mensaje, new TypeToken<ArrayList<Tematica>>(){}.getType()));
+                    this.mensaje, new TypeToken<ArrayList<Evento>>(){}.getType()));
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Integer activarEvento(Evento evento){
+        try {
+            this.mensaje = this.gson.toJson(ACTIVAR_EVENTO);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(evento);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return this.estadoSesion;
     }
 }

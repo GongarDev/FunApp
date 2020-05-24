@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -12,6 +14,10 @@
         android:roundIcon="@mipmap/icono_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_apikey" />
 
         <activity
             android:name=".activities.SplashActivity"
@@ -34,7 +40,27 @@
         </activity>
         <activity
             android:name=".activities.MainActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity
+            android:name=".ui.miseventos.crear_editar_evento.CrearEditarEventoActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/crear_editar_evento"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.MainActivity">
+        </activity>
+        <activity
+            android:name=".ui.explorar.EventosTematica.EventosTematicaActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity
+            android:name=".activities.EventoDetallesActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/evento_seleccionado"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.MainActivity">
+        </activity>
+
     </application>
 
 </manifest>
