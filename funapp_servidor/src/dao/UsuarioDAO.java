@@ -29,4 +29,6 @@ public interface UsuarioDAO {
     public boolean bajaUsEstandar(UsuarioEstandar usuario);
 
     public boolean bajaUsResponsable(UsuarioResponsable usuario);     
+    
+    public UsuarioResponsable consultarResponsbaleParaEvento(int id_usuario);
 }

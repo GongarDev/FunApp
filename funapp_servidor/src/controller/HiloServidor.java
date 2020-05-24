@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Credenciales;
@@ -75,17 +76,28 @@ public class HiloServidor extends Thread implements Protocolo {
 
             while (this.estadoSesion != SIN_SESION && this.estadoSesion != CERRAR_SESION) {
 
-                this.mensaje = gson.toJson(this.controlador.listaTematica());
-                this.salida.writeUTF(this.mensaje);
-
                 estadoJson = (String) this.entrada.readUTF();
                 this.estadoSesion = gson.fromJson(estadoJson, Integer.class);
 
-                if (this.estadoSesion == INSERTAR_EVENTO) {
-                    this.mensaje = (String) this.entrada.readUTF();
-                    insertarEvento();
-                    this.mensaje = gson.toJson(this.estadoSesion);
+                if (this.estadoSesion == VER_EVENTOS_RESPONSABLE) {
+                    verEventosResponsable();
+                } else if (this.estadoSesion == CREAR_EDITAR_EVENTO) {
+                    this.mensaje = gson.toJson(this.controlador.listaTematica());
                     this.salida.writeUTF(this.mensaje);
+                } else if (this.estadoSesion == INSERTAR_EVENTO) {
+                    insertarEvento();
+                } else if (this.estadoSesion == ACTUALIZAR_EVENTO) {
+                    actualizarEvento();
+                } else if (this.estadoSesion == ACTIVAR_EVENTO) {
+                    activarEvento();
+                } else if (this.estadoSesion == SUSCRITOS_EVENTO) {
+                    suscritosEvento();
+                } else if (this.estadoSesion == MAPA_EVENTOS) {
+                    eventosPorCodigoPostal();
+                } else if (this.estadoSesion == HISTORIAL_EVENTOS) {
+                    historialEventos();
+                } else if (this.estadoSesion == EXPLORAR_EVENTOS) {
+                    explorarEventos();
                 }
             }
 
@@ -139,12 +151,122 @@ public class HiloServidor extends Thread implements Protocolo {
 
     public void insertarEvento() {
 
-        Evento evento = this.gson.fromJson(this.mensaje, Evento.class);
-        boolean insertado = this.controlador.insertarEvento(evento);
-        if (insertado) {
-            this.estadoSesion = INSERTAR_EXITO;
-        }else{
-            this.estadoSesion = INSERTAR_FALLIDO;
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Evento evento = this.gson.fromJson(this.mensaje, Evento.class);
+            boolean insertado = this.controlador.insertarEvento(evento);
+            if (insertado) {
+                this.estadoSesion = INSERTAR_EXITO;
+            } else {
+                this.estadoSesion = INSERTAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void actualizarEvento() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Evento evento = this.gson.fromJson(this.mensaje, Evento.class);
+            boolean actualizado = this.controlador.actualizarEvento(evento);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void activarEvento() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Evento evento = this.gson.fromJson(this.mensaje, Evento.class);
+            boolean actualizado = this.controlador.activarEvento(evento);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void verEventosResponsable() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            List<Evento> listaEventos = this.controlador.listaEventosPorUsuarioResposable(id_usuario);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void suscritosEvento() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_evento = this.gson.fromJson(this.mensaje, Integer.class);
+            int suscritos = this.controlador.suscritosEvento(id_evento);
+            this.mensaje = gson.toJson(suscritos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void eventosPorCodigoPostal() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            String codigo_postal = this.gson.fromJson(this.mensaje, String.class);
+            List<Evento> listaEventos = this.controlador.listaEventosPorCodigoPostal(codigo_postal);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void historialEventos() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            List<Evento> listaEventos = this.controlador.historialEventos(id_usuario);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void explorarEventos() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            String codigo_postal = this.gson.fromJson(this.mensaje, String.class);
+            this.mensaje = (String) this.entrada.readUTF();
+            String nombreTematica = this.gson.fromJson(this.mensaje, String.class);
+            List<Evento> listaEventos = this.controlador.listaEventosExplorar(codigo_postal, nombreTematica);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

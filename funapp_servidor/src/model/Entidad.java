@@ -12,12 +12,13 @@ public class Entidad {
     private String calle;
     private String provincia;
     private String localidad;
-    private int codigo_postal;
-    private int telefono;
+    private String codigo_postal;
+    private String telefono;
     private double latitud;
     private double longitud;
 
-    public Entidad(String nombre, String nif, String calle, String provincia, String localidad, int codigo_postal, int telefono) {
+    public Entidad(String nombre, String nif, String calle, String provincia, 
+            String localidad, String codigo_postal, String telefono) {
         this.nombre = nombre;
         this.nif = nif;
         this.calle = calle;
@@ -27,7 +28,8 @@ public class Entidad {
         this.telefono = telefono;
     }
 
-    public Entidad(int id, String nombre, String nif, String calle, String provincia, String localidad, int codigo_postal, int telefono, double latitud, double longitud) {
+    public Entidad(int id, String nombre, String nif, String calle, String provincia,
+            String localidad, String codigo_postal, String telefono, double latitud, double longitud) {
         this.id = id;
         this.nombre = nombre;
         this.nif = nif;
@@ -88,19 +90,19 @@ public class Entidad {
         this.localidad = localidad;
     }
 
-    public int getCodigo_postal() {
+    public String getCodigo_postal() {
         return codigo_postal;
     }
 
-    public void setCodigo_postal(int codigo_postal) {
+    public void setCodigo_postal(String codigo_postal) {
         this.codigo_postal = codigo_postal;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 

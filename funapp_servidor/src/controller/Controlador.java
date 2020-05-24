@@ -16,7 +16,7 @@ public class Controlador {
 
     UsuarioDAOSQL usuarioDAOSQL;
     EventoDAOSQL eventoDAOSQL;
-    
+
     public Controlador() {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
         this.eventoDAOSQL = new EventoDAOSQL();
@@ -25,8 +25,8 @@ public class Controlador {
     public boolean existeUsuario(String correo) {
         return this.usuarioDAOSQL.existeUsuario(correo);
     }
-    
-        public boolean existeNombreUsuario(String seudonimo) {
+
+    public boolean existeNombreUsuario(String seudonimo) {
         return this.usuarioDAOSQL.existeUsuario(seudonimo);
     }
 
@@ -58,12 +58,40 @@ public class Controlador {
 
         return usuario;
     }
-    
+
     public boolean insertarEvento(Evento evento) {
         return this.eventoDAOSQL.insertarEvento(evento);
     }
-    
-    public List listaTematica(){     
+
+    public boolean actualizarEvento(Evento evento) {
+        return this.eventoDAOSQL.actualizarEvento(evento);
+    }
+
+    public boolean activarEvento(Evento evento) {
+        return this.eventoDAOSQL.activarEvento(evento);
+    }
+
+    public List listaTematica() {
         return this.eventoDAOSQL.listaTematica();
+    }
+
+    public List<Evento> listaEventosPorUsuarioResposable(int id_usuario) {
+        return this.eventoDAOSQL.listaEventosPorUsuarioResponsable(id_usuario);
+    }
+
+    public int suscritosEvento(int id_evento) {
+        return this.eventoDAOSQL.suscritosEvento(id_evento);
+    }
+
+    public List<Evento> listaEventosPorCodigoPostal(String codigo_postal) {
+        return this.eventoDAOSQL.listaEventosPorCodigoPostal(codigo_postal);
+    }
+
+    public List<Evento> historialEventos(int id_usuario) {
+        return this.eventoDAOSQL.historialEventos(id_usuario);
+    }
+
+    public List<Evento> listaEventosExplorar(String codigo_postal, String nombreTematica) {
+        return this.eventoDAOSQL.listaEventosExplorar(codigo_postal, nombreTematica);
     }
 }

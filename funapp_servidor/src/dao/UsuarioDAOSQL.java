@@ -266,7 +266,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                         resultado.getString(1),
                         resultado.getString(2),
                         resultado.getString(3),
-                        resultado.getInt(4),
+                        resultado.getString(4),
                         resultado.getInt(5),
                         resultado.getString(6),
                         resultado.getString(7),
@@ -410,7 +410,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             sentencia.setString(2, usuario.getDni());
             sentencia.setString(3, usuario.getNombre());
             sentencia.setString(4, usuario.getApellido());
-            sentencia.setInt(5, usuario.getTelefono());
+            sentencia.setString(5, usuario.getTelefono());
 
             affectedRows = sentencia.executeUpdate();
 
@@ -460,4 +460,64 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public UsuarioResponsable consultarResponsbaleParaEvento(int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+
+        UsuarioResponsable responsable = null;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT r.nombre, r.apellido, "
+                    + "u.id_usuario, u.seudonimo, u.fecha_ingreso "
+                    + "FROM usuario u, responsable r "
+                    + "WHERE r.id_usuario=? "
+                    + "AND u.id_usuario=r.id_usuario ");
+
+            sentencia.setInt(1, id_usuario);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha_ingreso = sdf.parse(resultado.getDate(5).toString());
+                responsable = new UsuarioResponsable(
+                        null,
+                        resultado.getString(1),
+                        resultado.getString(2),
+                        null,
+                        resultado.getInt(3),
+                        resultado.getString(4),
+                        null,
+                        null,
+                        fecha_ingreso,
+                        null,
+                        null
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ParseException ex) {
+            Logger.getLogger(UsuarioDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return responsable;
+    }
 }
