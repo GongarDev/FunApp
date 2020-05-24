@@ -11,11 +11,11 @@ public class Ubicacion implements Serializable{
     
     private int id_ubicacion;
     private String calle;
-    private int codigo_postal;
+    private String codigo_postal;
     private double latitud;
     private double longitud;
 
-    public Ubicacion(int id_ubicacion, String calle, int codigo_postal, double latitud, double longitud) {
+    public Ubicacion(int id_ubicacion, String calle, String codigo_postal, double latitud, double longitud) {
         this.id_ubicacion = id_ubicacion;
         this.calle = calle;
         this.codigo_postal = codigo_postal;
@@ -39,11 +39,11 @@ public class Ubicacion implements Serializable{
         this.calle = calle;
     }
 
-    public int getCodigo_postal() {
+    public String getCodigo_postal() {
         return codigo_postal;
     }
 
-    public void setCodigo_postal(int codigo_postal) {
+    public void setCodigo_postal(String codigo_postal) {
         this.codigo_postal = codigo_postal;
     }
 

@@ -382,7 +382,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
 
                     UsuarioResponsable usuario = new UsuarioResponsable(
                             this.jTFDNI.getText(), this.jTFNombreReal.getText(), this.jTFApellidos.getText(),
-                            Integer.parseInt(this.jTFTelefonoUsuario.getText()), 0, this.jTFSeudonimo.getText(),
+                            this.jTFTelefonoUsuario.getText(), 0, this.jTFSeudonimo.getText(),
                             this.jTFCorreo.getText(), this.jDCFechaNacimiento.getSelectedDate().getTime(),
                             null,
                             this.parent.encriptacion(String.copyValueOf(this.jPFContrasenia.getPassword())),

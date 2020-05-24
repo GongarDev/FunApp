@@ -56,6 +56,6 @@ public class Tematica implements Serializable{
 
     @Override
     public String toString() {
-        return nombre + "," + descripcion + ", edad legal=" + edad_legal;
+        return nombre + ", " + descripcion + ", a partir de " + edad_legal + " años";
     }   
 }

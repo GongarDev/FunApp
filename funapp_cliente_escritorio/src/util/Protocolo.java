@@ -20,5 +20,14 @@ public interface Protocolo {
     public static final Integer INSERTAR_EVENTO = 11;
     public static final Integer INSERTAR_EXITO = 12;
     public static final Integer INSERTAR_FALLIDO = 13;
-
+    public static final Integer VER_EVENTOS_RESPONSABLE = 14;
+    public static final Integer CREAR_EDITAR_EVENTO = 15;
+    public static final Integer ACTUALIZAR_EVENTO = 16;
+    public static final Integer ACTUALIZAR_EXITO = 17;
+    public static final Integer ACTUALIZAR_FALLIDO = 18;
+    public static final Integer ACTIVAR_EVENTO = 19;
+    public static final Integer SUSCRITOS_EVENTO = 20;
+    public static final Integer MAPA_EVENTOS = 21;
+    public static final Integer HISTORIAL_EVENTOS = 22;
+    public static final Integer EXPLORAR_EVENTOS = 23;
 }
