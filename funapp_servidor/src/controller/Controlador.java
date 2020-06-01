@@ -1,10 +1,13 @@
 package controller;
 
+import dao.EntidadDAOSQL;
 import dao.EventoDAOSQL;
 import dao.UsuarioDAOSQL;
 import java.util.List;
 import model.Credenciales;
+import model.Entidad;
 import model.Evento;
+import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 
@@ -16,10 +19,12 @@ public class Controlador {
 
     UsuarioDAOSQL usuarioDAOSQL;
     EventoDAOSQL eventoDAOSQL;
+    EntidadDAOSQL entidadDAOSQL;
 
     public Controlador() {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
         this.eventoDAOSQL = new EventoDAOSQL();
+        this.entidadDAOSQL = new EntidadDAOSQL();
     }
 
     public boolean existeUsuario(String correo) {
@@ -94,4 +99,45 @@ public class Controlador {
     public List<Evento> listaEventosExplorar(String codigo_postal, String nombreTematica) {
         return this.eventoDAOSQL.listaEventosExplorar(codigo_postal, nombreTematica);
     }
+
+    public UsuarioResponsable consultarUsuarioResponsable(int id_usuario) {
+        return this.usuarioDAOSQL.consultarResponsbalePerfil(id_usuario);
+    }
+
+    public boolean actualizarUsuarioResponsable(UsuarioResponsable usuarioResponsable) {
+        return this.usuarioDAOSQL.actualizarUsResponsable(usuarioResponsable);
+    }
+
+    public boolean actualizarUsuarioEstandar(Usuario usuario) {
+        return this.usuarioDAOSQL.actualizarUsEstandar(usuario);
+    }
+
+    public Entidad consultarEntidad(int id_usuario) {
+        return this.entidadDAOSQL.consultarEntidad(id_usuario);
+    }
+
+    public boolean actualizarEntidad(Entidad entidad) {
+        return this.entidadDAOSQL.actualizarEntidad(entidad);
+    }
+
+    public List<Evento> suscripcionesEventos(int id_usuario) {
+        return this.eventoDAOSQL.suscripcionesEventos(id_usuario);
+    }
+
+    public boolean suscribirseEvento(int id_evento, int id_usuario) {
+        return this.eventoDAOSQL.suscribirseEvento(id_evento, id_usuario);
+    }
+
+    public boolean desuscribirseEvento(int id_evento, int id_usuario) {
+        return this.eventoDAOSQL.desuscribirseEvento(id_evento, id_usuario);
+    }
+
+    public List<Evento> listaEventosProximos(String codigo_postal) {
+        return this.eventoDAOSQL.listaEventosProximos(codigo_postal);
+    }
+
+    public List<Evento> listaEventosRecomendados(String codigo_postal) {
+        return this.eventoDAOSQL.listaEventosRecomendados(codigo_postal);
+    }
+
 }

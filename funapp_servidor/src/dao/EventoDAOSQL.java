@@ -820,4 +820,349 @@ public class EventoDAOSQL implements EventoDAO {
         }
         return listaEventos;
     }
+
+    @Override
+    public List<Evento> suscripcionesEventos(int id_usuario) {
+
+        List<Evento> listaEventos = new ArrayList<Evento>();
+
+        PreparedStatement sentenciaEventos = null;
+        PreparedStatement sentenciaUbicaciones = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentenciaEventos = this.conexion.prepareStatement(
+                    "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, e.fecha_evento, "
+                    + "e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, e.id_usuario, "
+                    + "t. id_tematica, t.nombre, t.descripcion, t.edad_legal "
+                    + "FROM evento e, tematica t, responsable r, estandar es, usuario_evento ue "
+                    + "WHERE e.id_evento = ue.id_evento "
+                    + "AND ue.id_usuario = ? "
+                    + "AND e.id_tematica = t.id_tematica "
+                    + "AND e.fecha_evento > now() "
+                    + "GROUP BY e.id_evento ");
+
+            sentenciaEventos.setInt(1, id_usuario);
+            resultado = sentenciaEventos.executeQuery();
+
+            int id_evento, id_usuarioResp, id_tematica = 0, edad_legal = 0;
+            String nombreEvento, descripcionEvento, nombreTematica = "", descripcionTematica = "";
+            Date fecha_publicacion, fecha_evento;
+            LocalTime hora_inicio, hora_fin;
+            boolean activo;
+            Tematica tematica;
+
+            while (resultado.next()) {
+
+                id_evento = resultado.getInt(1);
+                nombreEvento = resultado.getString(2);
+                descripcionEvento = resultado.getString(3);
+                fecha_publicacion = resultado.getDate(4);
+                fecha_evento = resultado.getDate(5);
+                hora_inicio = resultado.getTime(6).toLocalTime();
+                hora_fin = resultado.getTime(7).toLocalTime();
+                // 8 codigo qr
+                activo = resultado.getBoolean(9);
+                id_usuarioResp = resultado.getInt(10);
+                id_tematica = resultado.getInt(11);
+                nombreTematica = resultado.getString(12);
+                descripcionTematica = resultado.getString(13);
+                edad_legal = resultado.getInt(14);
+                tematica = new Tematica(id_tematica, nombreTematica, descripcionTematica, edad_legal);
+
+                HashSet<Ubicacion> listaUbicaciones = this.ubicacionDAOSQL.listaUbicacionesEvento(id_evento);
+
+                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuarioResp);
+
+                listaEventos.add(new Evento(id_evento, nombreEvento, descripcionEvento, fecha_publicacion, fecha_evento,
+                        hora_inicio, hora_fin, listaUbicaciones, null, tematica, usuario, activo));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentenciaEventos != null) {
+                    sentenciaEventos.close();
+                }
+                if (sentenciaUbicaciones != null) {
+                    sentenciaUbicaciones.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return listaEventos;
+    }
+
+    @Override
+    public boolean suscribirseEvento(int id_evento, int id_usuario) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        int id = 0;
+        boolean insertado = false;
+        Date fechaIngreso = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "INSERT INTO usuario_evento (id_usuario, id_evento) "
+                    + "VALUES (?, ?)");
+
+            sentencia.setInt(1, id_usuario);
+            sentencia.setInt(2, id_evento);
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede insertar los datos");
+            }
+            insertado = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
+    }
+
+    @Override
+    public boolean desuscribirseEvento(int id_evento, int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        int id = 0;
+        boolean eliminado = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM usuario_evento "
+                    + "WHERE id_usuario = ? "
+                    + "AND id_evento = ? ");
+
+            sentencia.setInt(1, id_usuario);
+            sentencia.setInt(2, id_evento);
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede eliminar los datos");
+            }
+            eliminado = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return eliminado;
+    }
+
+    @Override
+    public List<Evento> listaEventosProximos(String codigo_postal) {
+        List<Evento> listaEventos = new ArrayList<Evento>();
+
+        PreparedStatement sentenciaEventos = null;
+        PreparedStatement sentenciaUbicaciones = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentenciaEventos = this.conexion.prepareStatement(
+                    "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, "
+                    + "e.fecha_evento, e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, "
+                    + "t.id_tematica, t.nombre, t.descripcion, t.edad_legal, "
+                    + "us.id_usuario "
+                    + "FROM evento e, tematica t, responsable r, ubicacion u, usuario us, evento_ubicacion eu "
+                    + "WHERE e.id_usuario = r.id_usuario "
+                    + "AND r.id_usuario  = us.id_usuario "
+                    + "AND e.id_tematica = t.id_tematica  "
+                    + "AND e.id_evento = eu.id_evento "
+                    + "AND eu.id_ubicacion = u.id_ubicacion "
+                    + "AND e.activo = true "
+                    + "AND u.codigo_postal =? "
+                    + "AND e.fecha_evento > now() "
+                    + "GROUP BY e.id_evento "
+                    + "ORDER BY e.fecha_evento "
+                    + "LIMIT 8 ");
+
+            sentenciaEventos.setString(1, codigo_postal);
+            resultado = sentenciaEventos.executeQuery();
+
+            int id_evento, id_tematica, edad_legal = 0, id_usuario;
+            String nombreEvento, descripcionEvento, nombreTematica = "", descripcionTematica = "";
+            Date fecha_publicacion, fecha_evento;
+            LocalTime hora_inicio, hora_fin;
+            boolean activo;
+            Tematica tematica;
+
+            while (resultado.next()) {
+
+                id_evento = resultado.getInt(1);
+                nombreEvento = resultado.getString(2);
+                descripcionEvento = resultado.getString(3);
+                fecha_publicacion = resultado.getDate(4);
+                fecha_evento = resultado.getDate(5);
+                hora_inicio = resultado.getTime(6).toLocalTime();
+                hora_fin = resultado.getTime(7).toLocalTime();
+                // 8 codigo qr
+                activo = resultado.getBoolean(9);
+
+                id_tematica = resultado.getInt(10);
+                nombreTematica = resultado.getString(11);
+                descripcionTematica = resultado.getString(12);
+                edad_legal = resultado.getInt(13);
+                id_usuario = resultado.getInt(14);
+                tematica = new Tematica(id_tematica, nombreTematica, descripcionTematica, edad_legal);
+
+                HashSet<Ubicacion> listaUbicaciones = this.ubicacionDAOSQL.listaUbicacionesEvento(id_evento);
+
+                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuario);
+
+                listaEventos.add(new Evento(id_evento, nombreEvento, descripcionEvento, fecha_publicacion, fecha_evento,
+                        hora_inicio, hora_fin, listaUbicaciones, null, tematica, usuario, activo));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentenciaEventos != null) {
+                    sentenciaEventos.close();
+                }
+                if (sentenciaUbicaciones != null) {
+                    sentenciaUbicaciones.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return listaEventos;
+    }
+
+    @Override
+    public List<Evento> listaEventosRecomendados(String codigo_postal) {
+        List<Evento> listaEventos = new ArrayList<Evento>();
+
+        PreparedStatement sentenciaEventos = null;
+        PreparedStatement sentenciaUbicaciones = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentenciaEventos = this.conexion.prepareStatement(
+                    "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, "
+                    + "e.fecha_evento, e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, "
+                    + "t.id_tematica, t.nombre, t.descripcion, t.edad_legal, "
+                    + "us.id_usuario "
+                    + "FROM evento e, tematica t, responsable r, ubicacion u, usuario us, evento_ubicacion eu "
+                    + "WHERE e.id_usuario = r.id_usuario "
+                    + "AND r.id_usuario  = us.id_usuario "
+                    + "AND e.id_tematica = t.id_tematica  "
+                    + "AND e.id_evento = eu.id_evento "
+                    + "AND eu.id_ubicacion = u.id_ubicacion "
+                    + "AND e.activo = true "
+                    + "AND u.codigo_postal = ? "
+                    + "AND e.fecha_evento > now() "
+                    + "GROUP BY e.id_evento ");
+
+            sentenciaEventos.setString(1, codigo_postal);
+            resultado = sentenciaEventos.executeQuery();
+
+            int id_evento, id_tematica, edad_legal = 0, id_usuario;
+            String nombreEvento, descripcionEvento, nombreTematica = "", descripcionTematica = "";
+            Date fecha_publicacion, fecha_evento;
+            LocalTime hora_inicio, hora_fin;
+            boolean activo;
+            Tematica tematica;
+
+            while (resultado.next()) {
+
+                id_evento = resultado.getInt(1);
+                nombreEvento = resultado.getString(2);
+                descripcionEvento = resultado.getString(3);
+                fecha_publicacion = resultado.getDate(4);
+                fecha_evento = resultado.getDate(5);
+                hora_inicio = resultado.getTime(6).toLocalTime();
+                hora_fin = resultado.getTime(7).toLocalTime();
+                // 8 codigo qr
+                activo = resultado.getBoolean(9);
+
+                id_tematica = resultado.getInt(10);
+                nombreTematica = resultado.getString(11);
+                descripcionTematica = resultado.getString(12);
+                edad_legal = resultado.getInt(13);
+                id_usuario = resultado.getInt(14);
+                tematica = new Tematica(id_tematica, nombreTematica, descripcionTematica, edad_legal);
+
+                HashSet<Ubicacion> listaUbicaciones = this.ubicacionDAOSQL.listaUbicacionesEvento(id_evento);
+
+                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuario);
+
+                listaEventos.add(new Evento(id_evento, nombreEvento, descripcionEvento, fecha_publicacion, fecha_evento,
+                        hora_inicio, hora_fin, listaUbicaciones, null, tematica, usuario, activo));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentenciaEventos != null) {
+                    sentenciaEventos.close();
+                }
+                if (sentenciaUbicaciones != null) {
+                    sentenciaUbicaciones.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return listaEventos;
+    }
 }

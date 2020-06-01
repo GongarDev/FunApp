@@ -9,10 +9,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Credenciales;
+import model.Ubicacion;
+import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 import util.ConfiguracionBD;
@@ -30,11 +35,13 @@ public class UsuarioDAOSQL implements UsuarioDAO {
     private String usuario;
     private String contrasenia;
     private Connection conexion;
+    private EntidadDAOSQL entidadDAOSQL;
 
     public UsuarioDAOSQL() {
 
         ConfiguracionBD c = new ConfiguracionBD();
         c.importar();
+        this.entidadDAOSQL = new EntidadDAOSQL();
         this.puerto_sgbd = c.getPuerto_sgbd();
         this.host_sgbd = c.getHost_sgbd();
         this.db = c.getDb();
@@ -419,7 +426,8 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             } else if (affectedRows == 1) {
                 insertado = true;
             }
-
+            
+            this.entidadDAOSQL.altaEntidad(id);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -441,13 +449,130 @@ public class UsuarioDAOSQL implements UsuarioDAO {
     }
 
     @Override
-    public boolean actualizarUsEstandar(UsuarioEstandar usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean actualizarUsEstandar(Usuario usuario) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean insertado = false;
+
+        try {
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentencia = this.conexion.prepareStatement(
+                    "UPDATE estandar SET seudonimo = ?, email = ?, fecha_nac = ?, "
+                    + "contrasenia = ? "
+                    + "WHERE id_evento = ? ");
+
+            sentencia.setString(1, usuario.getSeudonimo());
+            sentencia.setString(2, usuario.getEmail());
+            sentencia.setDate(3, java.sql.Date.valueOf(usuario.getFecha_nac_LocalDate()));
+            sentencia.setString(4, usuario.getContrasenia());
+            sentencia.setInt(5, usuario.getId_usuario());
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede actualizar los datos.");
+
+            }
+
+            this.conexion.commit();
+            insertado = true;
+        } catch (SQLException e) {
+            try {
+                this.conexion.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                Logger.getLogger(EventoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
     }
 
     @Override
     public boolean actualizarUsResponsable(UsuarioResponsable usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean insertado = false;
+
+        try {
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentencia = this.conexion.prepareStatement(
+                    "UPDATE usuario SET seudonimo = ?, email = ?, fecha_nac = ?, "
+                    + "contrasenia = ? "
+                    + "WHERE id_usuario = ? ");
+
+            sentencia.setString(1, usuario.getSeudonimo());
+            sentencia.setString(2, usuario.getEmail());
+            sentencia.setDate(3, java.sql.Date.valueOf(usuario.getFecha_nac_LocalDate()));
+            sentencia.setString(4, usuario.getContrasenia());
+            sentencia.setInt(5, usuario.getId_usuario());
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede actualizar los datos.");
+
+            } else if (affectedRows == 1) {
+
+                sentencia = this.conexion.prepareStatement(
+                        "UPDATE responsable SET dni = ?, nombre = ?, apellido = ?, "
+                        + "telefono = ? "
+                        + "WHERE id_usuario = ? ");
+
+                sentencia.setString(1, usuario.getDni());
+                sentencia.setString(2, usuario.getNombre());
+                sentencia.setString(3, usuario.getApellido());
+                sentencia.setString(4, usuario.getTelefono());
+                sentencia.setInt(5, usuario.getId_usuario());
+
+                affectedRows = sentencia.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("No se puede actualizar los datos.");
+                }
+            }
+            this.conexion.commit();
+            insertado = true;
+        } catch (SQLException e) {
+            try {
+                this.conexion.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                Logger.getLogger(EventoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
     }
 
     @Override
@@ -493,6 +618,68 @@ public class UsuarioDAOSQL implements UsuarioDAO {
                         resultado.getString(4),
                         null,
                         null,
+                        fecha_ingreso,
+                        null,
+                        null
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ParseException ex) {
+            Logger.getLogger(UsuarioDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return responsable;
+    }
+
+    @Override
+    public UsuarioResponsable consultarResponsbalePerfil(int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+
+        UsuarioResponsable responsable = null;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT r.dni, r.nombre, r.apellido, r.telefono, "
+                    + "u.id_usuario, u.seudonimo, u.email, u.fecha_nac, u.fecha_ingreso "
+                    + "FROM usuario u, responsable r "
+                    + "WHERE r.id_usuario=? "
+                    + "AND u.id_usuario=r.id_usuario ");
+
+            sentencia.setInt(1, id_usuario);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+
+                String pattern = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                Date fecha_nac = sdf.parse(resultado.getDate(8).toString());
+                Date fecha_ingreso = sdf.parse(resultado.getDate(9).toString());
+                responsable = new UsuarioResponsable(
+                        resultado.getString(1),
+                        resultado.getString(2),
+                        resultado.getString(3),
+                        resultado.getString(4),
+                        resultado.getInt(5),
+                        resultado.getString(6),
+                        resultado.getString(7),
+                        fecha_nac,
                         fecha_ingreso,
                         null,
                         null

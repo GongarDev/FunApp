@@ -8,5 +8,7 @@ import model.Entidad;
  */
 public interface EntidadDAO {
     
-    public boolean altaEntidad(Entidad entidad);
+    public boolean altaEntidad(int id_usuario);
+    public boolean actualizarEntidad(Entidad entidad);    
+    public Entidad consultarEntidad(int id_usuario);
 }

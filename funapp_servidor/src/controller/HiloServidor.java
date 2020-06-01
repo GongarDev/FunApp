@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Credenciales;
+import model.Entidad;
 import model.Evento;
 import model.Usuario;
 import model.UsuarioEstandar;
@@ -98,6 +99,28 @@ public class HiloServidor extends Thread implements Protocolo {
                     historialEventos();
                 } else if (this.estadoSesion == EXPLORAR_EVENTOS) {
                     explorarEventos();
+                } else if (this.estadoSesion == CONSULTAR_USUARIO_RESPONSABLE) {
+                    consultarUsuarioResponsable();
+                } else if (this.estadoSesion == CONSULTAR_USUARIO_ESTANDAR) {
+                    //consultarUsuarioEstandar();
+                } else if (this.estadoSesion == ACTUALIZAR_USUARIO_RESPONSABLE) {
+                    actualizarUsuarioResponsable();
+                } else if (this.estadoSesion == ACTUALIZAR_USUARIO_ESTANDAR) {
+                    actualizarUsuarioEstandar();
+                } else if (this.estadoSesion == CONSULTAR_ENTIDAD) {
+                    consultarEntidad();
+                } else if (this.estadoSesion == ACTUALIZAR_ENTIDAD) {
+                    actualizarEntidad();
+                } else if (this.estadoSesion == SUSCRIPCIONES_EVENTOS) {
+                    suscripcionesEventos();
+                } else if (this.estadoSesion == SUSCRIPCIONES_SUSCRIBIRSE) {
+                    suscribirseEvento();
+                } else if (this.estadoSesion == SUSCRIPCIONES_DESUSCRIBIRSE) {
+                    desuscribirseEvento();
+                } else if (this.estadoSesion == INICIO_PROXIMOS) {
+                    inicioProximos();
+                } else if (this.estadoSesion == INICIO_RECOMENDADOS) {
+                    inicioRecomendados();
                 }
             }
 
@@ -263,6 +286,165 @@ public class HiloServidor extends Thread implements Protocolo {
             this.mensaje = (String) this.entrada.readUTF();
             String nombreTematica = this.gson.fromJson(this.mensaje, String.class);
             List<Evento> listaEventos = this.controlador.listaEventosExplorar(codigo_postal, nombreTematica);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void consultarUsuarioResponsable() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            UsuarioResponsable usuario = this.controlador.consultarUsuarioResponsable(id_usuario);
+            this.mensaje = gson.toJson(usuario);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void actualizarUsuarioResponsable() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            UsuarioResponsable usuarioResponsable = this.gson.fromJson(this.mensaje, UsuarioResponsable.class);
+            boolean actualizado = this.controlador.actualizarUsuarioResponsable(usuarioResponsable);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void actualizarUsuarioEstandar() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Usuario usuario = this.gson.fromJson(this.mensaje, Usuario.class);
+            boolean actualizado = this.controlador.actualizarUsuarioEstandar(usuario);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void consultarEntidad() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            Entidad entidad = this.controlador.consultarEntidad(id_usuario);
+            this.mensaje = gson.toJson(entidad);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void actualizarEntidad() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Entidad entidad = this.gson.fromJson(this.mensaje, Entidad.class);
+            boolean actualizado = this.controlador.actualizarEntidad(entidad);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void suscripcionesEventos() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            List<Evento> listaEventos = this.controlador.suscripcionesEventos(id_usuario);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void suscribirseEvento() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_evento = this.gson.fromJson(this.mensaje, Integer.class);
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean actualizado = this.controlador.suscribirseEvento(id_evento, id_usuario);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void desuscribirseEvento() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_evento = this.gson.fromJson(this.mensaje, Integer.class);
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean actualizado = this.controlador.desuscribirseEvento(id_evento, id_usuario);
+            if (actualizado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void inicioProximos() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            String codigo_postal = this.gson.fromJson(this.mensaje, String.class);
+            List<Evento> listaEventos = this.controlador.listaEventosProximos(codigo_postal);
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void inicioRecomendados() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            String codigo_postal = this.gson.fromJson(this.mensaje, String.class);
+            List<Evento> listaEventos = this.controlador.listaEventosRecomendados(codigo_postal);
             this.mensaje = gson.toJson(listaEventos);
             this.salida.writeUTF(this.mensaje);
         } catch (IOException ex) {

@@ -1,6 +1,7 @@
 package dao;
 
 import model.Credenciales;
+import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 
@@ -22,7 +23,7 @@ public interface UsuarioDAO {
 
     public boolean altaUsResponsable(UsuarioResponsable usuario);
     
-    public boolean actualizarUsEstandar(UsuarioEstandar usuario);
+    public boolean actualizarUsEstandar(Usuario usuario);
 
     public boolean actualizarUsResponsable(UsuarioResponsable usuario);    
 
@@ -31,4 +32,6 @@ public interface UsuarioDAO {
     public boolean bajaUsResponsable(UsuarioResponsable usuario);     
     
     public UsuarioResponsable consultarResponsbaleParaEvento(int id_usuario);
+    
+    public UsuarioResponsable consultarResponsbalePerfil(int id_usuario);
 }
