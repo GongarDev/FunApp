@@ -1,12 +1,14 @@
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author melkart
  */
-public class Entidad {
-    
-    private int id;
+public class Entidad implements Serializable {
+
+    private int id_entidad;
     private String nombre;
     private String nif;
     private String calle;
@@ -14,10 +16,14 @@ public class Entidad {
     private String localidad;
     private String codigo_postal;
     private String telefono;
-    private double latitud;
-    private double longitud;
+    private int id_usuario;
 
-    public Entidad(String nombre, String nif, String calle, String provincia, String localidad, String codigo_postal, String telefono) {
+    public Entidad() {
+    }
+
+    public Entidad(int id_entidad, String nombre, String nif, String calle, String provincia,
+                   String localidad, String codigo_postal, String telefono, int id_usuario) {
+        this.id_entidad = id_entidad;
         this.nombre = nombre;
         this.nif = nif;
         this.calle = calle;
@@ -25,27 +31,15 @@ public class Entidad {
         this.localidad = localidad;
         this.codigo_postal = codigo_postal;
         this.telefono = telefono;
+        this.id_usuario = id_usuario;
     }
 
-    public Entidad(int id, String nombre, String nif, String calle, String provincia, String localidad, String codigo_postal, String telefono, double latitud, double longitud) {
-        this.id = id;
-        this.nombre = nombre;
-        this.nif = nif;
-        this.calle = calle;
-        this.provincia = provincia;
-        this.localidad = localidad;
-        this.codigo_postal = codigo_postal;
-        this.telefono = telefono;
-        this.latitud = latitud;
-        this.longitud = longitud;
+    public int getId_entidad() {
+        return id_entidad;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setId_entidad(int id_entidad) {
+        this.id_entidad = id_entidad;
     }
 
     public String getNombre() {
@@ -104,20 +98,11 @@ public class Entidad {
         this.telefono = telefono;
     }
 
-    public double getLatitud() {
-        return latitud;
+    public int getId_usuario() {
+        return id_usuario;
     }
 
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-    
 }

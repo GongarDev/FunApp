@@ -30,4 +30,15 @@ public interface Protocolo {
     public static final Integer MAPA_EVENTOS = 21;
     public static final Integer HISTORIAL_EVENTOS = 22;
     public static final Integer EXPLORAR_EVENTOS = 23;
+    public static final Integer CONSULTAR_USUARIO_RESPONSABLE = 24;
+    public static final Integer CONSULTAR_USUARIO_ESTANDAR = 25;
+    public static final Integer ACTUALIZAR_USUARIO_RESPONSABLE = 26;
+    public static final Integer ACTUALIZAR_USUARIO_ESTANDAR = 27;
+    public static final Integer CONSULTAR_ENTIDAD = 28;
+    public static final Integer ACTUALIZAR_ENTIDAD = 29;
+    public static final Integer SUSCRIPCIONES_EVENTOS = 30;
+    public static final Integer SUSCRIPCIONES_SUSCRIBIRSE = 31;
+    public static final Integer SUSCRIPCIONES_DESUSCRIBIRSE = 32;
+    public static final Integer INICIO_PROXIMOS = 33;
+    public static final Integer INICIO_RECOMENDADOS = 34;
 }
