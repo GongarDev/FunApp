@@ -18,14 +18,14 @@ import com.example.funapp.models.Evento;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class EventoHistorialAdapter extends RecyclerView.Adapter<EventoHistorialAdapter.ViewHolder> {
+public class EventoInicioAdapter extends RecyclerView.Adapter<EventoInicioAdapter.ViewHolder> {
 
     private List<Evento> eventos;
     private int layout;
     private Activity activity;
     private OnItemClickListener listenerItem;
 
-    public EventoHistorialAdapter(List<Evento> eventos, int layout, Activity activity, OnItemClickListener listenerItem) {
+    public EventoInicioAdapter(List<Evento> eventos, int layout, Activity activity, OnItemClickListener listenerItem) {
 
         this.eventos = eventos;
         this.layout = layout;
@@ -35,16 +35,16 @@ public class EventoHistorialAdapter extends RecyclerView.Adapter<EventoHistorial
 
     @NonNull
     @Override
-    public EventoHistorialAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public EventoInicioAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(activity).inflate(layout, viewGroup, false);
-        EventoHistorialAdapter.ViewHolder viewHolder = new EventoHistorialAdapter.ViewHolder(v);
+        EventoInicioAdapter.ViewHolder viewHolder = new EventoInicioAdapter.ViewHolder(v);
         return viewHolder;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(@NonNull EventoHistorialAdapter.ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull EventoInicioAdapter.ViewHolder viewHolder, final int i) {
 
         final Evento evento = eventos.get(i);
 
@@ -86,7 +86,6 @@ public class EventoHistorialAdapter extends RecyclerView.Adapter<EventoHistorial
         });
     }
 
-
     @Override
     public int getItemCount() {
         return eventos.size();
@@ -101,9 +100,9 @@ public class EventoHistorialAdapter extends RecyclerView.Adapter<EventoHistorial
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imgvEvento = itemView.findViewById(R.id.imgvHistorial);
-            tvNombreEvento = itemView.findViewById(R.id.tvNombreHistorial);
-            tvFecha = itemView.findViewById(R.id.tvFechaHistorial);
+            imgvEvento = itemView.findViewById(R.id.imgvInicioEventos);
+            tvNombreEvento = itemView.findViewById(R.id.tvNombreInicioEventos);
+            tvFecha = itemView.findViewById(R.id.tvFechaInicioEventos);
         }
     }
 

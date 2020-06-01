@@ -5,6 +5,7 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,40 +24,43 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class EventoTematicaAdapter extends RecyclerView.Adapter<EventoTematicaAdapter.ViewHolder> implements Protocolo {
+public class EventoSuscritoAdapter extends RecyclerView.Adapter<EventoSuscritoAdapter.ViewHolder> implements Protocolo {
 
     private List<Evento> eventosList;
     private int layout;
     private Activity activity;
     private OnItemClickListener listenerItem;
+    private OnItemClickListener listenerDesuscribirse;
 
     private String mensaje;
     private Gson gson;
 
-    public EventoTematicaAdapter(List<Evento> eventosList, int layout, Activity activity, OnItemClickListener listenerItem) {
+    public EventoSuscritoAdapter(List<Evento> eventosList, int layout, Activity activity, OnItemClickListener listenerItem,
+                                 OnItemClickListener listenerDesuscribirse) {
         this.eventosList = eventosList;
         this.layout = layout;
         this.activity = activity;
         this.listenerItem = listenerItem;
+        this.listenerDesuscribirse = listenerDesuscribirse;
         this.gson = new Gson();
     }
 
     @NonNull
     @Override
-    public EventoTematicaAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(activity).inflate(layout, viewGroup, false);
-        EventoTematicaAdapter.ViewHolder viewHolder = new EventoTematicaAdapter.ViewHolder(v);
+        ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void onBindViewHolder(@NonNull EventoTematicaAdapter.ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         final Evento evento = eventosList.get(i);
 
-        viewHolder.containerEventoTematica.setOnClickListener(new View.OnClickListener() {
+        viewHolder.containerEventoSuscritos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listenerItem.onItemClick(evento, i);
@@ -65,35 +69,42 @@ public class EventoTematicaAdapter extends RecyclerView.Adapter<EventoTematicaAd
 
         switch (evento.getTematica().getNombre()) {
             case "Cultura local":
-                viewHolder.imgvTematica.setImageResource(R.drawable.cultura);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.cultura);
                 break;
             case "Espectáculos":
-                viewHolder.imgvTematica.setImageResource(R.drawable.espectaculos);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.espectaculos);
                 break;
             case "Gastronomía":
-                viewHolder.imgvTematica.setImageResource(R.drawable.gastronomia);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.gastronomia);
                 break;
             case "Entretenimiento":
-                viewHolder.imgvTematica.setImageResource(R.drawable.entretenimiento);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.entretenimiento);
                 break;
             case "Deporte":
-                viewHolder.imgvTematica.setImageResource(R.drawable.deporte);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.deporte);
                 break;
             case "Tecnología":
-                viewHolder.imgvTematica.setImageResource(R.drawable.tecnologia);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.tecnologia);
                 break;
             case "Benéficos":
-                viewHolder.imgvTematica.setImageResource(R.drawable.beneficos);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.beneficos);
                 break;
             case "Ponencias":
-                viewHolder.imgvTematica.setImageResource(R.drawable.ponencias);
+                viewHolder.imgvSuscritos.setImageResource(R.drawable.ponencias);
                 break;
         }
-        viewHolder.tvEventoTematicaNombre.setText(evento.getNombre());
-        viewHolder.tvEventoTematicaFechaHora.setText(
+
+        viewHolder.tvEventoSuscritosNombre.setText(evento.getNombre());
+        viewHolder.tvEventoSuscritosFechaHora.setText(
                 "Empieza el día "+ evento.getFecha_evento_LocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+
-                " a las " + evento.getHora_inicio());
-        viewHolder.tvEventoTematicaSuscritos.setText(obtenerSuscritos(evento.getId_evento())+" suscritos");
+                        " a las " + evento.getHora_inicio());
+        viewHolder.tvEventoSuscritosSuscritos.setText(obtenerSuscritos(evento.getId_evento())+" suscritos");
+        viewHolder.imgbSuscritosDesuscribirse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listenerDesuscribirse.onItemClick(evento, i);
+            }
+        });
     }
 
     @Override
@@ -103,19 +114,21 @@ public class EventoTematicaAdapter extends RecyclerView.Adapter<EventoTematicaAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ConstraintLayout containerEventoTematica;
-        ImageView imgvTematica;
-        TextView tvEventoTematicaNombre;
-        TextView tvEventoTematicaFechaHora;
-        TextView tvEventoTematicaSuscritos;
+        ConstraintLayout containerEventoSuscritos;
+        ImageView imgvSuscritos;
+        TextView tvEventoSuscritosNombre;
+        TextView tvEventoSuscritosFechaHora;
+        TextView tvEventoSuscritosSuscritos;
+        ImageButton imgbSuscritosDesuscribirse;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            containerEventoTematica = itemView.findViewById(R.id.containerEventoTematica);
-            imgvTematica = itemView.findViewById(R.id.imgvEventoTematica);
-            tvEventoTematicaNombre = itemView.findViewById(R.id.tvEventoTematicaNombre);
-            tvEventoTematicaFechaHora = itemView.findViewById(R.id.tvEventoTematicaFechaHora);
-            tvEventoTematicaSuscritos = itemView.findViewById(R.id.tvEventoTematicaSuscritos);
+            containerEventoSuscritos = itemView.findViewById(R.id.containerEventoSuscritos);
+            imgvSuscritos = itemView.findViewById(R.id.imgvEventoSuscritos);
+            tvEventoSuscritosNombre = itemView.findViewById(R.id.tvEventoSuscritosNombre);
+            tvEventoSuscritosFechaHora = itemView.findViewById(R.id.tvEventoSuscritosFechaHora);
+            tvEventoSuscritosSuscritos = itemView.findViewById(R.id.tvEventoSuscritosSuscritos);
+            imgbSuscritosDesuscribirse = itemView.findViewById(R.id.imgbSuscritosDesuscribirse);
         }
     }
 

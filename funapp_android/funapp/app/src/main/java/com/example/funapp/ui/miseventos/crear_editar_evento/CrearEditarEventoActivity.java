@@ -140,6 +140,9 @@ public class CrearEditarEventoActivity extends AppCompatActivity implements OnMa
 
                 // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
+
+                mLastKnownLocation.setLatitude(latLng.latitude);
+                mLastKnownLocation.setLongitude(latLng.longitude);
             }
         });
     }

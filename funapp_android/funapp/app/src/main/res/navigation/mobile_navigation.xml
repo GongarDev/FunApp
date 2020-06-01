@@ -58,7 +58,7 @@
         android:id="@+id/navigation_cuenta"
         android:name="com.example.funapp.ui.cuenta.CuentaFragment"
         android:label="@string/cuenta"
-        tools:layout="@layout/fragment_cuenta" />
+        tools:layout="@layout/fragment_cuenta_responsable" />
 
     <fragment
         android:id="@+id/navigation_mis_eventos"

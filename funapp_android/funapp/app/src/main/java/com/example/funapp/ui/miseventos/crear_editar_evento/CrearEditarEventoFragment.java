@@ -1,14 +1,10 @@
 package com.example.funapp.ui.miseventos.crear_editar_evento;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +23,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -38,9 +32,7 @@ import com.example.funapp.models.Tematica;
 import com.example.funapp.models.Ubicacion;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.models.UsuarioResponsable;
-import com.example.funapp.ui.miseventos.MisEventosFragment;
 import com.example.funapp.util.Protocolo;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -179,6 +171,7 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
                         e.printStackTrace();
                     }
 
+
                     Evento evento = new Evento(0, crearEventoNombre.getText().toString(),
                             crearEventoDespricion.getText().toString(),
                             null, fechaEventoDate,
@@ -216,8 +209,9 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
                     arrayList.add(t);
                 }
                 ArrayAdapter<Tematica> arrayAdapter = new ArrayAdapter<Tematica>(getActivity(), android.R.layout.simple_spinner_item, arrayList);
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
                 tematica.setAdapter(arrayAdapter);
+                tematica.setPrompt("Seleccione una temática...");
                 tematica.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -262,6 +256,9 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 //Formateo el hora obtenido: antepone el 0 si son menores de 10
                 String horaFormateada = (hourOfDay < 10) ? String.valueOf(CERO + hourOfDay) : String.valueOf(hourOfDay);
+                if(horaFormateada.equals("0")){
+                    horaFormateada = "24";
+                }
                 //Formateo el minuto obtenido: antepone el 0 si son menores de 10
                 String minutoFormateado = (minute < 10) ? String.valueOf(CERO + minute) : String.valueOf(minute);
                 //Obtengo el valor a.m. o p.m., dependiendo de la selección del usuario

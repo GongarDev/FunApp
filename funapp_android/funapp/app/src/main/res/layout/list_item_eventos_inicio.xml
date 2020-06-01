@@ -6,7 +6,7 @@
     android:layout_height="188dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="104dp"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imgvEventosActivos"
+            android:id="@+id/imgvInicioEventos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
@@ -37,7 +37,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tvNombreEventosActivos"
+        android:id="@+id/tvNombreInicioEventos"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -50,36 +50,21 @@
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
         android:maxLines="2"
         android:ellipsize="end"/>
 
     <TextView
-        android:id="@+id/tvSuspenderEventosActivos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Suspender"
-        android:textColor="@color/color3"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvEditarEventosActivos"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreEventosActivos" />
-
-    <TextView
-        android:id="@+id/tvEditarEventosActivos"
+        android:id="@+id/tvFechaInicioEventos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="Editar"
-        android:textColor="@color/color3"
+        android:layout_marginBottom="8dp"
+        android:text="@string/fecha_evento"
+        android:textColor="@color/color1"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreEventosActivos" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreInicioEventos" />
 </androidx.constraintlayout.widget.ConstraintLayout>

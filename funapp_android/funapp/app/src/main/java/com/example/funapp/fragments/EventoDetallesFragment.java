@@ -40,6 +40,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
 
     private String mensaje;
     private Gson gson;
+    private Integer estadoSesion;
 
     public EventoDetallesFragment() {
         this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
@@ -74,6 +75,33 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         tvNombreEvento.setText(evento.getNombre());
         tvDescripcion.setText(evento.getDescripcion());
         tvSuscritos.setText(suscritos + " usuarios suscritos");
+
+        switch (evento.getTematica().getNombre()) {
+            case "Cultura local":
+                imgvLogoEntidad.setImageResource(R.drawable.cultura);
+                break;
+            case "Espectáculos":
+                imgvLogoEntidad.setImageResource(R.drawable.espectaculos);
+                break;
+            case "Gastronomía":
+                imgvLogoEntidad.setImageResource(R.drawable.gastronomia);
+                break;
+            case "Entretenimiento":
+                imgvLogoEntidad.setImageResource(R.drawable.entretenimiento);
+                break;
+            case "Deporte":
+                imgvLogoEntidad.setImageResource(R.drawable.deporte);
+                break;
+            case "Tecnología":
+                imgvLogoEntidad.setImageResource(R.drawable.tecnologia);
+                break;
+            case "Benéficos":
+                imgvLogoEntidad.setImageResource(R.drawable.beneficos);
+                break;
+            case "Ponencias":
+                imgvLogoEntidad.setImageResource(R.drawable.ponencias);
+                break;
+        }
 
         int minutos = evento.getHora_inicio().getMinute();
         if (minutos < 10)
@@ -126,7 +154,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
             bSuscribirse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    suscribirse(evento.getId_evento(), usuario.getId_usuario());
                 }
             });
         }
@@ -146,5 +174,21 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
             e.printStackTrace();
         }
         return suscritos;
+    }
+
+    public Integer suscribirse(int id_evento, int id_usuario){
+        try {
+            this.mensaje = this.gson.toJson(SUSCRIPCIONES_SUSCRIBIRSE);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_evento);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
     }
 }

@@ -42,11 +42,16 @@
     <string name="cerrar_sesion">Cerrar sesión</string>
 
     <string name="usuario">Usuario</string>
+    <string name="entidad">Entidad</string>
     <string name="eventos_activos">Eventos activos</string>
     <string name="eventos_suspendidos">Eventos suspendidos</string>
     <string name="eventos_asistidos">Eventos asistidos</string>
     <string name="eventos_organizados">Eventos organizados</string>
+    <string name="seleccione_tematica">Seleccione una temática</string>
     <string name="explorar">Explorar</string>
+    <string name="suscritos">Eventos suscritos</string>
+    <string name="proximos_eventos">Próximos eventos</string>
+    <string name="recomendados">Recomendados</string>
 
     <string name="google_maps_apikey">AIzaSyDqnIJCY1o-m9kmGjKYJ4H1z28UBPjvoUk</string>
 

@@ -57,7 +57,32 @@ public class EventoActivoAdapter extends RecyclerView.Adapter<EventoActivoAdapte
             }
         });
 
-
+        switch (evento.getTematica().getNombre()) {
+            case "Cultura local":
+                viewHolder.imgvEvento.setImageResource(R.drawable.cultura);
+                break;
+            case "Espectáculos":
+                viewHolder.imgvEvento.setImageResource(R.drawable.espectaculos);
+                break;
+            case "Gastronomía":
+                viewHolder.imgvEvento.setImageResource(R.drawable.gastronomia);
+                break;
+            case "Entretenimiento":
+                viewHolder.imgvEvento.setImageResource(R.drawable.entretenimiento);
+                break;
+            case "Deporte":
+                viewHolder.imgvEvento.setImageResource(R.drawable.deporte);
+                break;
+            case "Tecnología":
+                viewHolder.imgvEvento.setImageResource(R.drawable.tecnologia);
+                break;
+            case "Benéficos":
+                viewHolder.imgvEvento.setImageResource(R.drawable.beneficos);
+                break;
+            case "Ponencias":
+                viewHolder.imgvEvento.setImageResource(R.drawable.ponencias);
+                break;
+        }
 
         viewHolder.tvEditar.setOnClickListener(new View.OnClickListener() {
             @Override

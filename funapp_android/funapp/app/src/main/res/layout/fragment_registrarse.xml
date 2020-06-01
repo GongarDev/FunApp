@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/etConfirmarContrasenia" />
 
     <EditText
-        android:id="@+id/etContrasenia"
+        android:id="@+id/etRegistrarseContrasenia"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
@@ -46,7 +46,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSeudonimo" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegistrarseSeudonimo" />
 
     <EditText
         android:id="@+id/etConfirmarContrasenia"
@@ -62,7 +62,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etContrasenia" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegistrarseContrasenia" />
 
     <TextView
         android:id="@+id/tvCuenta"
@@ -82,7 +82,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/etSeudonimo"
+        android:id="@+id/etRegistrarseSeudonimo"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
@@ -187,8 +187,8 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/etContrasenia"
-        app:layout_constraintStart_toStartOf="@+id/etContrasenia"
+        app:layout_constraintEnd_toEndOf="@+id/etRegistrarseContrasenia"
+        app:layout_constraintStart_toStartOf="@+id/etRegistrarseContrasenia"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 

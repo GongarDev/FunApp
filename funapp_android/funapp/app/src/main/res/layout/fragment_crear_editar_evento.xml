@@ -43,12 +43,12 @@
             tools:ignore="ContentDescription" />
 
         <View
-            android:id="@+id/viewEventosActivos3"
+            android:id="@+id/viewCuenta1"
             android:layout_width="0dp"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:layout_weight="1"
@@ -73,12 +73,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewEventosActivos3" />
+            app:layout_constraintTop_toBottomOf="@+id/viewCuenta1" />
 
         <EditText
             android:id="@+id/etCrearDescripcion"
             android:layout_width="0dp"
-            android:layout_height="130dp"
+            android:layout_height="88dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
@@ -108,7 +108,9 @@
         <Button
             android:id="@+id/bConfirmarCrear"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
@@ -116,6 +118,7 @@
             android:text="Confirmar"
             android:textColor="@color/color4"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvCrearEvento"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -179,12 +182,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
+            android:prompt="@string/seleccione_tematica"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_CrearEventoHoraFin" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTematicaCrearEvento" />
 
         <Switch
             android:id="@+id/swCrearEventoCodigoQR"
@@ -201,17 +204,17 @@
             app:layout_constraintTop_toBottomOf="@+id/etCrearDescripcion" />
 
         <TextView
-            android:id="@+id/tvCrearEventoUbicacion"
+            android:id="@+id/tvTematicaCrearEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:text="Buscar  la ubicación del evento"
+            android:layout_marginTop="16dp"
+            android:text="Seleccione una temática"
             android:textColor="@color/color1"
-            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerTematicas" />
+            app:layout_constraintTop_toBottomOf="@+id/et_crearEventoHoraInicio" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

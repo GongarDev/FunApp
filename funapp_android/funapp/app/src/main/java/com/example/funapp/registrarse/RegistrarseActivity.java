@@ -70,8 +70,8 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
         ibObtenerFecha.setOnClickListener(this);
 
 
-        final EditText etSeudonimo = findViewById(R.id.etSeudonimo);
-        final EditText etContrasenia = findViewById(R.id.etContrasenia);
+        final EditText etSeudonimo = findViewById(R.id.etRegistrarseSeudonimo);
+        final EditText etContrasenia = findViewById(R.id.etRegistrarseContrasenia);
         final EditText etConfirmarContrasenia = findViewById(R.id.etConfirmarContrasenia);
         final EditText etCorreo = findViewById(R.id.etCorreo);
         loadingProgressBar = findViewById(R.id.loadingRegistrarse);

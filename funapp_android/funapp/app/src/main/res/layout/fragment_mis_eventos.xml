@@ -31,7 +31,7 @@
         <View
             android:id="@+id/viewEventosSuspendidos"
             android:layout_width="0dp"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
@@ -60,7 +60,7 @@
         <View
             android:id="@+id/viewEventosActivos"
             android:layout_width="0dp"
-            android:layout_height="3dp"
+            android:layout_height="1dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
@@ -117,15 +117,15 @@
             android:id="@+id/fbAddEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
             android:src="@android:drawable/ic_menu_add"
             app:backgroundTint="@color/color1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvEventosSuspendidos" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

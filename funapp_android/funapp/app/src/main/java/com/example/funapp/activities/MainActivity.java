@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.funapp.R;
-import com.example.funapp.adapters.ExplorarAdapter;
 import com.example.funapp.models.Evento;
 import com.example.funapp.models.Tematica;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.ui.explorar.EventosTematica.EventosTematicaActivity;
-import com.example.funapp.ui.explorar.EventosTematica.EventosTematicaFragment;
 import com.example.funapp.ui.explorar.ExplorarFragment;
 import com.example.funapp.ui.historial.HistorialFragment;
+import com.example.funapp.ui.inicio.InicioFragment;
 import com.example.funapp.ui.mapa.MapaFragment;
 import com.example.funapp.ui.miseventos.MisEventosFragment;
+import com.example.funapp.ui.suscripciones.SuscripcionesFragment;
 import com.example.funapp.util.Protocolo;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -29,7 +29,8 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity implements Protocolo, MisEventosFragment.OnEventoSelected,
         MapaFragment.OnEventoMapaSelected, HistorialFragment.OnEventoHistorialSelected,
-        ExplorarFragment.OnItemExplorarSelected {
+        ExplorarFragment.OnItemExplorarSelected, SuscripcionesFragment.OnEventoSelected,
+        InicioFragment.OnEventoSelected {
 
     private AppBarConfiguration appBarConfiguration;
     private NavController navController;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Intent intent = getIntent();
         if (intent != null) {
             usuario = (Usuario) intent.getSerializableExtra("usuario");
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
         NavigationView navView = findViewById(R.id.main_navigation_view);
         BottomNavigationView bottomNavigationView = findViewById(R.id.main_bottom_navigation_view);
         drawer = findViewById(R.id.main_drawer_layout);
+
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_inicio, R.id.navigation_notificaciones, R.id.navigation_explorar, R.id.navigation_suscripciones,
                 R.id.navigation_mapa, R.id.navigation_micodigoqr, R.id.navigation_amigos, R.id.navigation_historial,
@@ -61,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
     }
 
     @Override

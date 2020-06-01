@@ -74,7 +74,7 @@ public class EventosTematicaFragment extends Fragment implements Protocolo {
         mPlaceDetectionClient = Places.getPlaceDetectionClient(getActivity(), null);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         recyclerView = root.findViewById(R.id.rvEventosTematica);
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);

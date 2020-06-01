@@ -29,8 +29,8 @@ public class RegistrarseFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_registrarse, container, false);
 
-        etSeudonimo = view.findViewById(R.id.etSeudonimo);
-        etContrasenia = view.findViewById(R.id.etContrasenia);
+        etSeudonimo = view.findViewById(R.id.etRegistrarseSeudonimo);
+        etContrasenia = view.findViewById(R.id.etRegistrarseContrasenia);
         etConfirmarContrasenia = view.findViewById(R.id.etConfirmarContrasenia);
         etFechaNacimiento = view.findViewById(R.id.etFechaNacimiento);
         switchResponsable = view.findViewById(R.id.switchResponsable);
