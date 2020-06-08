@@ -2,14 +2,20 @@ package controller;
 
 import dao.EntidadDAOSQL;
 import dao.EventoDAOSQL;
+import dao.IncidenciaDAOSQL;
+import dao.PublicacionDAOSQL;
 import dao.UsuarioDAOSQL;
+import dao.ValoracionDAOSQL;
 import java.util.List;
 import model.Credenciales;
 import model.Entidad;
 import model.Evento;
+import model.Incidencia;
+import model.Publicacion;
 import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
+import model.Valoracion;
 
 /**
  *
@@ -20,11 +26,17 @@ public class Controlador {
     UsuarioDAOSQL usuarioDAOSQL;
     EventoDAOSQL eventoDAOSQL;
     EntidadDAOSQL entidadDAOSQL;
+    PublicacionDAOSQL publicacionDAOSQL;
+    ValoracionDAOSQL valoracionDAOSQL;
+    IncidenciaDAOSQL incidenciaDAOSQL;
 
     public Controlador() {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
         this.eventoDAOSQL = new EventoDAOSQL();
         this.entidadDAOSQL = new EntidadDAOSQL();
+        this.publicacionDAOSQL = new PublicacionDAOSQL();
+        this.valoracionDAOSQL = new ValoracionDAOSQL();
+        this.incidenciaDAOSQL = new IncidenciaDAOSQL();
     }
 
     public boolean existeUsuario(String correo) {
@@ -136,8 +148,63 @@ public class Controlador {
         return this.eventoDAOSQL.listaEventosProximos(codigo_postal);
     }
 
-    public List<Evento> listaEventosRecomendados(String codigo_postal) {
-        return this.eventoDAOSQL.listaEventosRecomendados(codigo_postal);
+    public List<Evento> listaEventosRecomendados(String codigo_postal, int id_usuario) {
+        return this.eventoDAOSQL.listaEventosRecomendados(codigo_postal, id_usuario);
     }
 
+    public List<Publicacion> listaPublicaciones(int id_evento) {
+        return this.publicacionDAOSQL.listaPublicaciones(id_evento);
+    }
+
+    public boolean insertarPublicacion(Publicacion publicacion, int id_evento, int id_usuario) {
+        return this.publicacionDAOSQL.insertarPublicacion(publicacion, id_evento, id_usuario);
+    }
+
+    public List<Valoracion> listaValoraciones(int id_evento) {
+        return this.valoracionDAOSQL.listaValoraciones(id_evento);
+    }
+
+    public boolean insertarValoracion(Valoracion valoracion) {
+        return this.valoracionDAOSQL.insertarValoracion(valoracion);
+    }
+
+    public boolean existeSuscritoEvento(int id_evento, int id_usuario) {
+        return this.eventoDAOSQL.existeSuscritoEvento(id_evento, id_usuario);
+    }
+
+    public boolean aumentarPuntosEvento(int id_evento, int id_usuario) {
+        return this.eventoDAOSQL.aumentarPuntosEvento(id_evento, id_usuario);
+    }
+
+    public boolean existeEntidadUsuario(int id_usuario) {
+        return this.usuarioDAOSQL.existeEntidadUsuario(id_usuario);
+    }
+
+    public List<Usuario> listaUsuariosAmigos(int id_usuario) {
+        return this.usuarioDAOSQL.listaUsuariosAmigos(id_usuario);
+    }
+
+    public int cantidadSuscripciones(int id_usuario) {
+        return this.usuarioDAOSQL.cantidadSuscripciones(id_usuario);
+    }
+
+    public boolean eliminarAmigo(int id_usuarioAmigo, int id_usuario) {
+        return this.usuarioDAOSQL.eliminarAmigo(id_usuarioAmigo, id_usuario);
+    }
+
+    public boolean existeSeguimientoUsuario(int id_usuarioAmigo, int id_usuario) {
+        return this.usuarioDAOSQL.existeSeguimientoUsuario(id_usuarioAmigo, id_usuario);
+    }
+
+    public boolean insertarSeguimiento(int id_usuarioAmigo, int id_usuario) {
+        return this.usuarioDAOSQL.insertarSeguimiento(id_usuarioAmigo, id_usuario);
+    }
+
+    public boolean eliminarCuenta(int id_usuario) {
+        return this.usuarioDAOSQL.eliminarCuenta(id_usuario);
+    }
+
+    public boolean insertarIncidencia(Incidencia incidencia) {
+        return this.incidenciaDAOSQL.insertarIncidencia(incidencia);
+    }
 }

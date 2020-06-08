@@ -2,8 +2,6 @@ package dao;
 
 import java.util.List;
 import model.Evento;
-import model.Usuario;
-import model.UsuarioResponsable;
 
 /**
  *
@@ -37,6 +35,9 @@ public interface EventoDAO {
 
     public List<Evento> listaEventosProximos(String codigo_postal);
 
-    public List<Evento> listaEventosRecomendados(String codigo_postal);
+    public List<Evento> listaEventosRecomendados(String codigo_postal, int id_usuario);
+    
+    public boolean existeSuscritoEvento(int id_evento, int id_usuario);
 
+    public boolean aumentarPuntosEvento(int id_evento, int id_usuario);
 }

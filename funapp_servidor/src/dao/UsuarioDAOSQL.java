@@ -8,15 +8,14 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Credenciales;
-import model.Ubicacion;
 import model.Usuario;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
@@ -189,7 +188,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             sentencia = this.conexion.prepareStatement(
                     "SELECT e.perfil_publico, u.id_usuario, u.seudonimo, "
                     + "u.email, u.fecha_nac, u.fecha_ingreso, "
-                    + "u.contrasenia, u.codigo_qr "
+                    + "u.contrasenia, u.imagen "
                     + "FROM usuario u, estandar e "
                     + "WHERE u.email=? "
                     + " AND u.contrasenia=? "
@@ -252,7 +251,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             sentencia = this.conexion.prepareStatement(
                     "SELECT r.dni, r.nombre, r.apellido, r.telefono, "
                     + "u.id_usuario, u.seudonimo, u.email, u.fecha_nac, u.fecha_ingreso, "
-                    + "u.contrasenia, u.codigo_qr "
+                    + "u.contrasenia, u.imagen "
                     + "FROM usuario u, responsable r "
                     + "WHERE u.email=? "
                     + "AND u.contrasenia=? "
@@ -319,7 +318,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         try {
             abrirConexion();
             sentencia = this.conexion.prepareStatement(
-                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, codigo_qr) "
+                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, imagen) "
                     + "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
             sentencia.setString(1, usuario.getSeudonimo());
@@ -327,7 +326,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             sentencia.setDate(3, java.sql.Date.valueOf(usuario.getFecha_nac_LocalDate()));
             sentencia.setDate(4, java.sql.Date.valueOf(usuario.getFecha_ingreso_LocalDate()));
             sentencia.setString(5, usuario.getContrasenia());
-            sentencia.setString(6, usuario.getCodigo_qr());
+            sentencia.setString(6, usuario.getImagen());
 
             int affectedRows = sentencia.executeUpdate();
 
@@ -388,7 +387,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
         try {
             abrirConexion();
             sentencia = this.conexion.prepareStatement(
-                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, codigo_qr) "
+                    "INSERT INTO usuario (seudonimo, email, fecha_nac, fecha_ingreso, contrasenia, imagen) "
                     + "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
             sentencia.setString(1, usuario.getSeudonimo());
@@ -396,7 +395,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             sentencia.setDate(3, java.sql.Date.valueOf(usuario.getFecha_nac_LocalDate()));
             sentencia.setDate(4, java.sql.Date.valueOf(usuario.getFecha_ingreso_LocalDate()));
             sentencia.setString(5, usuario.getContrasenia());
-            sentencia.setString(6, usuario.getCodigo_qr());
+            sentencia.setString(6, usuario.getImagen());
 
             int affectedRows = sentencia.executeUpdate();
 
@@ -426,7 +425,7 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             } else if (affectedRows == 1) {
                 insertado = true;
             }
-            
+
             this.entidadDAOSQL.altaEntidad(id);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -706,5 +705,358 @@ public class UsuarioDAOSQL implements UsuarioDAO {
             }
         }
         return responsable;
+    }
+
+    @Override
+    public boolean existeEntidadUsuario(int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean existe = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT * "
+                    + "FROM entidad "
+                    + "WHERE id_usuario=? ");
+
+            sentencia.setInt(1, id_usuario);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                existe = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+
+        return existe;
+    }
+
+    @Override
+    public List<Usuario> listaUsuariosAmigos(int id_usuario) {
+
+        List<Usuario> listaUsuariosAmigos = new ArrayList<Usuario>();
+
+        PreparedStatement sentenciaEventos = null;
+        PreparedStatement sentenciaUbicaciones = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentenciaEventos = this.conexion.prepareStatement(
+                    "SELECT u.id_usuario, u.seudonimo, u.fecha_ingreso, u.imagen "
+                    + "FROM usuario u "
+                    + "WHERE u.id_usuario in"
+                    + " (SELECT id_usuario_seguido "
+                    + "FROM seguidor "
+                    + "WHERE id_usuario_seguidor = ?)");
+
+            sentenciaEventos.setInt(1, id_usuario);
+            resultado = sentenciaEventos.executeQuery();
+
+            int id_usuario_amigo;
+            String seudonimo, imagen;
+            Date fecha_ingreso;
+
+            while (resultado.next()) {
+
+                id_usuario_amigo = resultado.getInt(1);
+                seudonimo = resultado.getString(2);
+                fecha_ingreso = resultado.getDate(3);
+                imagen = resultado.getString(4);
+
+                listaUsuariosAmigos.add(new Usuario(id_usuario_amigo, seudonimo, fecha_ingreso, imagen));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentenciaEventos != null) {
+                    sentenciaEventos.close();
+                }
+                if (sentenciaUbicaciones != null) {
+                    sentenciaUbicaciones.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return listaUsuariosAmigos;
+    }
+
+    @Override
+    public int cantidadSuscripciones(int id_usuario) {
+
+        int suscripciones = 0;
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT COUNT(id_evento) "
+                    + "FROM usuario_evento "
+                    + "WHERE id_usuario = ?");
+
+            sentencia.setInt(1, id_usuario);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                suscripciones = resultado.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return suscripciones;
+    }
+
+    @Override
+    public boolean eliminarAmigo(int id_usuarioAmigo, int id_usuario) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean eliminado = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM seguidor "
+                    + "WHERE (id_usuario_seguidor = ? "
+                    + "AND id_usuario_seguido = ?) "
+                    + "OR (id_usuario_seguido = ? "
+                    + "AND id_usuario_seguidor = ?) ");
+
+            sentencia.setInt(1, id_usuarioAmigo);
+            sentencia.setInt(2, id_usuario);
+            sentencia.setInt(3, id_usuarioAmigo);
+            sentencia.setInt(4, id_usuario);
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede eliminar los datos");
+            }
+            eliminado = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return eliminado;
+    }
+
+    @Override
+    public boolean existeSeguimientoUsuario(int id_usuarioAmigo, int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean existe = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT * "
+                    + "FROM seguidor s "
+                    + "WHERE s.id_usuario_seguidor=? AND id_usuario_seguido=? ");
+
+            sentencia.setInt(1, id_usuario);
+            sentencia.setInt(2, id_usuarioAmigo);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                existe = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return existe;
+    }
+
+    @Override
+    public boolean insertarSeguimiento(int id_usuarioAmigo, int id_usuario) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean insertado = false;;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "INSERT INTO seguidor (id_usuario_seguidor, id_usuario_seguido) "
+                    + "VALUES (?, ?)");
+
+            sentencia.setInt(1, id_usuario);
+            sentencia.setInt(2, id_usuarioAmigo);
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede insertar los datos");
+            } else if (affectedRows == 1) {
+                insertado = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
+    }
+
+    @Override
+    public boolean eliminarCuenta(int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean eliminado = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM entidad "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM evento "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM usuario_evento "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM mensaje "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM incidencia "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM usuario_logro "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM seguidor "
+                    + "WHERE id_usuario_seguidor = ? OR "
+                    + "id_usuario_seguido = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.setInt(2, id_usuario);
+            sentencia.executeUpdate();
+
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM usuario "
+                    + "WHERE id_usuario = ? ");
+            sentencia.setInt(1, id_usuario);
+            sentencia.executeUpdate();
+
+            eliminado = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return eliminado;
     }
 }

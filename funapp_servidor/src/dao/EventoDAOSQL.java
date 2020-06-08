@@ -1080,18 +1080,34 @@ public class EventoDAOSQL implements EventoDAO {
     }
 
     @Override
-    public List<Evento> listaEventosRecomendados(String codigo_postal) {
+    public List<Evento> listaEventosRecomendados(String codigo_postal, int id_usuario) {
         List<Evento> listaEventos = new ArrayList<Evento>();
 
-        PreparedStatement sentenciaEventos = null;
-        PreparedStatement sentenciaUbicaciones = null;
+        PreparedStatement sentencia = null;
         ResultSet resultado = null;
 
         try {
 
             abrirConexion();
             this.conexion.setAutoCommit(false);
-            sentenciaEventos = this.conexion.prepareStatement(
+
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT e.id_tematica, COUNT(e.id_tematica) as contador "
+                    + "FROM evento e, usuario_evento ue  "
+                    + "WHERE ue.id_usuario = ? "
+                    + "AND ue.id_evento = e.id_evento  "
+                    + "GROUP BY e.id_tematica "
+                    + "ORDER BY contador DESC "
+                    + "LIMIT 1");
+            
+            sentencia.setInt(1, id_usuario);
+            resultado = sentencia.executeQuery();
+            int id_tematica=0;
+            while (resultado.next()) {
+                id_tematica = resultado.getInt(1);
+            }
+            
+            sentencia = this.conexion.prepareStatement(
                     "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, "
                     + "e.fecha_evento, e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, "
                     + "t.id_tematica, t.nombre, t.descripcion, t.edad_legal, "
@@ -1099,18 +1115,20 @@ public class EventoDAOSQL implements EventoDAO {
                     + "FROM evento e, tematica t, responsable r, ubicacion u, usuario us, evento_ubicacion eu "
                     + "WHERE e.id_usuario = r.id_usuario "
                     + "AND r.id_usuario  = us.id_usuario "
-                    + "AND e.id_tematica = t.id_tematica  "
+                    + "AND e.id_tematica = ? "
                     + "AND e.id_evento = eu.id_evento "
                     + "AND eu.id_ubicacion = u.id_ubicacion "
                     + "AND e.activo = true "
                     + "AND u.codigo_postal = ? "
                     + "AND e.fecha_evento > now() "
-                    + "GROUP BY e.id_evento ");
+                    + "GROUP BY e.id_evento "
+                    + "LIMIT 8 ");
 
-            sentenciaEventos.setString(1, codigo_postal);
-            resultado = sentenciaEventos.executeQuery();
+            sentencia.setInt(1, id_tematica);
+            sentencia.setString(2, codigo_postal);
+            resultado = sentencia.executeQuery();
 
-            int id_evento, id_tematica, edad_legal = 0, id_usuario;
+            int id_evento, edad_legal = 0, id_usuario_resp;
             String nombreEvento, descripcionEvento, nombreTematica = "", descripcionTematica = "";
             Date fecha_publicacion, fecha_evento;
             LocalTime hora_inicio, hora_fin;
@@ -1133,12 +1151,12 @@ public class EventoDAOSQL implements EventoDAO {
                 nombreTematica = resultado.getString(11);
                 descripcionTematica = resultado.getString(12);
                 edad_legal = resultado.getInt(13);
-                id_usuario = resultado.getInt(14);
+                id_usuario_resp = resultado.getInt(14);
                 tematica = new Tematica(id_tematica, nombreTematica, descripcionTematica, edad_legal);
 
                 HashSet<Ubicacion> listaUbicaciones = this.ubicacionDAOSQL.listaUbicacionesEvento(id_evento);
 
-                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuario);
+                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuario_resp);
 
                 listaEventos.add(new Evento(id_evento, nombreEvento, descripcionEvento, fecha_publicacion, fecha_evento,
                         hora_inicio, hora_fin, listaUbicaciones, null, tematica, usuario, activo));
@@ -1150,11 +1168,8 @@ public class EventoDAOSQL implements EventoDAO {
                 if (resultado != null) {
                     resultado.close();
                 }
-                if (sentenciaEventos != null) {
-                    sentenciaEventos.close();
-                }
-                if (sentenciaUbicaciones != null) {
-                    sentenciaUbicaciones.close();
+                if (sentencia != null) {
+                    sentencia.close();
                 }
                 if (this.conexion != null) {
                     cerrarConexion();
@@ -1164,5 +1179,184 @@ public class EventoDAOSQL implements EventoDAO {
             }
         }
         return listaEventos;
+    }
+
+    @Override
+    public boolean existeSuscritoEvento(int id_evento, int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean existe = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT * "
+                    + "FROM usuario_evento ue "
+                    + "WHERE id_evento=? AND id_usuario=? "
+                    + " ");
+
+            sentencia.setInt(1, id_evento);
+            sentencia.setInt(2, id_usuario);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                existe = true;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return existe;
+    }
+
+    @Override
+    public boolean aumentarPuntosEvento(int id_evento, int id_usuario) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        String nombreTematica = "";
+        String atributo = "";
+        int id_atributo = 0;
+        boolean existe = false;
+        boolean insertado = false;
+
+        try {
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT nombre "
+                    + "FROM tematica "
+                    + "WHERE id_tematica=(SELECT id_tematica FROM evento WHERE id_evento=?) ");
+            sentencia.setInt(1, id_evento);
+            resultado = sentencia.executeQuery();
+            while (resultado.next()) {
+                nombreTematica = resultado.getString(1);
+            }
+
+            switch (nombreTematica) {
+                case "Cultura local":
+                    atributo = "Cultural";
+                    break;
+                case "Espectáculos":
+                    atributo = "Entretenimiento";
+                    break;
+                case "Gastronomía":
+                    atributo = "Gastronómico";
+                    break;
+                case "Entretenimiento":
+                    atributo = "Entretenimiento";
+                    break;
+                case "Deporte":
+                    atributo = "Deportivo";
+                    break;
+                case "Tecnología":
+                    atributo = "Entretenimiento";
+                    break;
+                case "Benéficos":
+                    atributo = "Compromiso social";
+                    break;
+                case "Ponencias":
+                    atributo = "Cultural";
+                    break;
+            }
+
+            sentencia = this.conexion.prepareStatement(
+                    "SELECT * "
+                    + "FROM usuario_atributo "
+                    + "WHERE id_atributo = ("
+                    + "SELECT id_atributo "
+                    + "FROM atributo "
+                    + "WHERE nombre =?) "
+                    + "AND id_usuario =? ");
+            sentencia.setString(1, atributo);
+            sentencia.setInt(2, id_usuario);
+            resultado = sentencia.executeQuery();
+            while (resultado.next()) {
+                existe = true;
+            }
+
+            if (existe) {
+                sentencia = this.conexion.prepareStatement(
+                        "UPDATE usuario_atributo SET experiencia = experiencia+25 "
+                        + "WHERE id_atributo = ("
+                        + "SELECT id_atributo "
+                        + "FROM atributo "
+                        + "WHERE nombre = ?) "
+                        + "AND id_usuario = ?");
+
+                sentencia.setString(1, atributo);
+                sentencia.setInt(2, id_usuario);
+
+                int affectedRows = sentencia.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("No se puede actualizar los datos.");
+                } else if (affectedRows == 1) {
+                    insertado = true;
+                }
+            } else {
+
+                sentencia = this.conexion.prepareStatement(
+                        "SELECT id_atributo "
+                        + "FROM atributo "
+                        + "WHERE nombre = ? ");
+                sentencia.setString(1, atributo);
+                resultado = sentencia.executeQuery();
+                while (resultado.next()) {
+                    id_atributo = resultado.getInt(1);
+                }
+
+                sentencia = this.conexion.prepareStatement(
+                        "INSERT INTO usuario_atributo (id_usuario, id_atributo, experiencia) "
+                        + "VALUES ( ?, ?, 25)");
+
+                sentencia.setInt(1, id_usuario);
+                sentencia.setInt(2, id_atributo);
+
+                int affectedRows = sentencia.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("No se puede actualizar los datos.");
+                } else if (affectedRows == 1) {
+                    insertado = true;
+                }
+            }
+            this.conexion.commit();
+        } catch (SQLException e) {
+            try {
+                this.conexion.rollback();
+                e.printStackTrace();
+            } catch (SQLException ex) {
+                Logger.getLogger(EventoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
     }
 }
