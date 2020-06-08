@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +34,8 @@ import com.example.funapp.ui.miseventos.MisEventosViewModel;
 import com.example.funapp.ui.miseventos.crear_editar_evento.CrearEditarEventoActivity;
 import com.example.funapp.util.Protocolo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,12 +85,8 @@ public class SuscripcionesFragment extends Fragment implements Protocolo {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(getContext(), CrearEditarEventoActivity.class);
-                intent.putExtra("usuario", usuario);
-                intent.putExtra("accion", INSERTAR_EVENTO);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(intent);
-                }*/
+                IntentIntegrator integrator = new IntentIntegrator(getActivity());
+                integrator.initiateScan();
             }
         });
 

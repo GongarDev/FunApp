@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    app:cardCornerRadius="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/containerEventoAmigos">
+
+        <ImageView
+            android:id="@+id/imgvEventoAmigos"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/adorno_rojo" />
+
+        <TextView
+            android:id="@+id/tvEventoAmigosNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Nombre del evento"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/imgvEventoAmigos"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvEventoAmigosFechaHora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Fecha y hora"
+            android:textColor="@color/color1"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/imgvEventoAmigos"
+            app:layout_constraintTop_toBottomOf="@+id/tvEventoAmigosNombre" />
+
+        <TextView
+            android:id="@+id/tvEventoAmigosSuscritos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="suscritos"
+            android:textColor="@color/color1"
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/imgvEventoAmigos"
+            app:layout_constraintTop_toBottomOf="@+id/tvEventoAmigosFechaHora" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

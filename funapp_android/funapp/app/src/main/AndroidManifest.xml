@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.funapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icono_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -60,7 +63,27 @@
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".activities.MainActivity">
         </activity>
-
+        <activity
+            android:name=".activities.PublicacionesActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/publicaciones"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.EventoDetallesActivity">
+        </activity>
+        <activity
+            android:name=".activities.ValoracionesActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/valoraciones"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.EventoDetallesActivity">
+        </activity>
+        <activity
+            android:name=".activities.UsuarioDetallesActivity"
+            android:theme="@style/AppTheme"
+            android:label="@string/usuario_seleccionado"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.MainActivity">
+        </activity>
     </application>
 
 </manifest>

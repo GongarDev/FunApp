@@ -1,25 +1,42 @@
 package com.example.funapp.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.funapp.R;
+import com.example.funapp.activities.PublicacionesActivity;
+import com.example.funapp.activities.ValoracionesActivity;
 import com.example.funapp.models.Evento;
+import com.example.funapp.models.Publicacion;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.util.Protocolo;
 import com.example.funapp.util.SocketHandler;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
@@ -37,7 +54,10 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
     ImageButton imgbPublicaciones;
     ImageButton imgbValoraciones;
     Button bSuscribirse;
-
+    Button bVerCodigoQR;
+    private OnPublicacionSelected callback;
+    private AlertDialog.Builder builder;
+    private AlertDialog dialog;
     private String mensaje;
     private Gson gson;
     private Integer estadoSesion;
@@ -64,7 +84,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         imgbPublicaciones = view.findViewById(R.id.imgbEventoSeleccionadoPublicaciones);
         imgbValoraciones = view.findViewById(R.id.imgBEventoSeleccionadoValoraciones);
         bSuscribirse = view.findViewById(R.id.bEventoSeleccionadoSuscribirse);
-
+        bVerCodigoQR = view.findViewById(R.id.bVerCodigoQR);
         return view;
     }
 
@@ -108,8 +128,8 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
             tvFechaHora.setText("Empieza el día " + evento.getFecha_evento_LocalDate().format(
                     DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " a las " + evento.getHora_inicio().getHour() + ":0" + evento.getHora_inicio().getMinute());
         else
-        tvFechaHora.setText("Empieza el día " + evento.getFecha_evento_LocalDate().format(
-                DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " a las " + evento.getHora_inicio().getHour() + ":" + evento.getHora_inicio().getMinute());
+            tvFechaHora.setText("Empieza el día " + evento.getFecha_evento_LocalDate().format(
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " a las " + evento.getHora_inicio().getHour() + ":" + evento.getHora_inicio().getMinute());
 
         minutos = evento.getHora_fin().getMinute();
         if (minutos < 10)
@@ -117,50 +137,87 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         else
             tvDuracion.setText("Finaliza sobre las " + evento.getHora_fin().getHour() + ":" + evento.getHora_fin().getMinute());
 
-        tvPublicado.setText("Creado por "+evento.getUsuario().getNombre() + " el " +
+        tvPublicado.setText("Creado por " + evento.getUsuario().getNombre() + " el " +
                 evento.getFecha_publicacion_LocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        //tvEntidad.setText(sendero.getPermiso());
 
         cbCodigoQR.setEnabled(false);
 
-        /*
         imgbPublicaciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), publicacionesEventoActivity.class);
-                intent.putExtra("evento", evento);
-                intent.putExtra("usuario", usuario);
-                intent.putExtra("tipoUsuario", tipoUsuario);
-                startActivity(intent);
+                callback.OnPublicacionSelected(evento);
             }
         });
 
         imgbValoraciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), valoracionesActivity.class);
-                intent.putExtra("evento", evento);
-                intent.putExtra("usuario", usuario);
-                intent.putExtra("tipoUsuario", tipoUsuario);
-                startActivity(intent);
+                if(evento.getFecha_publicacion_LocalDate().isBefore(LocalDate.now())){
+                    Snackbar.make(v, "Podrás ver las valoraciones cuando haya finalizado.", Snackbar.LENGTH_LONG)
+                            .setAction("Cerrar", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                }
+                            })
+                            .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                            .show();
+                }else {
+                    Intent intent = new Intent(getActivity(), ValoracionesActivity.class);
+                    intent.putExtra("evento", evento);
+                    intent.putExtra("usuario", usuario);
+                    intent.putExtra("tipoUsuario", tipoUsuario);
+                    startActivity(intent);
+                }
             }
         });
-         */
 
-        if(tipoUsuario==SESION_ABIERTA_RESPONSABLE || seccion==HISTORIAL_EVENTOS){
+        if (seccion == HISTORIAL_EVENTOS) {
             bSuscribirse.setVisibility(View.GONE);
-        } else {
+            bVerCodigoQR.setVisibility(View.GONE);
+        } else if (seccion == MIS_EVENTOS) {
+            bSuscribirse.setVisibility(View.GONE);
+            bVerCodigoQR.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    verCodigoQR(evento);
+                }
+            });
+        } else if (tipoUsuario == SESION_ABIERTA_RESPONSABLE && seccion != MIS_EVENTOS) {
+            bSuscribirse.setVisibility(View.GONE);
+            bVerCodigoQR.setVisibility(View.GONE);
+        } else if (tipoUsuario == SESION_ABIERTA_ESTANDAR && seccion != MIS_EVENTOS) {
+            bVerCodigoQR.setVisibility(View.GONE);
             bSuscribirse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    suscribirse(evento.getId_evento(), usuario.getId_usuario());
+                    if(existeSuscrito(evento.getId_evento(), usuario.getId_usuario())==EXISTE){
+                        Snackbar.make(getView(), "Ya te suscribiste a este evento.", Snackbar.LENGTH_LONG)
+                                .setAction("Cerrar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                .show();
+                    }else {
+                        suscribirse(evento.getId_evento(), usuario.getId_usuario());
+                        Snackbar.make(getView(), "Te has suscrito a este evento.", Snackbar.LENGTH_LONG)
+                                .setAction("Cerrar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                .show();
+                    }
                 }
             });
         }
     }
 
-    public int obtenerSuscritos(int id_evento){
+    public int obtenerSuscritos(int id_evento) {
 
         int suscritos = 0;
         try {
@@ -176,7 +233,23 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         return suscritos;
     }
 
-    public Integer suscribirse(int id_evento, int id_usuario){
+    public Integer existeSuscrito(int id_evento, int id_usuario) {
+        try {
+            this.mensaje = this.gson.toJson(COMPROBAR_SUSCRITO);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_evento);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
+    }
+
+    public Integer suscribirse(int id_evento, int id_usuario) {
         try {
             this.mensaje = this.gson.toJson(SUSCRIPCIONES_SUSCRIBIRSE);
             SocketHandler.getSalida().writeUTF(this.mensaje);
@@ -190,5 +263,41 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
             e.printStackTrace();
         }
         return this.estadoSesion;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void verCodigoQR(Evento evento) {
+
+        builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.popup_vercodigoqr_evento, null);
+        builder.setView(view);
+        final ImageView imgVCodigoQR = view.findViewById(R.id.imgVVerCodigoQR);
+        try {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.encodeBitmap("evento/"+
+                    evento.getId_evento() + "/" + evento.getNombre() + "/" + evento.getFecha_publicacion_LocalDate().toString(),
+                    BarcodeFormat.QR_CODE, 400, 400);
+            imgVCodigoQR.setImageBitmap(bitmap);
+        } catch (Exception e) {
+        }
+        dialog = builder.create();
+        dialog.show();
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            callback = (OnPublicacionSelected) context;
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "Debería implementar el interfaz OnEventoSelected");
+        }
+    }
+
+    public interface OnPublicacionSelected {
+        public void OnPublicacionSelected(Evento evento);
     }
 }

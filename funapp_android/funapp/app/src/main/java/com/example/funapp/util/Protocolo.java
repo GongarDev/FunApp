@@ -37,6 +37,26 @@ public interface Protocolo {
     public static final Integer SUSCRIPCIONES_DESUSCRIBIRSE = 32;
     public static final Integer INICIO_PROXIMOS = 33;
     public static final Integer INICIO_RECOMENDADOS = 34;
-
-
+    public static final Integer CONSULTAR_PUBLICACIONES = 35;
+    public static final Integer INSERTAR_PUBLICACION = 36;
+    public static final Integer CONSULTAR_VALORACIONES = 37;
+    public static final Integer INSERTAR_VALORACION = 38;
+    public static final Integer COMPROBAR_CODIGO_EVENTO = 39;
+    public static final Integer NO_SUSCRITO_CODIGO = 40;
+    public static final Integer GANADO_PUNTOS_CODIGO = 41;
+    public static final Integer MIS_EVENTOS = 42;
+    public static final Integer EXISTE_ENTIDAD_USUARIO = 43;
+    public static final Integer EXISTE = 44;
+    public static final Integer NO_EXISTE = 45;
+    public static final Integer COMPROBAR_SUSCRITO = 46;
+    public static final Integer AMIGOS_LISTA = 47;
+    public static final Integer AMIGOS_CODIGO = 48;
+    public static final Integer SUSCRIPCIONES_USUARIO = 49;
+    public static final Integer SUSCRIPCIONES_LISTA = 50;
+    public static final Integer ELIMINAR_AMIGO = 51;
+    public static final Integer COMPROBAR_CODIGO_SEGUIDOR = 52;
+    public static final Integer AMIGOS_SIGUIENDO = 53;
+    public static final Integer AMIGOS_EXISTE_SEGUIMIENTO = 54;
+    public static final Integer REPORTAR_INCIDENCIA = 55;
+    public static final Integer ELIMINAR_CUENTA = 56;
 }

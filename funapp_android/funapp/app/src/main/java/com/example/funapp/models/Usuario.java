@@ -18,7 +18,7 @@ public class Usuario implements Serializable {
     private Date fecha_ingreso;
     private String contrasenia;
     private String contrasenia_recup;
-    private String codigo_qr;
+    private String imagen;
 
     public Usuario() {
     }
@@ -31,14 +31,21 @@ public class Usuario implements Serializable {
         this.contrasenia = contrasenia;
     }
 
-    public Usuario(int id_usuario, String seudonimo, String email, Date fecha_nac, Date fecha_ingreso, String contrasenia, String codigo_qr) {
+    public Usuario(int id_usuario, String seudonimo, String email, Date fecha_nac, Date fecha_ingreso, String contrasenia, String imagen) {
         this.id_usuario = id_usuario;
         this.seudonimo = seudonimo;
         this.email = email;
         this.fecha_nac = fecha_nac;
         this.fecha_ingreso = fecha_ingreso;
         this.contrasenia = contrasenia;
-        this.codigo_qr = codigo_qr;
+        this.imagen = imagen;
+    }
+
+    public Usuario(int id_usuario, String seudonimo, Date fecha_ingreso, String imagen) {
+        this.id_usuario = id_usuario;
+        this.seudonimo = seudonimo;
+        this.fecha_ingreso = fecha_ingreso;
+        this.imagen = imagen;
     }
 
     public int getId_usuario() {
@@ -97,12 +104,12 @@ public class Usuario implements Serializable {
         this.contrasenia_recup = contrasenia_recup;
     }
 
-    public String getCodigo_qr() {
-        return codigo_qr;
+    public String getImagen() {
+        return imagen;
     }
 
-    public void setCodigo_qr(String codigo_qr) {
-        this.codigo_qr = codigo_qr;
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

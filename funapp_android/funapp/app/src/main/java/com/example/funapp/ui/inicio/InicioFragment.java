@@ -179,7 +179,7 @@ public class InicioFragment extends Fragment {
                                 }
                             });
 
-                            inicioViewModel.getEventosRecomendados(ubicacion.getCodigo_postal()).observe(getViewLifecycleOwner(), new Observer<List<Evento>>() {
+                            inicioViewModel.getEventosRecomendados(ubicacion.getCodigo_postal(), usuario.getId_usuario()).observe(getViewLifecycleOwner(), new Observer<List<Evento>>() {
                                 @Override
                                 public void onChanged(List<Evento> eventos) {
                                     progressBar.setVisibility(View.GONE);

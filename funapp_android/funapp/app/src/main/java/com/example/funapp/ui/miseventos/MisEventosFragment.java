@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.funapp.R;
 import com.example.funapp.activities.MainActivity;
 import com.example.funapp.adapters.EventoActivoAdapter;
@@ -25,8 +27,11 @@ import com.example.funapp.models.Usuario;
 import com.example.funapp.ui.miseventos.crear_editar_evento.CrearEditarEventoActivity;
 import com.example.funapp.util.Protocolo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class MisEventosFragment extends Fragment implements Protocolo {
@@ -42,7 +47,7 @@ public class MisEventosFragment extends Fragment implements Protocolo {
     private List<Evento> eventosList = new ArrayList<>();
     private List<Evento> eventosActivosList = new ArrayList<>();
     private List<Evento> eventosSuspedidosList = new ArrayList<>();
-    private OnEventoSelected callback;
+    private OnItemMisEventosSelected callback;
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
     private Usuario usuario;
@@ -86,11 +91,24 @@ public class MisEventosFragment extends Fragment implements Protocolo {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), CrearEditarEventoActivity.class);
-                intent.putExtra("usuario", usuario);
-                intent.putExtra("accion", INSERTAR_EVENTO);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(intent);
+                Integer estadoSesion = misEventosViewModel.existeEntidadUsuario(usuario.getId_usuario());
+                if (estadoSesion == NO_EXISTE) {
+                    Snackbar.make(view, "Tienes que completar los datos de perfil para poder crear eventos.", Snackbar.LENGTH_LONG)
+                            .setAction("Cerrar", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                }
+                            })
+                            .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                            .show();
+                } else if (estadoSesion == EXISTE) {
+                    Intent intent = new Intent(getContext(), CrearEditarEventoActivity.class);
+                    intent.putExtra("usuario", usuario);
+                    intent.putExtra("accion", INSERTAR_EVENTO);
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -112,17 +130,17 @@ public class MisEventosFragment extends Fragment implements Protocolo {
                         eventosActivosList = new ArrayList<>();
                         eventosSuspedidosList = new ArrayList<>();
 
-                        for(Evento e: eventosList){
-                            if(e.isActivo()){
+                        for (Evento e : eventosList) {
+                            if (e.isActivo()) {
                                 eventosActivosList.add(e);
-                            }else
+                            } else
                                 eventosSuspedidosList.add(e);
                         }
 
                         eventoActivoAdapter = new EventoActivoAdapter(eventosActivosList, R.layout.list_item_eventos_activos, getActivity(), new EventoActivoAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Evento evento, int position) {
-                                callback.OnEventoSelected(evento);
+                                callback.OnItemMisEventosSelected(evento);
                             }
                         }, new EventoActivoAdapter.OnItemClickListener() {
                             @Override
@@ -139,9 +157,9 @@ public class MisEventosFragment extends Fragment implements Protocolo {
                         }, new EventoActivoAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Evento evento, int position) {
-                                if(evento.isActivo()){
+                                if (evento.isActivo()) {
                                     evento.setActivo(false);
-                                }else{
+                                } else {
                                     evento.setActivo(true);
                                 }
                                 misEventosViewModel.activarEvento(evento);
@@ -154,7 +172,7 @@ public class MisEventosFragment extends Fragment implements Protocolo {
                         eventoSuspendidoAdapter = new EventoSuspendidoAdapter(eventosSuspedidosList, R.layout.list_item_eventos_suspendido, getActivity(), new EventoSuspendidoAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Evento evento, int position) {
-                                callback.OnEventoSelected(evento);
+                                callback.OnItemMisEventosSelected(evento);
                             }
                         }, new EventoSuspendidoAdapter.OnItemClickListener() {
                             @Override
@@ -170,9 +188,9 @@ public class MisEventosFragment extends Fragment implements Protocolo {
                         }, new EventoSuspendidoAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Evento evento, int position) {
-                                if(evento.isActivo()){
+                                if (evento.isActivo()) {
                                     evento.setActivo(false);
-                                }else{
+                                } else {
                                     evento.setActivo(true);
                                 }
                                 misEventosViewModel.activarEvento(evento);
@@ -190,10 +208,8 @@ public class MisEventosFragment extends Fragment implements Protocolo {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         try {
-            callback = (OnEventoSelected) context;
-
+            callback = (OnItemMisEventosSelected) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "Debería implementar el interfaz OnEventoSelected");
         }
@@ -205,8 +221,8 @@ public class MisEventosFragment extends Fragment implements Protocolo {
         misEventosViewModel.cargarEventos(usuario.getId_usuario());
     }
 
-    public interface OnEventoSelected {
-        public void OnEventoSelected(Evento evento);
+    public interface OnItemMisEventosSelected {
+        public void OnItemMisEventosSelected(Evento evento);
     }
 
     public Usuario getUsuario() {

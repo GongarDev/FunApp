@@ -39,14 +39,17 @@ public class MisEventosViewModel extends AndroidViewModel implements Protocolo {
     public void cargarEventos(int id_usuario){
 
         try {
-            this.mensaje = this.gson.toJson(VER_EVENTOS_RESPONSABLE);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = this.gson.toJson(id_usuario);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
-            this.eventosList.setValue(
-                    (ArrayList) this.gson.fromJson(
-                    this.mensaje, new TypeToken<ArrayList<Evento>>(){}.getType()));
+            if(SocketHandler.getSalida()!=null) {
+                this.mensaje = this.gson.toJson(VER_EVENTOS_RESPONSABLE);
+                SocketHandler.getSalida().writeUTF(this.mensaje);
+                this.mensaje = this.gson.toJson(id_usuario);
+                SocketHandler.getSalida().writeUTF(this.mensaje);
+                this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+                this.eventosList.setValue(
+                        (ArrayList) this.gson.fromJson(
+                                this.mensaje, new TypeToken<ArrayList<Evento>>() {
+                                }.getType()));
+            }
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,6 +60,20 @@ public class MisEventosViewModel extends AndroidViewModel implements Protocolo {
             this.mensaje = this.gson.toJson(ACTIVAR_EVENTO);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = this.gson.toJson(evento);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
+    }
+
+    public Integer existeEntidadUsuario(int id_usuario){
+        try {
+            this.mensaje = this.gson.toJson(EXISTE_ENTIDAD_USUARIO);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = (String) SocketHandler.getEntrada().readUTF();
             this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);

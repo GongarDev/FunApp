@@ -43,10 +43,10 @@ public class InicioViewModel extends AndroidViewModel implements Protocolo {
         return eventosProximosList;
     }
 
-    public LiveData<List<Evento>> getEventosRecomendados(String codigo_postal) {
+    public LiveData<List<Evento>> getEventosRecomendados(String codigo_postal, int id_usuario) {
         if (eventosRecomendadosList==null){
             eventosRecomendadosList= new MutableLiveData<>();
-            cargarEventosRecomendados(codigo_postal);
+            cargarEventosRecomendados(codigo_postal, id_usuario);
         }
         return eventosRecomendadosList;
     }
@@ -54,25 +54,30 @@ public class InicioViewModel extends AndroidViewModel implements Protocolo {
     public void cargarEventosProximos(String codigo_postal){
 
         try {
-            this.mensaje = this.gson.toJson(INICIO_PROXIMOS);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = this.gson.toJson(codigo_postal);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
-            this.eventosProximosList.setValue(
-                    (ArrayList) this.gson.fromJson(
-                            this.mensaje, new TypeToken<ArrayList<Evento>>(){}.getType()));
+            if(SocketHandler.getSalida()!=null) {
+                this.mensaje = this.gson.toJson(INICIO_PROXIMOS);
+                SocketHandler.getSalida().writeUTF(this.mensaje);
+                this.mensaje = this.gson.toJson(codigo_postal);
+                SocketHandler.getSalida().writeUTF(this.mensaje);
+                this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+                this.eventosProximosList.setValue(
+                        (ArrayList) this.gson.fromJson(
+                                this.mensaje, new TypeToken<ArrayList<Evento>>() {
+                                }.getType()));
+            }
         }catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void cargarEventosRecomendados(String codigo_postal){
+    public void cargarEventosRecomendados(String codigo_postal, int id_usuario){
 
         try {
             this.mensaje = this.gson.toJson(INICIO_RECOMENDADOS);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = this.gson.toJson(codigo_postal);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = (String) SocketHandler.getEntrada().readUTF();
             List<Evento> listaEventos = (ArrayList) this.gson.fromJson(

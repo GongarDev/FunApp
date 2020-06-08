@@ -22,7 +22,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class EventoDetallesActivity extends AppCompatActivity implements OnMapReadyCallback, Protocolo {
+public class EventoDetallesActivity extends AppCompatActivity implements OnMapReadyCallback, Protocolo,
+        EventoDetallesFragment.OnPublicacionSelected{
 
     private Evento evento;
     private Usuario usuario;
@@ -85,5 +86,17 @@ public class EventoDetallesActivity extends AppCompatActivity implements OnMapRe
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
+    }
+
+    @Override
+    public void OnPublicacionSelected(Evento evento) {
+        Intent intent= new Intent(this, PublicacionesActivity.class);
+        intent.putExtra("evento", this.evento);
+        intent.putExtra("usuario", usuario);
+        intent.putExtra("tipoUsuario", tipoUsuario);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        finish();
     }
 }

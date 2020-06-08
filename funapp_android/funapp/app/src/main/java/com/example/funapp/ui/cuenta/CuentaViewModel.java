@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.funapp.models.Entidad;
 import com.example.funapp.models.Evento;
+import com.example.funapp.models.Incidencia;
 import com.example.funapp.models.Tematica;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.models.UsuarioEstandar;
@@ -115,6 +116,34 @@ public class CuentaViewModel extends AndroidViewModel implements Protocolo {
             this.mensaje = this.gson.toJson(ACTUALIZAR_USUARIO_ESTANDAR);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = this.gson.toJson(usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
+    }
+
+    public Integer reportarIncidencia(Incidencia incidencia){
+        try {
+            this.mensaje = this.gson.toJson(REPORTAR_INCIDENCIA);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(incidencia);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
+    }
+
+    public Integer eliminarCuenta(int id_usuario){
+        try {
+            this.mensaje = this.gson.toJson(ELIMINAR_CUENTA);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = (String) SocketHandler.getEntrada().readUTF();
             this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);

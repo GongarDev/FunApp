@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.funapp.models.Evento;
 import com.example.funapp.util.Protocolo;
@@ -75,6 +74,22 @@ public class SuscripcionesViewModel extends AndroidViewModel implements Protocol
     public Integer desuscribirseEvento(int id_evento, int id_usuario){
         try {
             this.mensaje = this.gson.toJson(SUSCRIPCIONES_DESUSCRIBIRSE);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_evento);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            this.estadoSesion = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.estadoSesion;
+    }
+
+    public Integer lecturaQR(int id_evento, int id_usuario){
+        try {
+            this.mensaje = this.gson.toJson(COMPROBAR_CODIGO_EVENTO);
             SocketHandler.getSalida().writeUTF(this.mensaje);
             this.mensaje = this.gson.toJson(id_evento);
             SocketHandler.getSalida().writeUTF(this.mensaje);

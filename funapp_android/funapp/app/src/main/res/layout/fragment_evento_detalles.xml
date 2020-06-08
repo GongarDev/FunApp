@@ -18,7 +18,7 @@
         <TextView
             android:id="@+id/tvEventoSeleccionadoNombre"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="16dp"
@@ -49,7 +49,6 @@
             android:layout_height="56dp"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:text="Descripcion sobre el evento seleccionado que puede ocupar varias lineas"
@@ -65,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="Creado por usuario resp. en 05/05/21"
@@ -232,6 +231,22 @@
             app:layout_constraintEnd_toStartOf="@+id/tvEventoSelecionadoPublicaciones"
             app:layout_constraintTop_toBottomOf="@+id/cbBonificaciones"
             app:srcCompat="@android:drawable/stat_notify_chat" />
+
+        <Button
+            android:id="@+id/bVerCodigoQR"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginRight="64dp"
+            android:background="@color/color2"
+            android:text=" Ver codigo QR"
+            android:textColor="@color/color4"
+            app:layout_constraintEnd_toStartOf="@+id/cbBonificaciones"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bEventoSeleccionadoSuscribirse" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

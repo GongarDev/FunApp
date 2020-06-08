@@ -5,41 +5,31 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.funapp.R;
 import com.example.funapp.models.Evento;
-import com.example.funapp.util.SocketHandler;
-import com.google.gson.Gson;
-
-import java.io.IOException;
+import com.example.funapp.models.Publicacion;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.ViewHolder> {
 
-    private List<Evento> eventos;
+    private List<Publicacion> publicaciones;
     private int layout;
     private Activity activity;
-    private OnItemClickListener listenerItem;
-    private String mensaje;
-    private Gson gson;
 
-    public PublicacionAdapter(List<Evento> eventos, int layout, Activity activity, OnItemClickListener listenerItem) {
-
-        this.eventos = eventos;
+    public PublicacionAdapter(List<Publicacion> publicaciones, int layout, Activity activity) {
+        this.publicaciones = publicaciones;
         this.layout = layout;
         this.activity = activity;
-        this.listenerItem = listenerItem;
-        this.gson = new Gson();
     }
 
     @NonNull
     @Override
     public PublicacionAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-
         View v = LayoutInflater.from(activity).inflate(layout, viewGroup, false);
         PublicacionAdapter.ViewHolder viewHolder = new PublicacionAdapter.ViewHolder(v);
         return viewHolder;
@@ -49,50 +39,32 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     @Override
     public void onBindViewHolder(@NonNull PublicacionAdapter.ViewHolder viewHolder, final int i) {
 
-        final Evento evento = eventos.get(i);
-        viewHolder.imgvEvento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listenerItem.onItemClick(evento, i);
-            }
-        });
+        final Publicacion publicacion = publicaciones.get(i);
+
+        viewHolder.tvMensaje.setText(publicacion.getMensaje());
+        viewHolder.tvFecha.setText("Publicado el " + publicacion.getFecha_publicacion_LocalDate().
+                format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " a las " +
+                publicacion.getHora().getHour() +":"+ publicacion.getHora().getMinute());
     }
 
     @Override
     public int getItemCount() {
-        return eventos.size();
+        return publicaciones.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ConstraintLayout container;
-        ImageView imgvEvento;
+        TextView tvMensaje;
+        TextView tvFecha;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            container = itemView.findViewById(R.id.containerPublicaciones);
-            imgvEvento = itemView.findViewById(R.id.imgvPublicaciones);
+            tvMensaje = itemView.findViewById(R.id.tvPublicacionesMensaje);
+            tvFecha = itemView.findViewById(R.id.tvPublicacionesFecha);
         }
-    }
-
-    public int obtenerImagen(int id_evento){
-
-        int suscritos = 0;
-        try {
-            //this.mensaje = this.gson.toJson(DESCARGAR_IMAGEN);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = this.gson.toJson(id_evento);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
-            suscritos = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return suscritos;
     }
 
     public interface OnItemClickListener {
         void onItemClick(Evento evento, int position);
     }
 }
-
