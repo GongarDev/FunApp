@@ -27,6 +27,9 @@ public class Evento implements Serializable {
     private UsuarioResponsable usuario;
     private boolean activo;
     
+    public Evento(){
+    }
+    
     public Evento(int id_evento, String nombre, String descripcion, Date fecha_publicacion, Date fecha_evento, 
             LocalTime hora_inicio, LocalTime hora_fin, HashSet<Ubicacion> ubicaciones, 
             String codigoQR, Tematica tematica, UsuarioResponsable usuario, boolean activo) {
