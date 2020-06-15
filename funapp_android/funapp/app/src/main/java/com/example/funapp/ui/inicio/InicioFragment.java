@@ -28,16 +28,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.funapp.R;
 import com.example.funapp.activities.MainActivity;
+import com.example.funapp.adapters.AnuncioAdapter;
 import com.example.funapp.adapters.EventoActivoAdapter;
 import com.example.funapp.adapters.EventoInicioAdapter;
 import com.example.funapp.adapters.EventoSuspendidoAdapter;
 import com.example.funapp.adapters.EventoTematicaAdapter;
+import com.example.funapp.models.Anuncio;
 import com.example.funapp.models.Evento;
 import com.example.funapp.models.Ubicacion;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.ui.explorar.EventosTematica.EventosTematicaActivity;
 import com.example.funapp.ui.miseventos.MisEventosFragment;
 import com.example.funapp.ui.miseventos.crear_editar_evento.CrearEditarEventoActivity;
+import com.example.funapp.util.Protocolo;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.GeoDataClient;
@@ -54,22 +57,27 @@ import java.util.Locale;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
-public class InicioFragment extends Fragment {
+public class InicioFragment extends Fragment implements Protocolo {
 
     private InicioViewModel inicioViewModel;
     private RecyclerView recyclerViewEventosProximos;
     private RecyclerView recyclerViewEventosRecomendados;
+    private RecyclerView recyclerViewAnuncios;
     private RecyclerView.LayoutManager layoutManagerProximos;
     private RecyclerView.LayoutManager layoutManagerRecomendados;
+    private RecyclerView.LayoutManager layoutManagerAnuncios;
     private EventoInicioAdapter adapterProximos;
     private EventoInicioAdapter adapterRecomendados;
+    private AnuncioAdapter adapterAnuncios;
     private List<Evento> eventosProximosList = new ArrayList<>();
     private List<Evento> eventosRecomendadosList = new ArrayList<>();
+    private List<Anuncio> anunciosList = new ArrayList<>();
     private OnEventoSelected callback;
     private Usuario usuario;
     private Integer estadoSesion;
     private ProgressBar progressBar;
-
+    private TextView tvRecomendados;
+    private View separatorRecomendados;
     GeoDataClient mGeoDataClient;
     PlaceDetectionClient mPlaceDetectionClient;
     FusedLocationProviderClient mFusedLocationProviderClient;
@@ -94,8 +102,10 @@ public class InicioFragment extends Fragment {
 
         recyclerViewEventosProximos = root.findViewById(R.id.rvInicio);
         recyclerViewEventosRecomendados = root.findViewById(R.id.rvInicio2);
+        recyclerViewAnuncios = root.findViewById(R.id.rvAnuncios);
         layoutManagerProximos = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         layoutManagerRecomendados = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManagerAnuncios = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewEventosProximos.setLayoutManager(layoutManagerProximos);
         recyclerViewEventosProximos.setHasFixedSize(true);
 
@@ -109,6 +119,21 @@ public class InicioFragment extends Fragment {
         recyclerViewEventosRecomendados.setItemViewCacheSize(20);
         recyclerViewEventosRecomendados.setDrawingCacheEnabled(true);
         recyclerViewEventosRecomendados.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+        recyclerViewAnuncios.setLayoutManager(layoutManagerAnuncios);
+        recyclerViewAnuncios.setHasFixedSize(true);
+
+        recyclerViewAnuncios.setItemViewCacheSize(20);
+        recyclerViewAnuncios.setDrawingCacheEnabled(true);
+        recyclerViewAnuncios.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
+        estadoSesion = ((MainActivity) getActivity()).getTipoUsuario();
+        tvRecomendados = root.findViewById(R.id.tvInicio2);
+        separatorRecomendados = root.findViewById(R.id.viewInicio2);
+        if (estadoSesion == SESION_ABIERTA_RESPONSABLE) {
+            tvRecomendados.setVisibility(View.GONE);
+            separatorRecomendados.setVisibility(View.GONE);
+        }
 
         progressBar = root.findViewById(R.id.pbInicio);
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getContext().getSystemService(CONNECTIVITY_SERVICE);
@@ -162,6 +187,18 @@ public class InicioFragment extends Fragment {
                         if (task.isSuccessful()) {
                             mLastKnownLocation = (Location) task.getResult();
                             Ubicacion ubicacion = getUbicacion();
+
+                            inicioViewModel.getAnuncios().observe(getViewLifecycleOwner(), new Observer<List<Anuncio>>() {
+                                @Override
+                                public void onChanged(List<Anuncio> anuncios) {
+                                    if (anuncios != null) {
+                                        anunciosList = anuncios;
+                                        adapterAnuncios = new AnuncioAdapter(anunciosList, R.layout.list_item_anuncio, getActivity());
+                                        recyclerViewAnuncios.setAdapter(adapterAnuncios);
+                                    }
+                                }
+                            });
+
                             inicioViewModel.getEventosProximos(ubicacion.getCodigo_postal()).observe(getViewLifecycleOwner(), new Observer<List<Evento>>() {
                                 @Override
                                 public void onChanged(List<Evento> eventos) {
@@ -179,22 +216,24 @@ public class InicioFragment extends Fragment {
                                 }
                             });
 
-                            inicioViewModel.getEventosRecomendados(ubicacion.getCodigo_postal(), usuario.getId_usuario()).observe(getViewLifecycleOwner(), new Observer<List<Evento>>() {
-                                @Override
-                                public void onChanged(List<Evento> eventos) {
-                                    progressBar.setVisibility(View.GONE);
-                                    if (eventos != null) {
-                                        eventosRecomendadosList = eventos;
-                                        adapterRecomendados = new EventoInicioAdapter(eventosRecomendadosList, R.layout.list_item_eventos_inicio, getActivity(), new EventoInicioAdapter.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(Evento evento, int position) {
-                                                callback.OnEventoSelected(evento);
-                                            }
-                                        });
-                                        recyclerViewEventosRecomendados.setAdapter(adapterRecomendados);
+                            if (estadoSesion == SESION_ABIERTA_ESTANDAR) {
+                                inicioViewModel.getEventosRecomendados(ubicacion.getCodigo_postal(), usuario.getId_usuario()).observe(getViewLifecycleOwner(), new Observer<List<Evento>>() {
+                                    @Override
+                                    public void onChanged(List<Evento> eventos) {
+                                        progressBar.setVisibility(View.GONE);
+                                        if (eventos != null) {
+                                            eventosRecomendadosList = eventos;
+                                            adapterRecomendados = new EventoInicioAdapter(eventosRecomendadosList, R.layout.list_item_eventos_inicio, getActivity(), new EventoInicioAdapter.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(Evento evento, int position) {
+                                                    callback.OnEventoSelected(evento);
+                                                }
+                                            });
+                                            recyclerViewEventosRecomendados.setAdapter(adapterRecomendados);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });

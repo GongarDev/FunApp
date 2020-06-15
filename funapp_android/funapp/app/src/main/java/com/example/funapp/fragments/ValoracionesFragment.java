@@ -141,7 +141,7 @@ public class ValoracionesFragment extends Fragment implements Protocolo {
                     Evento evento = new Evento();
                     evento.setId_evento(getId_evento());
                     Valoracion valoracion = new Valoracion(etMensajePublicacion.getText().toString(),
-                            ratingBarValoracion.getNumStars(), usuario, evento);
+                            ratingBarValoracion.getRating(), usuario, evento);
                     valoracionesViewModel.insertarValoracion(valoracion);
                     dialog.dismiss();
                     valoracionesViewModel.cargarValoraciones(getId_evento());

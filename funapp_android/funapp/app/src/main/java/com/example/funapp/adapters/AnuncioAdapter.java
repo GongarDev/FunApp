@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.funapp.R;
+import com.example.funapp.models.Anuncio;
 import com.example.funapp.models.Evento;
 import com.example.funapp.util.SocketHandler;
 import com.google.gson.Gson;
@@ -20,20 +23,15 @@ import java.util.List;
 
 public class AnuncioAdapter extends RecyclerView.Adapter<AnuncioAdapter.ViewHolder> {
 
-    private List<Evento> eventos;
+    private List<Anuncio> anunciosList;
     private int layout;
     private Activity activity;
     private OnItemClickListener listenerItem;
-    private String mensaje;
-    private Gson gson;
 
-    public AnuncioAdapter(List<Evento> eventos, int layout, Activity activity, OnItemClickListener listenerItem) {
-
-        this.eventos = eventos;
+    public AnuncioAdapter(List<Anuncio> anunciosList, int layout, Activity activity) {
+        this.anunciosList = anunciosList;
         this.layout = layout;
         this.activity = activity;
-        this.listenerItem = listenerItem;
-        this.gson = new Gson();
     }
 
     @NonNull
@@ -49,50 +47,30 @@ public class AnuncioAdapter extends RecyclerView.Adapter<AnuncioAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull AnuncioAdapter.ViewHolder viewHolder, final int i) {
 
-        final Evento evento = eventos.get(i);
-        viewHolder.imgvEvento.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listenerItem.onItemClick(evento, i);
-            }
-        });
+        final Anuncio anuncios = anunciosList.get(i);
+        viewHolder.tvTitulo.setText(anuncios.getNombre());
+        viewHolder.tvDescripcion.setText(anuncios.getMensaje());
     }
 
     @Override
     public int getItemCount() {
-        return eventos.size();
+        return anunciosList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ConstraintLayout container;
-        ImageView imgvEvento;
+        TextView tvTitulo;
+        TextView tvDescripcion;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            container = itemView.findViewById(R.id.containerPublicaciones);
-            //imgvEvento = itemView.findViewById(R.id.imgvPublicaciones);
+            tvTitulo = itemView.findViewById(R.id.tvAnunciosTitulo);
+            tvDescripcion = itemView.findViewById(R.id.tvAnunciosDescripcion);
         }
-    }
-
-    public int obtenerImagen(int id_evento){
-
-        int suscritos = 0;
-        try {
-            //this.mensaje = this.gson.toJson(DESCARGAR_IMAGEN);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = this.gson.toJson(id_evento);
-            SocketHandler.getSalida().writeUTF(this.mensaje);
-            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
-            suscritos = (Integer) this.gson.fromJson(this.mensaje, Integer.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return suscritos;
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Evento evento, int position);
+        void onItemClick(Anuncio anuncio, int position);
     }
 }
 

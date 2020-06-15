@@ -195,7 +195,7 @@ public class CuentaFragment extends Fragment implements Protocolo {
                             !TextUtils.isEmpty(etEntidadTelefono.getText()) &&
                             !TextUtils.isEmpty(etEntidadCodigoPostal.getText())) {
 
-                        if (!switchConfirmar.isActivated()) {
+                        if (!switchConfirmar.isChecked()) {
                             Snackbar.make(view, "Tienes que aceptar las condiciones de responsabilidad.", Snackbar.LENGTH_LONG)
                                     .setAction("Cerrar", new View.OnClickListener() {
                                         @Override
@@ -216,7 +216,7 @@ public class CuentaFragment extends Fragment implements Protocolo {
 
                             UsuarioResponsable usuarioRes = new UsuarioResponsable(etCuentaDNI.getText().toString(), etCuentaNombre.getText().toString(),
                                     etCuentaApellidos.getText().toString(), etCuentaTelefono.getText().toString(), usuario.getId_usuario(), etCuentaSeudonimo.getText().toString(),
-                                    etCuentaCorreo.getText().toString(), fechaNacimientoDate, null, encriptacion(etCuentaContrasenia.getText().toString()), null);
+                                    etCuentaCorreo.getText().toString(), fechaNacimientoDate, null, encriptacion(etCuentaContrasenia.getText().toString()), usuario.getImagen());
 
                             estadoSesion = cuentaViewModel.actualizarUsuarioResponsable(usuarioRes);
                             if (estadoSesion == ACTUALIZAR_EXITO) {
@@ -232,6 +232,7 @@ public class CuentaFragment extends Fragment implements Protocolo {
 
                             estadoSesion = cuentaViewModel.actualizarEntidad(e);
                             if (estadoSesion == ACTUALIZAR_EXITO) {
+                                ((MainActivity) getActivity()).actualizarPerfilEstadisticas();
                                 Toast.makeText(getActivity(), "La entidad se ha actualizado con éxito", Toast.LENGTH_SHORT).show();
                             } else if (estadoSesion == ACTUALIZAR_FALLIDO) {
                                 Toast.makeText(getActivity(), "No se ha podido actualizar la entidad", Toast.LENGTH_SHORT).show();
@@ -330,10 +331,12 @@ public class CuentaFragment extends Fragment implements Protocolo {
                         u.setContrasenia(encriptacion(etCuentaContrasenia.getText().toString()));
                         u.setFecha_nac(fechaNacimientoDate);
                         u.setEmail(etCuentaCorreo.getText().toString());
+                        u.setImagen(usuario.getImagen());
 
                         estadoSesion = cuentaViewModel.actualizarUsuarioEstandar(u);
 
                         if (estadoSesion == ACTUALIZAR_EXITO) {
+                            ((MainActivity) getActivity()).actualizarPerfilEstadisticas();
                             Toast.makeText(getActivity(), "El usuario se ha actualizado con éxito", Toast.LENGTH_SHORT).show();
                         } else if (estadoSesion == ACTUALIZAR_FALLIDO) {
                             Toast.makeText(getActivity(), "No se ha podido actualizar el usuario", Toast.LENGTH_SHORT).show();
@@ -349,6 +352,22 @@ public class CuentaFragment extends Fragment implements Protocolo {
                                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                                 .show();
                     }
+                }
+            });
+
+            TextView tvInicidencia = root.findViewById(R.id.tvReportar2);
+            tvInicidencia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popupReportar();
+                }
+            });
+
+            TextView tvDarBaja = root.findViewById(R.id.tvDarBajaClick);
+            tvDarBaja.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popupDarBaja();
                 }
             });
         }
@@ -401,7 +420,7 @@ public class CuentaFragment extends Fragment implements Protocolo {
             @Override
             public void onClick(View view) {
                 if (!TextUtils.isEmpty(etIncidencia.getText())) {
-                    Incidencia incidencia = new Incidencia(etIncidencia.getText().toString(), usuario.getId_usuario());
+                    Incidencia incidencia = new Incidencia(0, etIncidencia.getText().toString(),null, usuario.getId_usuario());
                     estadoSesion = cuentaViewModel.reportarIncidencia(incidencia);
                     if (estadoSesion == INSERTAR_EXITO) {
                         Snackbar.make(view, "Se ha enviado el reporte a FunApp, se revisará lo antes posible, gracias.", Snackbar.LENGTH_LONG)

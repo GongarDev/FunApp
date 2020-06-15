@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,12 +31,14 @@ import com.example.funapp.adapters.EventoActivoAdapter;
 import com.example.funapp.adapters.EventoSuscritoAdapter;
 import com.example.funapp.adapters.EventoSuspendidoAdapter;
 import com.example.funapp.models.Evento;
+import com.example.funapp.models.Incidencia;
 import com.example.funapp.models.Usuario;
 import com.example.funapp.ui.miseventos.MisEventosFragment;
 import com.example.funapp.ui.miseventos.MisEventosViewModel;
 import com.example.funapp.ui.miseventos.crear_editar_evento.CrearEditarEventoActivity;
 import com.example.funapp.util.Protocolo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -113,7 +118,7 @@ public class SuscripcionesFragment extends Fragment implements Protocolo {
                         }, new EventoSuscritoAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Evento evento, int position) {
-                                suscripcionesViewModel.desuscribirseEvento(evento.getId_evento(), usuario.getId_usuario());
+                                popupDesuscribirse(evento.getId_evento());
                             }
                         });
                         recyclerView.setAdapter(adapter);
@@ -122,6 +127,46 @@ public class SuscripcionesFragment extends Fragment implements Protocolo {
             });
         }
         return root;
+    }
+
+    private void popupDesuscribirse(int id_evento) {
+
+        builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.popup_confirmacion, null);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
+        TextView tvDesuscribirse = view.findViewById(R.id.tvPopupConfirmacion);
+        tvDesuscribirse.setText("¿Estás seguro que quieres desuscribirte?");
+        Button bEnviar = view.findViewById(R.id.bPopupConfirmar);
+        Button bCancelar = view.findViewById(R.id.bPopupCancelar);
+
+        bEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    estadoSesion = suscripcionesViewModel.desuscribirseEvento(id_evento, usuario.getId_usuario());
+                    if (estadoSesion == ACTUALIZAR_EXITO) {
+                        suscripcionesViewModel.cargarEventosSuscritos(usuario.getId_usuario());
+                        Snackbar.make(view, "Se ha desuscrito del evento.", Snackbar.LENGTH_LONG)
+                                .setAction("Cerrar", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+
+                                    }
+                                })
+                                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
+                                .show();
+                        dialog.dismiss();
+                    }
+
+            }
+        });
+        bCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override

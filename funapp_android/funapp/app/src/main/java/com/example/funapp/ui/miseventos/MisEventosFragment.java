@@ -41,17 +41,13 @@ public class MisEventosFragment extends Fragment implements Protocolo {
     private RecyclerView recyclerViewSuspendidos;
     private RecyclerView.LayoutManager layoutManagerActivos;
     private RecyclerView.LayoutManager layoutManagerSuspendidos;
-
     private EventoActivoAdapter eventoActivoAdapter;
     private EventoSuspendidoAdapter eventoSuspendidoAdapter;
     private List<Evento> eventosList = new ArrayList<>();
     private List<Evento> eventosActivosList = new ArrayList<>();
     private List<Evento> eventosSuspedidosList = new ArrayList<>();
     private OnItemMisEventosSelected callback;
-    private AlertDialog.Builder builder;
-    private AlertDialog dialog;
     private Usuario usuario;
-    private Integer estadoSesion;
     private ProgressBar progressBar;
 
     public MisEventosFragment() {

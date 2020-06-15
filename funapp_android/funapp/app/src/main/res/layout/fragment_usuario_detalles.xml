@@ -15,13 +15,197 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvEliminarAmigo" />
+
+        <TextView
+            android:id="@+id/tvEstadoEntretenimientolvl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:text="lvl 0"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoEntretenimiento3"
+            app:layout_constraintTop_toBottomOf="@+id/tvEstadoDeportivolvl3" />
+
+        <TextView
+            android:id="@+id/tvEstadoDeportivolvl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:text="lvl 0"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoDeportivo3"
+            app:layout_constraintTop_toBottomOf="@+id/tvEstadoSociallvl3" />
+
+        <TextView
+            android:id="@+id/tvEstadoSociallvl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:text="lvl 0"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoSocial3"
+            app:layout_constraintTop_toBottomOf="@+id/tvEstadoGastronomicolvl3" />
+
+        <TextView
+            android:id="@+id/tvEstadoGastronomicolvl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="24dp"
+            android:text="lvl 0"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoGastronomico3"
+            app:layout_constraintTop_toBottomOf="@+id/tvEstadoCulturallvl3" />
+
+        <TextView
+            android:id="@+id/tvEstadoCulturallvl3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:text="lvl 0"
+            android:textColor="@color/color1"
+            app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoCultural3"
+            app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+        <TextView
+            android:id="@+id/tvPerfilEstadoCultural3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:text="Cultural"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+        <ProgressBar
+            android:id="@+id/pBPerfilEstadoCultural3"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoCultural3" />
+
+        <TextView
+            android:id="@+id/tvPerfilEstadoGastronomico3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:text="Gastronómico"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoCultural3" />
+
+        <ProgressBar
+            android:id="@+id/pBPerfilEstadoGastronomico3"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoGastronomico3" />
+
+        <TextView
+            android:id="@+id/tvPerfilEstadoSocial3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:text="Compromiso social"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoGastronomico3" />
+
+        <ProgressBar
+            android:id="@+id/pBPerfilEstadoSocial3"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoSocial3" />
+
+        <TextView
+            android:id="@+id/tvPerfilEstadoDeportivo3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:text="Deportivo"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoSocial3" />
+
+        <ProgressBar
+            android:id="@+id/pBPerfilEstadoDeportivo3"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoDeportivo3" />
+
+        <TextView
+            android:id="@+id/tvPerfilEstadoEntretenimiento3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
+            android:text="Entretenimiento"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoDeportivo3" />
+
+        <ProgressBar
+            android:id="@+id/pBPerfilEstadoEntretenimiento3"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginLeft="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoEntretenimiento3" />
+
         <TextView
             android:id="@+id/tvUsuarioSeleccionadoNombre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:text="Nombre usuario"
@@ -55,8 +239,9 @@
             android:text="Usuario desde 05/05/21"
             android:textColor="@color/color1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imgvUsuarioSelecionado"
-            app:layout_constraintTop_toBottomOf="@+id/tvUsuarioSeleccionadoNombre" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAmigosNivel" />
 
         <View
             android:id="@+id/divider"
@@ -83,13 +268,13 @@
             android:textColor="@color/color1"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgvUsuarioSelecionado" />
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoEntretenimiento3" />
 
         <TextView
             android:id="@+id/tvEliminarAmigo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="Dejar seguimiento mutuo"
@@ -112,6 +297,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <TextView
+            android:id="@+id/tvAmigosNivel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="Nivel 0"
+            android:textColor="@color/color1"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imgvUsuarioSelecionado"
+            app:layout_constraintTop_toBottomOf="@+id/tvUsuarioSeleccionadoNombre" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

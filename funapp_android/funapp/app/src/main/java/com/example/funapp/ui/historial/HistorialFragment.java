@@ -78,7 +78,6 @@ public class HistorialFragment extends Fragment implements Protocolo {
                 public void onChanged(List<Evento> eventos) {
 
                     progressBar.setVisibility(View.GONE);
-
                     if (eventos != null) {
                         eventosList = eventos;
 

@@ -9,36 +9,40 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+public class Anuncio implements Serializable {
 
-public class Incidencia implements Serializable {
-
-    private int id_incidencia;
-    private String tipo;
-    private String descripcion;
+    private int id_anuncio;
+    private String nombre;
+    private String mensaje;
     private Date fecha;
     private int id_usuario;
 
-    public Incidencia(int id_incidencia, String descripcion, Date fecha, int id_usuario) {
-        this.id_incidencia = id_incidencia;
-        this.descripcion = descripcion;
+    public Anuncio(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public Anuncio(int id_anuncio, String nombre, String mensaje, Date fecha, int id_usuario) {
+        this.id_anuncio = id_anuncio;
+        this.nombre = nombre;
+        this.mensaje = mensaje;
         this.fecha = fecha;
         this.id_usuario = id_usuario;
     }
 
-    public String getTipo() {
-        return tipo;
+    public int getId_anuncio() {
+        return id_anuncio;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setId_anuncio(int id_anuncio) {
+        this.id_anuncio = id_anuncio;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getMensaje() {
+        return mensaje;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 
     public Date getFecha() {
@@ -49,12 +53,12 @@ public class Incidencia implements Serializable {
         this.fecha = fecha;
     }
 
-    public int getId_incidencia() {
-        return id_incidencia;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setId_incidencia(int id_incidencia) {
-        this.id_incidencia = id_incidencia;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public int getId_usuario() {
@@ -70,4 +74,3 @@ public class Incidencia implements Serializable {
         return getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }
-

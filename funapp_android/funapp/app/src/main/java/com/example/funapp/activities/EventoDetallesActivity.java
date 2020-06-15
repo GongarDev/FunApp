@@ -1,6 +1,8 @@
 package com.example.funapp.activities;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +23,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import static com.example.funapp.util.SocketHandler.getContext;
 
 public class EventoDetallesActivity extends AppCompatActivity implements OnMapReadyCallback, Protocolo,
         EventoDetallesFragment.OnPublicacionSelected{
@@ -69,6 +77,17 @@ public class EventoDetallesActivity extends AppCompatActivity implements OnMapRe
         MarkerOptions markerOptions = new MarkerOptions();
         if(evento.getUbicacionesList()!=null && !evento.getUbicacionesList().isEmpty()) {
             Ubicacion ubicacion = evento.getUbicacionesList().get(0);
+            if(ubicacion.getLatitud()==0.0 || ubicacion.getLatitud()==0){
+                List<Address> addresses = null;
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                try {
+                    addresses = geocoder.getFromLocationName(ubicacion.getCalle(), 20);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                ubicacion.setLatitud(addresses.get(0).getLatitude());
+                ubicacion.setLongitud(addresses.get(0).getLongitude());
+            }
             markerOptions.position(new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud()));
             markerOptions.title(ubicacion.getCalle());
             mMap.animateCamera(CameraUpdateFactory.newLatLng(

@@ -175,6 +175,17 @@ public class MapaFragment extends Fragment implements Protocolo, OnMapReadyCallb
                                             if (e.getUbicacionesList() != null && !e.getUbicacionesList().isEmpty()) {
                                                 for (Ubicacion ubicacion : e.getUbicacionesList()) {
                                                     //Ubicacion ubicacion = e.getUbicacionesList().get(0);
+                                                    if(ubicacion.getLatitud()==0.0 || ubicacion.getLatitud()==0){
+                                                        List<Address> addresses = null;
+                                                        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                                        try {
+                                                            addresses = geocoder.getFromLocationName(ubicacion.getCalle(), 20);
+                                                        } catch (IOException ex) {
+                                                            ex.printStackTrace();
+                                                        }
+                                                        ubicacion.setLatitud(addresses.get(0).getLatitude());
+                                                        ubicacion.setLongitud(addresses.get(0).getLongitude());
+                                                    }
                                                     mMap.addMarker(new MarkerOptions().
                                                             position(new LatLng(ubicacion.getLatitud(), ubicacion.getLongitud())).
                                                             title(String.valueOf(e.getNombre())).

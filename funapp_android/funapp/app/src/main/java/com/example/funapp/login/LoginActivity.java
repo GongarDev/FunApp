@@ -5,7 +5,11 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,6 +17,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,6 +38,7 @@ import com.example.funapp.util.SocketHandler;
 public class LoginActivity extends AppCompatActivity implements Protocolo {
 
     private LoginViewModel loginViewModel;
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,32 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
         setContentView(R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        context = this;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            new AlertDialog.Builder(this)
+                    .setMessage("La aplicación necesita tener activda la información de ubicación.")
+                    .setPositiveButton("Abrir configuración", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    }).setNegativeButton("Cancelar",null).show();
+        }
 
         SocketHandler.setContext(this);
 
@@ -80,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
                 }
                 if (loginResult.getSuccess() != null) {
 
-                    if(loginResult.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
+                    if (loginResult.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
                         updateUiWithUser(loginResult.getSuccess());
                         Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
                         intentAcceder.putExtra("usuario", loginResult.getUsuario());
@@ -88,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
                         startActivity(intentAcceder);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if(loginResult.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
+                    } else if (loginResult.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
                         updateUiWithUser(loginResult.getSuccess());
                         Intent intentAcceder = new Intent(LoginActivity.this, MainActivity.class);
                         intentAcceder.putExtra("usuario", loginResult.getUsuario());
@@ -96,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
                         startActivity(intentAcceder);
                         setResult(Activity.RESULT_OK);
                         finish();
-                    } else if(loginResult.getEstadoSesion() == SESION_FALLIDA) {
+                    } else if (loginResult.getEstadoSesion() == SESION_FALLIDA) {
                         updateUiWithUser(loginResult.getSuccess());
                     }
                 }

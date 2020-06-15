@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.funapp.adapters.AnuncioAdapter;
+import com.example.funapp.models.Anuncio;
 import com.example.funapp.models.Evento;
 import com.example.funapp.ui.miseventos.MisEventosFragment;
 import com.example.funapp.util.Protocolo;
@@ -25,6 +27,7 @@ public class InicioViewModel extends AndroidViewModel implements Protocolo {
 
     private MutableLiveData<List<Evento>> eventosProximosList;
     private MutableLiveData<List<Evento>> eventosRecomendadosList;
+    private MutableLiveData<List<Anuncio>> anunciosList;
 
     private String mensaje;
     private Gson gson;
@@ -33,6 +36,14 @@ public class InicioViewModel extends AndroidViewModel implements Protocolo {
     public InicioViewModel(@NonNull Application application) {
         super(application);
         this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
+    }
+
+    public LiveData<List<Anuncio>> getAnuncios() {
+        if (anunciosList==null){
+            anunciosList= new MutableLiveData<>();
+            cargarAnuncios();
+        }
+        return anunciosList;
     }
 
     public LiveData<List<Evento>> getEventosProximos(String codigo_postal) {
@@ -49,6 +60,23 @@ public class InicioViewModel extends AndroidViewModel implements Protocolo {
             cargarEventosRecomendados(codigo_postal, id_usuario);
         }
         return eventosRecomendadosList;
+    }
+
+    public void cargarAnuncios(){
+
+        try {
+            if(SocketHandler.getSalida()!=null) {
+                this.mensaje = this.gson.toJson(INICIO_CARGAR_ANUNCIOS);
+                SocketHandler.getSalida().writeUTF(this.mensaje);
+                this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+                this.anunciosList.setValue(
+                        (ArrayList) this.gson.fromJson(
+                                this.mensaje, new TypeToken<ArrayList<Anuncio>>() {
+                                }.getType()));
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void cargarEventosProximos(String codigo_postal){

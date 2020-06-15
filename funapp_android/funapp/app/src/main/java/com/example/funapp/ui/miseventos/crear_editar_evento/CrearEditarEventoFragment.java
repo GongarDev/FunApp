@@ -36,6 +36,7 @@ import com.example.funapp.util.Protocolo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.YEARS;
 
 public class CrearEditarEventoFragment extends Fragment implements Protocolo {
 
@@ -113,17 +116,33 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
             String fechaEvento = evento.getFecha_evento_LocalDate().format(formatter);
             crearEventoFecha.setText(fechaEvento);
 
+            int hora = evento.getHora_inicio().getHour();
             int minutos = evento.getHora_inicio().getMinute();
-            if (minutos < 10)
-                crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + ":0" + evento.getHora_inicio().getMinute());
-            else
-                crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + ":" + evento.getHora_inicio().getMinute());
+            if (minutos < 10) {
+                if (hora == 0){
+                    crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + "0:0" + evento.getHora_inicio().getMinute());
+                }else
+                    crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + ":0" + evento.getHora_inicio().getMinute());
+            }else {
+                if (hora == 0)
+                    crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + "0:" + evento.getHora_inicio().getMinute());
+                else
+                    crearEventoHoraInicio.setText(evento.getHora_inicio().getHour() + ":" + evento.getHora_inicio().getMinute());
+            }
 
+            hora = evento.getHora_fin().getHour();
             minutos = evento.getHora_fin().getMinute();
-            if (minutos < 10)
-                crearEventoHoraFin.setText(evento.getHora_fin().getHour() + ":0" + evento.getHora_fin().getMinute());
-            else
-                crearEventoHoraFin.setText(evento.getHora_fin().getHour() + ":" + evento.getHora_fin().getMinute());
+            if (minutos < 10){
+                if (hora == 0){
+                    crearEventoHoraFin.setText(evento.getHora_fin().getHour() + "0:0" + evento.getHora_fin().getMinute());
+                }else
+                    crearEventoHoraFin.setText(evento.getHora_fin().getHour() + ":0" + evento.getHora_fin().getMinute());
+            }else{
+                if (hora == 0)
+                    crearEventoHoraFin.setText(evento.getHora_fin().getHour() + "0:" + evento.getHora_fin().getMinute());
+                else
+                    crearEventoHoraFin.setText(evento.getHora_fin().getHour() + ":" + evento.getHora_fin().getMinute());
+            }
 
             tematica.setSelection(evento.getTematica().getId_tematica());
         }
@@ -160,41 +179,53 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
                         !TextUtils.isEmpty(crearEventoHoraInicio.getText()) &&
                         !TextUtils.isEmpty(crearEventoHoraFin.getText()) &&
                         tematica.getSelectedItemPosition() != -1) {
-                    Ubicacion ubicacion = ((CrearEditarEventoActivity) getActivity()).getUbicacion();
-                    HashSet<Ubicacion> ubicaciones = new HashSet<Ubicacion>();
-                    ubicaciones.add(ubicacion);
-                    String fechaEvento = crearEventoFecha.getText().toString();
-                    Date fechaEventoDate = null;
-                    try {
-                        fechaEventoDate = new SimpleDateFormat("dd-MM-yyyy").parse(fechaEvento);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-
-                    Evento evento = new Evento(0, crearEventoNombre.getText().toString(),
-                            crearEventoDespricion.getText().toString(),
-                            null, fechaEventoDate,
-                            LocalTime.parse(crearEventoHoraInicio.getText()),
-                            LocalTime.parse(crearEventoHoraFin.getText()),
-                            ubicaciones, (Tematica) tematica.getSelectedItem(),
-                            (UsuarioResponsable) parentActivity.getUsuario(), true);
-
-                    if (accion == INSERTAR_EVENTO) {
-                        estadoSesion = crearEditarEventoViewModel.insertarEvento(evento);
-                        if (estadoSesion == INSERTAR_EXITO) {
-                            Toast.makeText(getActivity(), "El evento se ha añadido con éxito", Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
-                        } else if (estadoSesion == INSERTAR_FALLIDO) {
-                            Toast.makeText(getActivity(), "No se ha podido insertar el evento", Toast.LENGTH_SHORT).show();
+                    if(isAfterToday(crearEventoFecha.getText().toString())) {
+                        Ubicacion ubicacion = ((CrearEditarEventoActivity) getActivity()).getUbicacion();
+                        HashSet<Ubicacion> ubicaciones = new HashSet<Ubicacion>();
+                        ubicaciones.add(ubicacion);
+                        String fechaEvento = crearEventoFecha.getText().toString();
+                        Date fechaEventoDate = null;
+                        try {
+                            fechaEventoDate = new SimpleDateFormat("dd-MM-yyyy").parse(fechaEvento);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                    } else if (accion == ACTUALIZAR_EVENTO) {
-                        estadoSesion = crearEditarEventoViewModel.actualizarEvento(evento);
-                        if (estadoSesion == ACTUALIZAR_EXITO) {
-                            Toast.makeText(getActivity(), "El evento se ha actualizado con éxito", Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
-                        } else if (estadoSesion == ACTUALIZAR_FALLIDO) {
-                            Toast.makeText(getActivity(), "No se ha podido actualizar el evento", Toast.LENGTH_SHORT).show();
+
+                        Evento evento = null;
+
+                        if (accion == INSERTAR_EVENTO) {
+
+                            evento = new Evento(0, crearEventoNombre.getText().toString(),
+                                    crearEventoDespricion.getText().toString(),
+                                    null, fechaEventoDate,
+                                    LocalTime.parse(crearEventoHoraInicio.getText().toString()),
+                                    LocalTime.parse(crearEventoHoraFin.getText().toString()),
+                                    ubicaciones, (Tematica) tematica.getSelectedItem(),
+                                    (UsuarioResponsable) parentActivity.getUsuario(), true);
+                            estadoSesion = crearEditarEventoViewModel.insertarEvento(evento);
+                            if (estadoSesion == INSERTAR_EXITO) {
+                                Toast.makeText(getActivity(), "El evento se ha añadido con éxito", Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            } else if (estadoSesion == INSERTAR_FALLIDO) {
+                                Toast.makeText(getActivity(), "No se ha podido insertar el evento", Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (accion == ACTUALIZAR_EVENTO) {
+
+                            evento = new Evento(parentActivity.getEvento().getId_evento(), crearEventoNombre.getText().toString(),
+                                    crearEventoDespricion.getText().toString(),
+                                    null, fechaEventoDate,
+                                    LocalTime.parse(crearEventoHoraInicio.getText().toString()),
+                                    LocalTime.parse(crearEventoHoraFin.getText().toString()),
+                                    ubicaciones, (Tematica) tematica.getSelectedItem(),
+                                    (UsuarioResponsable) parentActivity.getUsuario(), true);
+
+                            estadoSesion = crearEditarEventoViewModel.actualizarEvento(evento);
+                            if (estadoSesion == ACTUALIZAR_EXITO) {
+                                Toast.makeText(getActivity(), "El evento se ha actualizado con éxito", Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            } else if (estadoSesion == ACTUALIZAR_FALLIDO) {
+                                Toast.makeText(getActivity(), "No se ha podido actualizar el evento", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 }
@@ -226,6 +257,23 @@ public class CrearEditarEventoFragment extends Fragment implements Protocolo {
             }
         });
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean isAfterToday(String birthday) {
+
+        Boolean despues = false;
+
+        if(!birthday.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String dateNow = LocalDate.now().format(formatter);
+            LocalDate fechaEvento = LocalDate.parse(birthday, formatter);
+            LocalDate fechaActual = LocalDate.parse(dateNow, formatter);
+
+            despues = fechaEvento.isAfter(fechaActual);
+        }
+
+        return despues;
     }
 
     public void obtenerFecha() {

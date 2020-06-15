@@ -3,26 +3,270 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="112dp"
+    android:layout_height="374dp"
     android:background="?attr/colorPrimary"
     android:gravity="center"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:id="@+id/pBPerfilEstadoEntretenimiento"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoEntretenimiento" />
+
     <TextView
+        android:id="@+id/tvPerfilEstadoEntretenimiento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="171dp"
-        android:layout_marginLeft="171dp"
-        android:layout_marginTop="77dp"
-        android:layout_marginEnd="172dp"
-        android:layout_marginRight="172dp"
-        android:layout_marginBottom="88dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Entretenimiento"
+        android:textColor="@color/color4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoDeportivo" />
+
+    <ProgressBar
+        android:id="@+id/pBPerfilEstadoDeportivo"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoDeportivo" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoDeportivo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Deportivo"
+        android:textColor="@color/color4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoSocial" />
+
+    <ProgressBar
+        android:id="@+id/pBPerfilEstadoSocial"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoSocial" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoSocial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Compromiso social"
+        android:textColor="@color/color4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoGastronomico" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="56dp"
         android:text="@string/usuario"
         android:textColor="@android:color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imgVPerfilEstado"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgVPerfilEstado"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/avatar0" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Nivel 9"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imgVPerfilEstado"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoNombre" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoCultural"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Cultural"
+        android:textColor="@color/color4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <ProgressBar
+        android:id="@+id/pBPerfilEstadoGastronomico"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoGastronomico" />
+
+    <ProgressBar
+        android:id="@+id/pBPerfilEstadoCultural"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoCultural" />
+
+    <TextView
+        android:id="@+id/tvPerfilEstadoGastronomico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Gastronómico"
+        android:textColor="@color/color4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pBPerfilEstadoCultural" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imgVPerfilEstado" />
+
+    <TextView
+        android:id="@+id/tvEstadoCulturallvl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="lvl 0"
+        android:textColor="@color/color1"
+        app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoCultural"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <TextView
+        android:id="@+id/tvEstadoGastronomicolvl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:text="lvl 0"
+        android:textColor="@color/color1"
+        app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoGastronomico"
+        app:layout_constraintTop_toBottomOf="@+id/tvEstadoCulturallvl" />
+
+    <TextView
+        android:id="@+id/tvEstadoSociallvl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:text="lvl 0"
+        android:textColor="@color/color1"
+        app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoSocial"
+        app:layout_constraintTop_toBottomOf="@+id/tvEstadoGastronomicolvl" />
+
+    <TextView
+        android:id="@+id/tvEstadoDeportivolvl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:text="lvl 0"
+        android:textColor="@color/color1"
+        app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoDeportivo"
+        app:layout_constraintTop_toBottomOf="@+id/tvEstadoSociallvl" />
+
+    <TextView
+        android:id="@+id/tvEstadoEntretenimientolvl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:text="lvl 0"
+        android:textColor="@color/color1"
+        app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoEntretenimiento"
+        app:layout_constraintTop_toBottomOf="@+id/tvEstadoDeportivolvl" />
+
+    <TextView
+        android:id="@+id/tvValoracionMedia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="Valoración media"
+        android:textColor="@color/color4"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <RatingBar
+        android:id="@+id/ratingBarValoracionMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvValoracionMedia" />
+
+    <ProgressBar
+        android:id="@+id/progressBarNivelTotal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgVPerfilEstado"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerfilEstadoNivel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

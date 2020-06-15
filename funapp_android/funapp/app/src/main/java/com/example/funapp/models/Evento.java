@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-public class Evento implements Serializable {
+public class  Evento implements Serializable {
 
     private int id_evento;
     private String nombre;

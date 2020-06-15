@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -23,14 +25,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.funapp.R;
 import com.example.funapp.adapters.EventoAmigosAdapter;
 import com.example.funapp.adapters.EventoSuscritoAdapter;
+import com.example.funapp.models.Atributo;
 import com.example.funapp.models.Evento;
 import com.example.funapp.models.Usuario;
+import com.example.funapp.models.UsuarioResponsable;
+import com.example.funapp.models.Valoracion;
 import com.example.funapp.ui.suscripciones.SuscripcionesViewModel;
 import com.example.funapp.util.Protocolo;
+import com.example.funapp.util.SocketHandler;
+import com.example.funapp.viewModels.EstadisticasViewModel;
 import com.example.funapp.viewModels.UsuarioDetallesViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +49,13 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 public class UsuarioDetallesFragment extends Fragment implements Protocolo {
 
     private UsuarioDetallesViewModel usuarioDetallesViewModel;
+    private EstadisticasViewModel estadisticasViewModel;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private EventoAmigosAdapter adapter;
     private List<Evento> eventosList = new ArrayList<>();
+    private List<Atributo> atributoList;
+    private List<Evento> eventosAtributoList;
     ImageView imgvUsuario;
     TextView tvNombreUsuario;
     TextView tvFechaIngreso;
@@ -54,6 +66,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
     private String mensaje;
     private Gson gson;
     private Integer estadoSesion;
+    View hview;
 
     public UsuarioDetallesFragment() {
         this.gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();
@@ -64,7 +77,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_usuario_detalles, container, false);
-
+        hview = view;
         imgvUsuario = view.findViewById(R.id.imgvUsuarioSelecionado);
         tvNombreUsuario = view.findViewById(R.id.tvUsuarioSeleccionadoNombre);
         tvFechaIngreso = view.findViewById(R.id.tvUsuarioSeleccionadoFechaIngreso);
@@ -85,6 +98,22 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mostrarUsuario(final Usuario usuarioAmigo, Usuario usuario) {
 
+        UsuarioResponsable usuarioResponsable = null;
+        try {
+            this.mensaje = this.gson.toJson(CONSULTAR_USUARIO_RESPONSABLE);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(usuarioAmigo.getId_usuario());
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+            usuarioResponsable=(UsuarioResponsable)this.gson.fromJson(this.mensaje, UsuarioResponsable.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(usuarioResponsable!=null){
+            cargarAtributosResponsable(hview);
+        }else {
+            cargarAtributosEstandar(hview, usuarioAmigo);
+        }
         tvNombreUsuario.setText(usuarioAmigo.getSeudonimo());
         tvFechaIngreso.setText("Usuario desde el "+usuarioAmigo.getFecha_ingreso_LocalDate().format(
                 DateTimeFormatter.ofPattern("dd-MM-yyyy")));
@@ -272,5 +301,117 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
 
     public interface OnEventoSelected {
         public void OnEventoSelected(Evento evento);
+    }
+
+    public void cargarAtributosEstandar(View hView, Usuario usuarioAmigo) {
+        estadisticasViewModel =
+                ViewModelProviders.of(this).get(EstadisticasViewModel.class);
+        estadisticasViewModel.getAtributosList(usuarioAmigo.getId_usuario()).observe(this, new Observer<List<Atributo>>() {
+            @Override
+            public void onChanged(List<Atributo> atributos) {
+                if (atributos != null) {
+                    atributoList = atributos;
+                    int expTotal = 0;
+                    for (Atributo a : atributoList) {
+                        expTotal += a.getExperiencia();
+                        //Cultural
+                        if (a.getId_atributo() == 1) {
+                            int culturalLvl = a.getExperiencia() / 100;
+                            int culturaExp = a.getExperiencia() % 100;
+                            ProgressBar pbCultural = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoCultural3);
+                            pbCultural.setMax(100);
+                            pbCultural.setProgress(culturaExp);
+                            TextView tvEstadoCulturallvl = (TextView) hView.findViewById(R.id.tvEstadoCulturallvl3);
+                            tvEstadoCulturallvl.setText("lvl " + culturalLvl);
+                        }
+                        //Gastronómico
+                        else if (a.getId_atributo() == 2) {
+                            int gastronómicoLvl = a.getExperiencia() / 100;
+                            int gastronómicoExp = a.getExperiencia() % 100;
+                            ProgressBar pbGastronomico = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoGastronomico3);
+                            pbGastronomico.setMax(100);
+                            pbGastronomico.setProgress(gastronómicoExp);
+                            TextView tvEstadoGastronomicolvl = (TextView) hView.findViewById(R.id.tvEstadoGastronomicolvl3);
+                            tvEstadoGastronomicolvl.setText("lvl " + gastronómicoLvl);
+                        }
+                        //Social
+                        else if (a.getId_atributo() == 3) {
+                            int socialLvl = a.getExperiencia() / 100;
+                            int socialExp = a.getExperiencia() % 100;
+                            ProgressBar pbSocial = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoSocial3);
+                            pbSocial.setMax(100);
+                            pbSocial.setProgress(socialExp);
+                            TextView tvEstadoSociallvl = (TextView) hView.findViewById(R.id.tvEstadoSociallvl3);
+                            tvEstadoSociallvl.setText("lvl " + socialLvl);
+                        }
+                        //Deportivo
+                        else if (a.getId_atributo() == 4) {
+                            int deportivoLvl = a.getExperiencia() / 100;
+                            int deportivoExp = a.getExperiencia() % 100;
+                            ProgressBar pbDeportivo = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoDeportivo3);
+                            pbDeportivo.setMax(100);
+                            pbDeportivo.setProgress(deportivoExp);
+                            TextView tvEstadoDeportivolvl = (TextView) hView.findViewById(R.id.tvEstadoDeportivolvl3);
+                            tvEstadoDeportivolvl.setText("lvl " + deportivoLvl);
+                        }
+                        //Entretenimiento
+                        else if (a.getId_atributo() == 5) {
+                            int entretenimientoLvl = a.getExperiencia() / 100;
+                            int entretenimientoExp = a.getExperiencia() % 100;
+                            ProgressBar pbEntretenimiento = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoEntretenimiento3);
+                            pbEntretenimiento.setMax(100);
+                            pbEntretenimiento.setProgress(entretenimientoExp);
+                            TextView tvEstadoEntretenimientolvl = (TextView) hView.findViewById(R.id.tvEstadoEntretenimientolvl3);
+                            tvEstadoEntretenimientolvl.setText("lvl " + entretenimientoLvl);
+                        }
+                    }
+                    int nivelUsuario = (expTotal / 100)+1;
+                    TextView tvPerfilEstadoNivel = (TextView) hView.findViewById(R.id.tvAmigosNivel);
+                    tvPerfilEstadoNivel.setText("Nivel " + nivelUsuario);
+                }
+            }
+        });
+    }
+
+    public void cargarAtributosResponsable(View hView) {
+
+        TextView tvSuscripciones = (TextView) hView.findViewById(R.id.tvSuscripciones);
+        tvSuscripciones.setText("Historial de eventos");
+        TextView tvPerfilEstadoNivel = (TextView) hView.findViewById(R.id.tvAmigosNivel);
+        tvPerfilEstadoNivel.setVisibility(View.GONE);
+        ProgressBar pbCultural = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoCultural3);
+        TextView tvEstadoCulturallvl = (TextView) hView.findViewById(R.id.tvEstadoCulturallvl3);
+        TextView tvEstadoCultural = (TextView) hView.findViewById(R.id.tvPerfilEstadoCultural3);
+        pbCultural.setVisibility(View.GONE);
+        tvEstadoCulturallvl.setVisibility(View.GONE);
+        tvEstadoCultural.setVisibility(View.GONE);
+
+        ProgressBar pbGastronomico = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoGastronomico3);
+        TextView tvEstadoGastronomicolvl = (TextView) hView.findViewById(R.id.tvEstadoGastronomicolvl3);
+        TextView tvEstadoGastronomico = (TextView) hView.findViewById(R.id.tvPerfilEstadoGastronomico3);
+        pbGastronomico.setVisibility(View.GONE);
+        tvEstadoGastronomicolvl.setVisibility(View.GONE);
+        tvEstadoGastronomico.setVisibility(View.GONE);
+
+        ProgressBar pbSocial = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoSocial3);
+        TextView tvEstadoSociallvl = (TextView) hView.findViewById(R.id.tvEstadoSociallvl3);
+        TextView tvEstadoSocial = (TextView) hView.findViewById(R.id.tvPerfilEstadoSocial3);
+        pbSocial.setVisibility(View.GONE);
+        tvEstadoSociallvl.setVisibility(View.GONE);
+        tvEstadoSocial.setVisibility(View.GONE);
+
+        ProgressBar pbDeportivo = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoDeportivo3);
+        TextView tvEstadoDeportivolvl = (TextView) hView.findViewById(R.id.tvEstadoDeportivolvl3);
+        TextView tvEstadoDeportivo = (TextView) hView.findViewById(R.id.tvPerfilEstadoDeportivo3);
+        pbDeportivo.setVisibility(View.GONE);
+        tvEstadoDeportivolvl.setVisibility(View.GONE);
+        tvEstadoDeportivo.setVisibility(View.GONE);
+
+        ProgressBar pbEntretenimiento = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoEntretenimiento3);
+        TextView tvEstadoEntretenimientolvl = (TextView) hView.findViewById(R.id.tvEstadoEntretenimientolvl3);
+        TextView tvEstadoEntretenimiento = (TextView) hView.findViewById(R.id.tvPerfilEstadoEntretenimiento3);
+        pbEntretenimiento.setVisibility(View.GONE);
+        tvEstadoEntretenimientolvl.setVisibility(View.GONE);
+        tvEstadoEntretenimiento.setVisibility(View.GONE);
     }
 }

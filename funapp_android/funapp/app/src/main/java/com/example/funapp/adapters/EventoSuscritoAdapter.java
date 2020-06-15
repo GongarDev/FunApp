@@ -1,5 +1,6 @@
 package com.example.funapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.funapp.R;
@@ -54,6 +56,7 @@ public class EventoSuscritoAdapter extends RecyclerView.Adapter<EventoSuscritoAd
         return viewHolder;
     }
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
@@ -98,7 +101,12 @@ public class EventoSuscritoAdapter extends RecyclerView.Adapter<EventoSuscritoAd
         viewHolder.tvEventoSuscritosFechaHora.setText(
                 "Empieza el día "+ evento.getFecha_evento_LocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))+
                         " a las " + evento.getHora_inicio());
-        viewHolder.tvEventoSuscritosSuscritos.setText(obtenerSuscritos(evento.getId_evento())+" suscritos");
+        if(evento.isActivo()) {
+            viewHolder.tvEventoSuscritosSuscritos.setText(obtenerSuscritos(evento.getId_evento()) + " suscritos");
+        }else {
+            viewHolder.tvEventoSuscritosSuscritos.setText("El evento ha sido suspendido por el momento.");
+            viewHolder.tvEventoSuscritosSuscritos.setTextColor(ContextCompat.getColor(activity.getBaseContext(), R.color.colorAccent));
+        }
         viewHolder.imgbSuscritosDesuscribirse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

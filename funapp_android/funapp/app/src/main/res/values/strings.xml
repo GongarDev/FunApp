@@ -41,7 +41,7 @@
     <string name="mis_eventos">Mis eventos</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
 
-    <string name="usuario">Usuario</string>
+    <string name="usuario">Nombre usuario</string>
     <string name="entidad">Entidad</string>
     <string name="eventos_activos">Eventos activos</string>
     <string name="eventos_suspendidos">Eventos suspendidos</string>

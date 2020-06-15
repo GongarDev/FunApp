@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.funapp.R;
 import com.example.funapp.activities.PublicacionesActivity;
 import com.example.funapp.activities.ValoracionesActivity;
+import com.example.funapp.models.Entidad;
 import com.example.funapp.models.Evento;
 import com.example.funapp.models.Publicacion;
 import com.example.funapp.models.Usuario;
@@ -46,6 +47,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
     TextView tvPublicado;
     TextView tvEntidad;
     TextView tvNombreEvento;
+    TextView tvCreado;
     TextView tvDescripcion;
     TextView tvSuscritos;
     TextView tvFechaHora;
@@ -77,6 +79,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         tvDescripcion = view.findViewById(R.id.tvEventoSeleccionadoDescripcion);
         tvSuscritos = view.findViewById(R.id.tvEventoSeleccionadoSuscritos);
         tvFechaHora = view.findViewById(R.id.tvEventoSeleccionadoFecha);
+        tvCreado = view.findViewById(R.id.tvEventoSeleccionadoCreado);
         tvDuracion = view.findViewById(R.id.tvEventoDetallesDuracion);
         tvPublicado = view.findViewById(R.id.tvEventoSeleccionadoCreado);
         tvEntidad = view.findViewById(R.id.tvEventoSeleccionadoEntidad);
@@ -95,6 +98,10 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         tvNombreEvento.setText(evento.getNombre());
         tvDescripcion.setText(evento.getDescripcion());
         tvSuscritos.setText(suscritos + " usuarios suscritos");
+        tvCreado.setText("Creado por "+evento.getUsuario().getSeudonimo()+ " el "
+                +evento.getFecha_publicacion_LocalDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        Entidad entidad = cargarEntidad(evento.getUsuario().getId_usuario());
+        tvEntidad.setText("Pertenece a la entidad \""+entidad.getNombre()+"\"");
 
         switch (evento.getTematica().getNombre()) {
             case "Cultura local":
@@ -152,7 +159,7 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
         imgbValoraciones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(evento.getFecha_publicacion_LocalDate().isBefore(LocalDate.now())){
+                if(evento.getFecha_evento_LocalDate().isAfter(LocalDate.now())){
                     Snackbar.make(v, "Podrás ver las valoraciones cuando haya finalizado.", Snackbar.LENGTH_LONG)
                             .setAction("Cerrar", new View.OnClickListener() {
                                 @Override
@@ -215,6 +222,19 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
                 }
             });
         }
+    }
+
+    public Entidad cargarEntidad(int id_usuario) {
+        try {
+            this.mensaje = this.gson.toJson(CONSULTAR_ENTIDAD);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = this.gson.toJson(id_usuario);
+            SocketHandler.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) SocketHandler.getEntrada().readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ((Entidad) this.gson.fromJson(this.mensaje, Entidad.class));
     }
 
     public int obtenerSuscritos(int id_evento) {
