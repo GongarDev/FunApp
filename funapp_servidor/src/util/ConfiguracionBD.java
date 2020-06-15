@@ -20,16 +20,13 @@ public class ConfiguracionBD {
     public void importar() {
 
         Properties importar = new Properties();
-
         try {
-
             importar.load(new FileInputStream("database.props"));
             this.puerto_sgbd = importar.getProperty("puerto_sgbd");
             this.host_sgbd = importar.getProperty("host_sgbd");
             this.db = importar.getProperty("db");
             this.usuario = importar.getProperty("usuario");
             this.contrasenia = importar.getProperty("contrasenia");
-
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe) {

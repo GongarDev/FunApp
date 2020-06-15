@@ -11,13 +11,16 @@ import java.util.Date;
 
 public class Incidencia implements Serializable {
 
+    private int id_incidencia;
     private String tipo;
     private String descripcion;
     private Date fecha;
     private int id_usuario;
 
-    public Incidencia(String descripcion, int id_usuario) {
+    public Incidencia(int id_incidencia, String descripcion, Date fecha, int id_usuario) {
+        this.id_incidencia = id_incidencia;
         this.descripcion = descripcion;
+        this.fecha = fecha;        
         this.id_usuario = id_usuario;
     }
 
@@ -45,6 +48,14 @@ public class Incidencia implements Serializable {
         this.fecha = fecha;
     }
 
+    public int getId_incidencia() {
+        return id_incidencia;
+    }
+
+    public void setId_incidencia(int id_incidencia) {
+        this.id_incidencia = id_incidencia;
+    }
+
     public int getId_usuario() {
         return id_usuario;
     }
@@ -55,5 +66,5 @@ public class Incidencia implements Serializable {
 
     public LocalDate getFecha_publicacion_LocalDate() {
         return getFecha().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-    }
+    }    
 }

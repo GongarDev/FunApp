@@ -61,6 +61,22 @@ public interface Protocolo {
     public static final Integer COMPROBAR_CODIGO_SEGUIDOR = 52;
     public static final Integer AMIGOS_SIGUIENDO = 53;
     public static final Integer AMIGOS_EXISTE_SEGUIMIENTO = 54;
-        public static final Integer REPORTAR_INCIDENCIA = 55;
+    public static final Integer REPORTAR_INCIDENCIA = 55;
     public static final Integer ELIMINAR_CUENTA = 56;
+    public static final Integer REGISTRARSE_RESPONSABLE_ESCRITORIO = 57;
+    public static final Integer SESION_ABIERTA_ADMIN = 58;
+    public static final Integer ADMIN_VER_ANUNCIOS = 59;
+    public static final Integer ADMIN_INSERTAR_ANUNCIOS = 60;
+    public static final Integer ADMIN_ELIMINAR_ANUNCIOS = 61;
+    public static final Integer ADMIN_VER_INCIDENCIAS = 62;  
+    public static final Integer ADMIN_ELIMINAR_INCIDENCIAS = 63;  
+    public static final Integer ADMIN_VER_EVENTOS = 64;  
+    public static final Integer ADMIN_ELIMINAR_EVENTOS = 65;
+    public static final Integer ADMIN_VER_USUARIOS_ESTANDAR = 66;
+    public static final Integer ADMIN_ELIMINAR_USUARIO_ESTANDAR = 67;
+    public static final Integer ADMIN_VER_USUARIOS_RESPONSABLE = 68;
+    public static final Integer ADMIN_ELIMINAR_USUARIO_RESPONSABLE = 69;   
+    public static final Integer ADMIN_VER_ENTIDADES = 70; 
+    public static final Integer INICIO_CARGAR_ANUNCIOS = 71;
+    public static final Integer CONSULTAR_ATRIBUTOS = 72;      
 }

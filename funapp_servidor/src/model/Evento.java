@@ -1,10 +1,10 @@
-
 package model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -13,7 +13,7 @@ import java.util.HashSet;
  * @author melkart
  */
 public class Evento implements Serializable {
-    
+
     private int id_evento;
     private String nombre;
     private String descripcion;
@@ -21,18 +21,18 @@ public class Evento implements Serializable {
     private Date fecha_evento;
     private LocalTime hora_inicio;
     private LocalTime hora_fin;
-    private HashSet<Ubicacion> ubicaciones; 
+    private HashSet<Ubicacion> ubicaciones;
     private String codigoQR;
     private Tematica tematica;
     private UsuarioResponsable usuario;
     private boolean activo;
-    
-    public Evento(){
-        
+
+    public Evento() {
+
     }
-    
-    public Evento(int id_evento, String nombre, String descripcion, Date fecha_publicacion, Date fecha_evento, 
-            LocalTime hora_inicio, LocalTime hora_fin, HashSet<Ubicacion> ubicaciones, 
+
+    public Evento(int id_evento, String nombre, String descripcion, Date fecha_publicacion, Date fecha_evento,
+            LocalTime hora_inicio, LocalTime hora_fin, HashSet<Ubicacion> ubicaciones,
             String codigoQR, Tematica tematica, UsuarioResponsable usuario, boolean activo) {
         this.id_evento = id_evento;
         this.nombre = nombre;
@@ -41,7 +41,7 @@ public class Evento implements Serializable {
         this.fecha_evento = fecha_evento;
         this.hora_inicio = hora_inicio;
         this.hora_fin = hora_fin;
-        this.ubicaciones = ubicaciones;   
+        this.ubicaciones = ubicaciones;
         this.codigoQR = codigoQR;
         this.tematica = tematica;
         this.usuario = usuario;
@@ -64,14 +64,14 @@ public class Evento implements Serializable {
         this.nombre = nombre;
     }
 
-        public String getDescripcion() {
+    public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-    
+
     public Date getFecha_publicacion() {
         return fecha_publicacion;
     }
@@ -108,6 +108,14 @@ public class Evento implements Serializable {
         return ubicaciones;
     }
 
+    public ArrayList<Ubicacion> getUbicacionesList() {
+        if (!getUbicaciones().isEmpty()) {
+            return new ArrayList<Ubicacion>(getUbicaciones());
+        } else {
+            return new ArrayList<Ubicacion>();
+        }
+    }
+
     public void setUbicaciones(HashSet<Ubicacion> ubicaciones) {
         this.ubicaciones = ubicaciones;
     }
@@ -135,16 +143,16 @@ public class Evento implements Serializable {
     public void setUsuario(UsuarioResponsable usuario) {
         this.usuario = usuario;
     }
-    
-        public LocalDate getFecha_publicacion_LocalDate() {
+
+    public LocalDate getFecha_publicacion_LocalDate() {
         return getFecha_publicacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     public LocalDate getFecha_evento_LocalDate() {
         return getFecha_evento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
-       
-        public boolean isActivo() {
+
+    public boolean isActivo() {
         return activo;
     }
 

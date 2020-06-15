@@ -287,22 +287,22 @@ public class EventoDAOSQL implements EventoDAO {
             /*Primero insertamos el evento junto con la ID del temática y usuario
             porque ya lo tenemos de antes.*/
             sentencia = this.conexion.prepareStatement(
-                    "UPDATE evento SET nombre = ?, descripcion = ?, fecha_publicacion = ?, "
+                    "UPDATE evento SET nombre = ?, descripcion = ?, "
                     + "fecha_evento = ?, hora_inicio = ?, hora_fin = ?, "
                     + " codigo_qr = ?, id_tematica = ?, id_usuario = ?, activo = ? "
                     + "WHERE id_evento = ? ");
 
             sentencia.setString(1, evento.getNombre());
             sentencia.setString(2, evento.getDescripcion());
-            sentencia.setDate(3, java.sql.Date.valueOf(evento.getFecha_publicacion_LocalDate()));
-            sentencia.setDate(4, java.sql.Date.valueOf(evento.getFecha_evento_LocalDate()));
-            sentencia.setTime(5, java.sql.Time.valueOf(evento.getHora_inicio()));
-            sentencia.setTime(6, java.sql.Time.valueOf(evento.getHora_fin()));
-            sentencia.setString(7, evento.getCodigoQR());
-            sentencia.setInt(8, evento.getTematica().getId_tematica());
-            sentencia.setInt(9, evento.getUsuario().getId_usuario());
-            sentencia.setBoolean(10, evento.isActivo());
-            sentencia.setInt(11, evento.getId_evento());
+            //sentencia.setDate(3, java.sql.Date.valueOf(evento.getFecha_publicacion_LocalDate()));
+            sentencia.setDate(3, java.sql.Date.valueOf(evento.getFecha_evento_LocalDate()));
+            sentencia.setTime(4, java.sql.Time.valueOf(evento.getHora_inicio()));
+            sentencia.setTime(5, java.sql.Time.valueOf(evento.getHora_fin()));
+            sentencia.setString(6, evento.getCodigoQR());
+            sentencia.setInt(7, evento.getTematica().getId_tematica());
+            sentencia.setInt(8, evento.getUsuario().getId_usuario());
+            sentencia.setBoolean(9, evento.isActivo());
+            sentencia.setInt(10, evento.getId_evento());
 
             int affectedRows = sentencia.executeUpdate();
 
@@ -459,7 +459,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "WHERE e.id_usuario = r.id_usuario "
                     + "AND r.id_usuario = ? "
                     + "AND e.id_tematica = t.id_tematica "
-                    + "AND e.fecha_evento > now() ");
+                    + "AND e.fecha_evento >= DATE(NOW()) ");
 
             sentenciaEventos.setInt(1, id_usuario);
             resultado = sentenciaEventos.executeQuery();
@@ -586,6 +586,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "AND eu.id_ubicacion = u.id_ubicacion "
                     + "AND e.activo = true "
                     + "AND u.codigo_postal = ? "
+                    + "AND e.fecha_evento >= DATE(NOW()) "
                     + "GROUP BY e.id_evento ");
 
             sentenciaEventos.setString(1, codigo_postal);
@@ -665,16 +666,18 @@ public class EventoDAOSQL implements EventoDAO {
                     + "e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, e.id_usuario, "
                     + "t. id_tematica, t.nombre, t.descripcion, t.edad_legal "
                     + "FROM evento e, tematica t, responsable r, estandar es, usuario_evento ue "
-                    + "WHERE ((e.id_usuario = r.id_usuario "
+                    + "WHERE ((e.id_usuario = ? "
                     + "AND r.id_usuario = ?) "
                     + "OR (e.id_evento = ue.id_evento "
                     + "AND ue.id_usuario = ?)) "
                     + "AND e.id_tematica = t.id_tematica "
-                    + "AND e.fecha_evento < now() "
-                    + "GROUP BY e.id_evento ");
+                    + "AND e.fecha_evento < DATE(NOW()) "
+                    + "GROUP BY e.id_evento "
+                    + "LIMIT 50 ");
 
             sentenciaEventos.setInt(1, id_usuario);
             sentenciaEventos.setInt(2, id_usuario);
+            sentenciaEventos.setInt(3, id_usuario);
             resultado = sentenciaEventos.executeQuery();
 
             int id_evento, id_usuarioResp, id_tematica = 0, edad_legal = 0;
@@ -759,6 +762,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "AND e.activo = true "
                     + "AND u.codigo_postal = ? "
                     + "AND t.nombre = ? "
+                    + "AND e.fecha_evento >= DATE(NOW()) "
                     + "GROUP BY e.id_evento ");
 
             sentenciaEventos.setString(1, codigo_postal);
@@ -842,7 +846,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "WHERE e.id_evento = ue.id_evento "
                     + "AND ue.id_usuario = ? "
                     + "AND e.id_tematica = t.id_tematica "
-                    + "AND e.fecha_evento > now() "
+                    + "AND e.fecha_evento >= DATE(NOW()) "
                     + "GROUP BY e.id_evento ");
 
             sentenciaEventos.setInt(1, id_usuario);
@@ -1015,7 +1019,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "AND eu.id_ubicacion = u.id_ubicacion "
                     + "AND e.activo = true "
                     + "AND u.codigo_postal =? "
-                    + "AND e.fecha_evento > now() "
+                    + "AND e.fecha_evento >= DATE(NOW()) "
                     + "GROUP BY e.id_evento "
                     + "ORDER BY e.fecha_evento "
                     + "LIMIT 8 ");
@@ -1099,14 +1103,14 @@ public class EventoDAOSQL implements EventoDAO {
                     + "GROUP BY e.id_tematica "
                     + "ORDER BY contador DESC "
                     + "LIMIT 1");
-            
+
             sentencia.setInt(1, id_usuario);
             resultado = sentencia.executeQuery();
-            int id_tematica=0;
+            int id_tematica = 0;
             while (resultado.next()) {
                 id_tematica = resultado.getInt(1);
             }
-            
+
             sentencia = this.conexion.prepareStatement(
                     "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, "
                     + "e.fecha_evento, e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, "
@@ -1120,7 +1124,7 @@ public class EventoDAOSQL implements EventoDAO {
                     + "AND eu.id_ubicacion = u.id_ubicacion "
                     + "AND e.activo = true "
                     + "AND u.codigo_postal = ? "
-                    + "AND e.fecha_evento > now() "
+                    + "AND e.fecha_evento >= DATE(NOW()) "
                     + "GROUP BY e.id_evento "
                     + "LIMIT 8 ");
 
@@ -1358,5 +1362,128 @@ public class EventoDAOSQL implements EventoDAO {
             }
         }
         return insertado;
+    }
+
+    @Override
+    public List<Evento> listaEventosAdmin() {
+        List<Evento> listaEventos = new ArrayList<Evento>();
+
+        PreparedStatement sentenciaEventos = null;
+        PreparedStatement sentenciaUbicaciones = null;
+        ResultSet resultado = null;
+
+        try {
+
+            abrirConexion();
+            this.conexion.setAutoCommit(false);
+            sentenciaEventos = this.conexion.prepareStatement(
+                    "SELECT e.id_evento, e.nombre, e.descripcion, e.fecha_publicacion, "
+                    + "e.fecha_evento, e.hora_inicio, e.hora_fin, e.codigo_qr, e.activo, "
+                    + "t.id_tematica, t.nombre, t.descripcion, t.edad_legal, "
+                    + "us.id_usuario "
+                    + "FROM evento e, tematica t, responsable r, ubicacion u, usuario us, evento_ubicacion eu "
+                    + "WHERE e.id_usuario = r.id_usuario "
+                    + "AND r.id_usuario  = us.id_usuario "
+                    + "AND e.id_tematica = t.id_tematica  "
+                    + "AND e.id_evento = eu.id_evento "
+                    + "AND eu.id_ubicacion = u.id_ubicacion "
+                    + "GROUP BY e.id_evento "
+                    + "ORDER BY u.codigo_postal, us.id_usuario, e.fecha_publicacion ");
+
+            resultado = sentenciaEventos.executeQuery();
+
+            int id_evento, id_tematica, edad_legal = 0, id_usuario;
+            String nombreEvento, descripcionEvento, nombreTematica = "", descripcionTematica = "";
+            Date fecha_publicacion, fecha_evento;
+            LocalTime hora_inicio, hora_fin;
+            boolean activo;
+            Tematica tematica;
+
+            while (resultado.next()) {
+
+                id_evento = resultado.getInt(1);
+                nombreEvento = resultado.getString(2);
+                descripcionEvento = resultado.getString(3);
+                fecha_publicacion = resultado.getDate(4);
+                fecha_evento = resultado.getDate(5);
+                hora_inicio = resultado.getTime(6).toLocalTime();
+                hora_fin = resultado.getTime(7).toLocalTime();
+                // 8 codigo qr
+                activo = resultado.getBoolean(9);
+
+                id_tematica = resultado.getInt(10);
+                nombreTematica = resultado.getString(11);
+                descripcionTematica = resultado.getString(12);
+                edad_legal = resultado.getInt(13);
+                id_usuario = resultado.getInt(14);
+                tematica = new Tematica(id_tematica, nombreTematica, descripcionTematica, edad_legal);
+
+                HashSet<Ubicacion> listaUbicaciones = this.ubicacionDAOSQL.listaUbicacionesEvento(id_evento);
+
+                UsuarioResponsable usuario = this.usuarioDAOSQL.consultarResponsbaleParaEvento(id_usuario);
+
+                listaEventos.add(new Evento(id_evento, nombreEvento, descripcionEvento, fecha_publicacion, fecha_evento,
+                        hora_inicio, hora_fin, listaUbicaciones, null, tematica, usuario, activo));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (sentenciaEventos != null) {
+                    sentenciaEventos.close();
+                }
+                if (sentenciaUbicaciones != null) {
+                    sentenciaUbicaciones.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return listaEventos;
+    }
+
+    @Override
+    public boolean eliminarEventoAdmin(int id_evento) {
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean eliminado = false;
+
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "DELETE FROM evento "
+                    + "WHERE id_evento = ? ");
+
+            sentencia.setInt(1, id_evento);
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede eliminar los datos");
+            }
+            eliminado = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return eliminado;
     }
 }

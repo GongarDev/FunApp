@@ -1,5 +1,6 @@
 package controller;
 
+import dao.AnuncioDAOSQL;
 import dao.EntidadDAOSQL;
 import dao.EventoDAOSQL;
 import dao.IncidenciaDAOSQL;
@@ -7,12 +8,15 @@ import dao.PublicacionDAOSQL;
 import dao.UsuarioDAOSQL;
 import dao.ValoracionDAOSQL;
 import java.util.List;
+import model.Anuncio;
+import model.Atributo;
 import model.Credenciales;
 import model.Entidad;
 import model.Evento;
 import model.Incidencia;
 import model.Publicacion;
 import model.Usuario;
+import model.UsuarioAdmin;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 import model.Valoracion;
@@ -29,6 +33,7 @@ public class Controlador {
     PublicacionDAOSQL publicacionDAOSQL;
     ValoracionDAOSQL valoracionDAOSQL;
     IncidenciaDAOSQL incidenciaDAOSQL;
+    AnuncioDAOSQL anuncioDAOSQL;
 
     public Controlador() {
         this.usuarioDAOSQL = new UsuarioDAOSQL();
@@ -37,6 +42,7 @@ public class Controlador {
         this.publicacionDAOSQL = new PublicacionDAOSQL();
         this.valoracionDAOSQL = new ValoracionDAOSQL();
         this.incidenciaDAOSQL = new IncidenciaDAOSQL();
+        this.anuncioDAOSQL = new AnuncioDAOSQL();
     }
 
     public boolean existeUsuario(String correo) {
@@ -55,12 +61,20 @@ public class Controlador {
         return this.usuarioDAOSQL.consultarUsResponsable(credenciales);
     }
 
+    public UsuarioAdmin buscarUsAdmin(Credenciales credenciales) {
+        return this.usuarioDAOSQL.consultarUsAdmin(credenciales);
+    }
+
     public boolean insertarUsEstandar(UsuarioEstandar usuario) {
         return this.usuarioDAOSQL.altaUsEstandar(usuario);
     }
 
     public boolean insertarUsResponsable(UsuarioResponsable usuario) {
         return this.usuarioDAOSQL.altaUsResponsable(usuario);
+    }
+
+    public boolean insertarUsResponsableEscritorio(UsuarioResponsable usuario, Entidad entidad) {
+        return this.usuarioDAOSQL.altaUsResponsableEscritorio(usuario, entidad);
     }
 
     public Object buscarUsuario(Credenciales credenciales) {
@@ -206,5 +220,44 @@ public class Controlador {
 
     public boolean insertarIncidencia(Incidencia incidencia) {
         return this.incidenciaDAOSQL.insertarIncidencia(incidencia);
+    }
+
+    public List<Anuncio> listaAnunciosAdmin() {
+        return this.anuncioDAOSQL.listaPublicacionesAdmin();
+    }
+
+    public boolean adminInsertarAnuncio(Anuncio anuncio) {
+        return this.anuncioDAOSQL.adminInsertarAnuncio(anuncio);
+    }
+
+    public boolean adminEliminarAnuncio(int id_anuncio) {
+        return this.anuncioDAOSQL.adminEliminarAnuncio(id_anuncio);
+    }
+
+    public List<Incidencia> listaIncidenciasAdmin() {
+        return this.incidenciaDAOSQL.listaIncidenciasAdmin();
+    }
+
+    public boolean adminEliminarIncidencia(int id_incidencia) {
+        return this.incidenciaDAOSQL.adminEliminarIncidencia(id_incidencia);
+    }
+
+    public List<Evento> listaEventosAdmin() {
+        return this.eventoDAOSQL.listaEventosAdmin();
+    }
+
+    public boolean adminEliminarEventos(int id_evento) {
+        return this.eventoDAOSQL.eliminarEventoAdmin(id_evento);
+    }
+
+    public List<Usuario> adminListaUsuariosEstandar() {
+        return this.usuarioDAOSQL.adminListaUsuariosEstandar();
+    }
+
+    public List<UsuarioResponsable> adminListaUsuariosResponsable() {
+        return this.usuarioDAOSQL.adminListaUsuariosResponsable();
+    }
+    public List<Atributo> listaAtributosUsuario(int id_usuario) {
+        return this.usuarioDAOSQL.listaAtributosUsuario(id_usuario);      
     }
 }

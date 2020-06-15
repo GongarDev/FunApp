@@ -5,11 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Entidad;
@@ -94,6 +89,53 @@ public class EntidadDAOSQL implements EntidadDAO {
                     + "VALUES (?)");
 
             sentencia.setInt(1, id_usuario);
+
+            int affectedRows = sentencia.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("No se puede insertar los datos");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (sentencia != null) {
+                    sentencia.close();
+                }
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (this.conexion != null) {
+                    cerrarConexion();
+                }
+            } catch (SQLException ex) {
+                ex.getMessage();
+            }
+        }
+        return insertado;
+    }
+
+    @Override
+    public boolean altaEntidadEscritorio(Entidad entidad) {
+
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+        boolean insertado = false;
+        try {
+            abrirConexion();
+            sentencia = this.conexion.prepareStatement(
+                    "INSERT INTO entidad (nombre, nif, calle, provincia, localidad, "
+                    + "codigo_postal, telefono, id_usuario) "
+                    + "VALUES (?,?,?,?,?,?,?,?)");
+
+            sentencia.setString(1, entidad.getNombre());
+            sentencia.setString(2, entidad.getNif());
+            sentencia.setString(3, entidad.getCalle());
+            sentencia.setString(4, entidad.getProvincia());
+            sentencia.setString(5, entidad.getLocalidad());
+            sentencia.setString(6, entidad.getCodigo_postal());
+            sentencia.setString(7, entidad.getTelefono());       
+            sentencia.setInt(8, entidad.getId_usuario());
 
             int affectedRows = sentencia.executeUpdate();
 

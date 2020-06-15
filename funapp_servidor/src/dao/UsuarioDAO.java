@@ -1,8 +1,11 @@
 package dao;
 
 import java.util.List;
+import model.Atributo;
 import model.Credenciales;
+import model.Entidad;
 import model.Usuario;
+import model.UsuarioAdmin;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 
@@ -22,9 +25,13 @@ public interface UsuarioDAO {
 
     public UsuarioResponsable consultarUsResponsable(Credenciales credenciales);
 
+    public UsuarioAdmin consultarUsAdmin(Credenciales credenciales);
+
     public boolean altaUsEstandar(UsuarioEstandar usuario);
 
     public boolean altaUsResponsable(UsuarioResponsable usuario);
+
+    public boolean altaUsResponsableEscritorio(UsuarioResponsable usuario, Entidad entidad);
 
     public boolean actualizarUsEstandar(Usuario usuario);
 
@@ -47,7 +54,13 @@ public interface UsuarioDAO {
     public boolean existeSeguimientoUsuario(int id_usuarioAmigo, int id_usuario);
 
     public boolean insertarSeguimiento(int id_usuarioAmigo, int id_usuario);
-    
-    public boolean eliminarCuenta(int id_usuario);
 
+    public boolean eliminarCuenta(int id_usuario);
+    
+    public List<Usuario> adminListaUsuariosEstandar();
+    
+    public List<UsuarioResponsable> adminListaUsuariosResponsable();    
+    
+    public List<Atributo> listaAtributosUsuario(int id_usuario);
+    
 }

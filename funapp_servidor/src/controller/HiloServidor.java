@@ -9,12 +9,15 @@ import java.net.Socket;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Anuncio;
+import model.Atributo;
 import model.Credenciales;
 import model.Entidad;
 import model.Evento;
 import model.Incidencia;
 import model.Publicacion;
 import model.Usuario;
+import model.UsuarioAdmin;
 import model.UsuarioEstandar;
 import model.UsuarioResponsable;
 import model.Valoracion;
@@ -61,9 +64,18 @@ public class HiloServidor extends Thread implements Protocolo {
 
                 iniciarSesion();
 
+                System.out.println(this.estadoSesion);
                 this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
                 this.mensaje = gson.toJson(this.usuario);
+                this.salida.writeUTF(this.mensaje);
+
+            } else if (this.estadoSesion == REGISTRARSE_RESPONSABLE_ESCRITORIO) {
+                this.mensaje = (String) this.entrada.readUTF();
+
+                altaUsuarioEscritorio();
+
+                this.mensaje = gson.toJson(this.estadoSesion);
                 this.salida.writeUTF(this.mensaje);
 
             } else if (this.estadoSesion == REGISTRARSE_RESPONSABLE
@@ -150,8 +162,35 @@ public class HiloServidor extends Thread implements Protocolo {
                     eliminarCuenta();
                 } else if (this.estadoSesion == REPORTAR_INCIDENCIA) {
                     reportarIncidencia();
+                } else if (this.estadoSesion == ADMIN_VER_ANUNCIOS) {
+                    adminVerAnuncios();
+                } else if (this.estadoSesion == ADMIN_INSERTAR_ANUNCIOS) {
+                    adminInsertarAnuncios();
+                } else if (this.estadoSesion == ADMIN_ELIMINAR_ANUNCIOS) {
+                    adminEliminarAnuncios();
+                } else if (this.estadoSesion == ADMIN_VER_INCIDENCIAS) {
+                    adminVerIncidencias();
+                } else if (this.estadoSesion == ADMIN_ELIMINAR_INCIDENCIAS) {
+                    adminEliminarIncidencias();
+                } else if (this.estadoSesion == ADMIN_VER_EVENTOS) {
+                    adminVerEventos();
+                } else if (this.estadoSesion == ADMIN_ELIMINAR_EVENTOS) {
+                    adminEliminarEventos();
+                } else if (this.estadoSesion == ADMIN_VER_USUARIOS_ESTANDAR) {
+                    adminVerUsuariosEstandar();
+                } else if (this.estadoSesion == ADMIN_VER_USUARIOS_RESPONSABLE) {
+                    adminVerUsuariosResponsable();
+                } else if (this.estadoSesion == ADMIN_ELIMINAR_USUARIO_ESTANDAR) {
+                    adminEliminarUsuario();
+                } else if (this.estadoSesion == ADMIN_ELIMINAR_USUARIO_RESPONSABLE) {
+                    adminEliminarUsuario();
+                } else if (this.estadoSesion == INICIO_CARGAR_ANUNCIOS) {
+                    inicioCargarAnuncios();
+                } else if (this.estadoSesion == CONSULTAR_ATRIBUTOS) {
+                    cargarAtributosUsuario();
+                } else {
+                    System.out.println("No corresponde con ninguna opción.");
                 }
-                
             }
 
         } catch (IOException ex) {
@@ -170,7 +209,12 @@ public class HiloServidor extends Thread implements Protocolo {
             if (this.usuario != null) {
                 this.estadoSesion = SESION_ABIERTA_RESPONSABLE;
             } else {
-                this.estadoSesion = SESION_FALLIDA;
+                this.usuario = (UsuarioAdmin) this.controlador.buscarUsAdmin(credenciales);
+                if (this.usuario != null) {
+                    this.estadoSesion = SESION_ABIERTA_ADMIN;
+                } else {
+                    this.estadoSesion = SESION_FALLIDA;
+                }
             }
         }
     }
@@ -199,6 +243,26 @@ public class HiloServidor extends Thread implements Protocolo {
             } else {
                 this.estadoSesion = REGISTRARSE_FALLIDO;
             }
+        }
+    }
+
+    public void altaUsuarioEscritorio() {
+
+        UsuarioResponsable usuario = this.gson.fromJson(this.mensaje, UsuarioResponsable.class);
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Entidad entidad = this.gson.fromJson(this.mensaje, Entidad.class);
+        if (this.controlador.existeUsuario(usuario.getEmail())) {
+            this.estadoSesion = REGISTRARSE_EXISTE_USUARIO;
+        } else if (this.controlador.existeNombreUsuario(usuario.getSeudonimo())) {
+            this.estadoSesion = REGISTRARSE_EXISTE_SEUDONIMO;
+        } else if (this.controlador.insertarUsResponsableEscritorio(usuario, entidad)) {
+            this.estadoSesion = SIN_SESION;
+        } else {
+            this.estadoSesion = REGISTRARSE_FALLIDO;
         }
     }
 
@@ -666,7 +730,7 @@ public class HiloServidor extends Thread implements Protocolo {
             if (existe) {
                 this.estadoSesion = AMIGOS_EXISTE_SEGUIMIENTO;
             } else {
-                this.controlador.insertarSeguimiento(id_usuarioAmigo, id_usuario);                
+                this.controlador.insertarSeguimiento(id_usuarioAmigo, id_usuario);
                 this.estadoSesion = AMIGOS_SIGUIENDO;
             }
             this.mensaje = gson.toJson(this.estadoSesion);
@@ -675,8 +739,8 @@ public class HiloServidor extends Thread implements Protocolo {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        public void eliminarCuenta() {
+
+    public void eliminarCuenta() {
 
         try {
             this.mensaje = (String) this.entrada.readUTF();
@@ -693,7 +757,8 @@ public class HiloServidor extends Thread implements Protocolo {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-       public void reportarIncidencia() {
+
+    public void reportarIncidencia() {
 
         try {
             this.mensaje = (String) this.entrada.readUTF();
@@ -709,5 +774,167 @@ public class HiloServidor extends Thread implements Protocolo {
         } catch (IOException ex) {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }     
+    }
+
+    public void adminVerAnuncios() {
+        try {
+            List<Anuncio> listaAnuncios = this.controlador.listaAnunciosAdmin();
+            this.mensaje = gson.toJson(listaAnuncios);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminInsertarAnuncios() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            Anuncio anuncio = this.gson.fromJson(this.mensaje, Anuncio.class);
+            boolean insertado = this.controlador.adminInsertarAnuncio(anuncio);
+            if (insertado) {
+                this.estadoSesion = INSERTAR_EXITO;
+            } else {
+                this.estadoSesion = INSERTAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminEliminarAnuncios() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_anuncio = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean insertado = this.controlador.adminEliminarAnuncio(id_anuncio);
+            if (insertado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminVerIncidencias() {
+        try {
+            List<Incidencia> listaIncidencias = this.controlador.listaIncidenciasAdmin();
+            this.mensaje = gson.toJson(listaIncidencias);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminEliminarIncidencias() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_incidencia = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean insertado = this.controlador.adminEliminarIncidencia(id_incidencia);
+            if (insertado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminVerEventos() {
+        try {
+            List<Evento> listaEventos = this.controlador.listaEventosAdmin();
+            this.mensaje = gson.toJson(listaEventos);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminEliminarEventos() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_evento = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean insertado = this.controlador.adminEliminarEventos(id_evento);
+            if (insertado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminVerUsuariosEstandar() {
+        try {
+            List<Usuario> listaUsuarios = this.controlador.adminListaUsuariosEstandar();
+            this.mensaje = gson.toJson(listaUsuarios);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminVerUsuariosResponsable() {
+        try {
+            List<UsuarioResponsable> listaUsuarios = this.controlador.adminListaUsuariosResponsable();
+            this.mensaje = gson.toJson(listaUsuarios);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void adminEliminarUsuario() {
+
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_evento = this.gson.fromJson(this.mensaje, Integer.class);
+            boolean insertado = this.controlador.eliminarCuenta(id_evento);
+            if (insertado) {
+                this.estadoSesion = ACTUALIZAR_EXITO;
+            } else {
+                this.estadoSesion = ACTUALIZAR_FALLIDO;
+            }
+            this.mensaje = gson.toJson(this.estadoSesion);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void inicioCargarAnuncios() {
+        try {
+            List<Anuncio> listaAnuncios = this.controlador.listaAnunciosAdmin();
+            this.mensaje = gson.toJson(listaAnuncios);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void cargarAtributosUsuario() {
+        try {
+            this.mensaje = (String) this.entrada.readUTF();
+            int id_usuario = this.gson.fromJson(this.mensaje, Integer.class);
+            List<Atributo> listaAtributosUsuario = this.controlador.listaAtributosUsuario(id_usuario);
+            this.mensaje = gson.toJson(listaAtributosUsuario);
+            this.salida.writeUTF(this.mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

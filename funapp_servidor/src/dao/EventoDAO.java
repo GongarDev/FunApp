@@ -40,4 +40,9 @@ public interface EventoDAO {
     public boolean existeSuscritoEvento(int id_evento, int id_usuario);
 
     public boolean aumentarPuntosEvento(int id_evento, int id_usuario);
+    
+    public List<Evento> listaEventosAdmin();
+    
+    public boolean eliminarEventoAdmin(int id_evento);
+    
 }

@@ -18,13 +18,10 @@ public class ConfiguracionServidor {
     public void importar() {
 
         Properties importar = new Properties();
-
         try {
-
             importar.load(new FileInputStream("servidor.props"));
             this.puerto_servidor = importar.getProperty("puerto_servidor");
             this.ip_servidor = importar.getProperty("ip_servidor");
-
         } catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         } catch (IOException ioe) {
