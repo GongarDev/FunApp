@@ -1,13 +1,10 @@
 package view;
 
-import com.google.gson.reflect.TypeToken;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -15,8 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import model.Credenciales;
-import model.Tematica;
-import model.Usuario;
+import model.UsuarioAdmin;
 import model.UsuarioResponsable;
 import util.Protocolo;
 import util.TextPrompt;
@@ -244,16 +240,17 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
                     if (this.parent.getEstadoSesion() == SESION_ABIERTA_RESPONSABLE) {
                         this.mensaje = (String) this.parent.getEntrada().readUTF();
                         this.parent.setUsuario((UsuarioResponsable) this.parent.getGson().fromJson(this.mensaje, UsuarioResponsable.class));
-                        this.mensaje = (String) this.parent.getEntrada().readUTF();
-                        this.parent.setTematicas(
-                                (ArrayList) this.parent.getGson().fromJson(
-                                        this.mensaje, new TypeToken<ArrayList<Tematica>>(){}.getType()));
                         this.parent.vistaSesionAbierta();
-                    } else if (this.parent.getEstadoSesion() == SESION_FALLIDA
+                    }else if(this.parent.getEstadoSesion() == SESION_ABIERTA_ADMIN){
+                        this.mensaje = (String) this.parent.getEntrada().readUTF();
+                        this.parent.setAdmin((UsuarioAdmin) this.parent.getGson().fromJson(this.mensaje, UsuarioAdmin.class));
+                        this.parent.vistaSesionAdmin();                        
+                    }
+                    else if (this.parent.getEstadoSesion() == SESION_FALLIDA
                             || this.parent.getEstadoSesion() == SESION_ABIERTA_ESTANDAR) {
                         JOptionPane.showMessageDialog(null, "El correo o contraseña no coincide con ningún usuario responsable.");
                         this.mensaje = (String) this.parent.getEntrada().readUTF();
-                        this.parent.setUsuario(this.parent.getGson().fromJson(this.mensaje, Usuario.class));
+                        this.parent.setUsuario(this.parent.getGson().fromJson(this.mensaje, UsuarioResponsable.class));
                         this.parent.setEstadoSesion(SIN_SESION);
                         this.parent.getCliente().close();
                         this.parent.getSalida().close();

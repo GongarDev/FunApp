@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -106,7 +107,14 @@ public class Evento implements Serializable {
     public HashSet<Ubicacion> getUbicaciones() {
         return ubicaciones;
     }
-
+    
+    public ArrayList<Ubicacion> getUbicacionesList() {
+        if (!getUbicaciones().isEmpty())
+            return new ArrayList<Ubicacion>(getUbicaciones());
+        else
+            return new ArrayList<Ubicacion>();
+    }
+    
     public void setUbicaciones(HashSet<Ubicacion> ubicaciones) {
         this.ubicaciones = ubicaciones;
     }

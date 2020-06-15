@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Entidad;
 import model.Tematica;
-import model.Usuario;
+import model.UsuarioAdmin;
+import model.UsuarioResponsable;
 import util.Protocolo;
 import org.apache.commons.codec.binary.Hex;
 import util.ConfiguracionServidor;
@@ -30,15 +32,18 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
     private Integer estadoSesion;
     private Gson gson;
     private MessageDigest md;
-    private Usuario usuario;
-    private List <Tematica> tematicas;
+    private UsuarioResponsable usuario;
+    private UsuarioAdmin admin;
+    private List<Tematica> tematicas;
+    private Entidad entidad;
 
     private view.JPRegistrarse jPRegistrarse;
     private view.JPSesionAbierta jPSesionAbierta;
+    private view.JPSesionAdmin jPSesionAdmin;
     
     private int x;
     private int y;
-    
+
     public VentanaPrincipal() {
         initComponents();
 
@@ -83,7 +88,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        x = evt.getX();        
+        x = evt.getX();
         y = evt.getY();
     }//GEN-LAST:event_formMousePressed
 
@@ -104,6 +109,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
         } catch (IOException ex) {
             Logger.getLogger(VentanaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public UsuarioAdmin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(UsuarioAdmin admin) {
+        this.admin = admin;
     }
 
     private void setParentsComponentes() {
@@ -173,20 +186,28 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
         return cadenaEncriptada;
     }
 
-    public Usuario getUsuario() {
+    public UsuarioResponsable getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UsuarioResponsable usuario) {
         this.usuario = usuario;
     }
-    
+
     public List getTematicas() {
         return tematicas;
     }
-    
+
     public void setTematicas(ArrayList tematicas) {
         this.tematicas = tematicas;
+    }
+
+    public Entidad getEntidad() {
+        return entidad;
+    }
+
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     public void vistaInicioSesion() {
@@ -196,7 +217,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
         getContentPane().add(jPInicioSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 391, 445));
         this.jPRegistrarse = null;
     }
-    
+
     public void vistaRegistrarse() {
         this.jPInicioSesion.setVisible(false);
         this.jPRegistrarse = new view.JPRegistrarse();
@@ -210,13 +231,28 @@ public class VentanaPrincipal extends javax.swing.JFrame implements Protocolo {
         this.jPInicioSesion.setVisible(false);
         this.jPSesionAbierta = new view.JPSesionAbierta(this);
         this.jPSesionAbierta.setParent(this);
-        this.setSize(920, 600);
+        this.setSize(920, 500);
         getContentPane().add(jPSesionAbierta, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 600));
-        this.jPSesionAbierta.setVisible(true);      
-        
+        this.jPSesionAbierta.setVisible(true);
     }
-    
-    
+
+    public void vistaSesionAdmin() {
+        this.jPInicioSesion.setVisible(false);
+        this.jPSesionAdmin = new view.JPSesionAdmin(this);
+        this.jPSesionAdmin.setParent(this);
+        this.setSize(920, 500);
+        getContentPane().add(jPSesionAdmin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 920, 600));
+        this.jPSesionAdmin.setVisible(true);
+    }
+
+    public JPSesionAbierta getjPSesionAbierta() {
+        return jPSesionAbierta;
+    }
+
+    public void setjPSesionAbierta(JPSesionAbierta jPSesionAbierta) {
+        this.jPSesionAbierta = jPSesionAbierta;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private view.JPInicioSesion jPInicioSesion;
     // End of variables declaration//GEN-END:variables

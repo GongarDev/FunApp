@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import model.Entidad;
 import model.UsuarioResponsable;
 import util.Protocolo;
 import util.TextPrompt;
@@ -362,7 +363,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
         LocalDate fechaNac = this.jDCFechaNacimiento.getSelectedDate().getTime().toInstant()
                 .atZone(ZoneId.systemDefault()).toLocalDate();
         Period edad = Period.between(fechaNac, LocalDate.now());
-        if (textFieldsVacios()) {
+        if (!textFieldsVacios()) {
             JOptionPane.showMessageDialog(null, "Debes completar todos los campos del usuario.");
         } else if (!String.copyValueOf(this.jPFContrasenia.getPassword()).equals(
                 String.copyValueOf(this.jPFConfirmarContrasenia.getPassword()))) {
@@ -376,7 +377,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
             try {
                 if (this.parent.getEstadoSesion() == SIN_SESION) {
                     this.parent.establecerSocket();
-                    Integer protocolo = REGISTRARSE_RESPONSABLE;
+                    Integer protocolo = REGISTRARSE_RESPONSABLE_ESCRITORIO;
                     this.mensaje = this.parent.getGson().toJson(protocolo);
                     this.parent.getSalida().writeUTF(this.mensaje);
 
@@ -387,12 +388,20 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
                             null,
                             this.parent.encriptacion(String.copyValueOf(this.jPFContrasenia.getPassword())),
                             null
-                    );
-
+                    );     
+                    
+                    usuario.setImagen("avatar0");
+                    Entidad entidad = new Entidad(0, this.jTFNombreEntidad.getText(), this.jTFNIF.getText(), 
+                    this.jTFCalle.getText(), this.jTFProvincia.getText(), this.jTFLocalidad.getText(),
+                    this.jTFCodigoPostal.getText(), this.jTFTelefonoEntidad.getText(), 0);
+                    
                     this.mensaje = this.parent.getGson().toJson(usuario);
                     this.parent.getSalida().writeUTF(this.mensaje);
+                    this.mensaje = this.parent.getGson().toJson(entidad);
+                    this.parent.getSalida().writeUTF(this.mensaje);                    
                     this.mensaje = (String) this.parent.getEntrada().readUTF();
                     this.parent.setEstadoSesion((Integer) this.parent.getGson().fromJson(this.mensaje, Integer.class));
+                                        
                     if (this.parent.getEstadoSesion() == SIN_SESION) {
                         JOptionPane.showMessageDialog(null, "Se ha registrado con éxito, ahora podrás iniciar sesión.");
                         this.parent.getCliente().close();
@@ -532,7 +541,7 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
 
     public boolean textFieldsVacios() {
 
-        boolean[] fields = new boolean[8];
+        boolean[] fields = new boolean[15];
         boolean vacio = false;
         fields[0] = this.jTFSeudonimo.getText().isEmpty();
         fields[1] = (this.jPFContrasenia.getPassword().length != 0);
@@ -542,6 +551,13 @@ public class JPRegistrarse extends javax.swing.JPanel implements Protocolo {
         fields[5] = this.jTFNombreReal.getText().isEmpty();
         fields[6] = this.jTFApellidos.getText().isEmpty();
         fields[7] = this.jTFTelefonoUsuario.getText().isEmpty();
+        fields[8] = this.jTFNombreEntidad.getText().isEmpty();
+        fields[9] = this.jTFNIF.getText().isEmpty();
+        fields[10] = this.jTFTelefonoEntidad.getText().isEmpty();
+        fields[11] = this.jTFCalle.getText().isEmpty();
+        fields[12] = this.jTFProvincia.getText().isEmpty();
+        fields[13] = this.jTFLocalidad.getText().isEmpty();
+        fields[14] = this.jTFCodigoPostal.getText().isEmpty();        
 
         for (int i = 0; fields.length < i; i++) {
             if (fields[i]) {

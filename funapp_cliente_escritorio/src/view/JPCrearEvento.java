@@ -1,13 +1,15 @@
 package view;
 
-import com.teamdev.jxbrowser.browser.Browser;
-
+import com.google.gson.reflect.TypeToken;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -26,7 +28,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
 
     private VentanaPrincipal parent;
     private JPSesionAbierta vistaSesionAbierta;
-    //private JPGoogleMaps jPGoogleMaps;
     private TextPrompt pHNombreEvento;
     private TextPrompt pHDescripcion;
     private TextPrompt pHCalle;
@@ -37,11 +38,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
     public JPCrearEvento() {
         initComponents();
         iniciarLayout();
-        //jPGoogleMaps = new JPGoogleMaps();
-        //this.jPGoogleMaps.setSize(700, 240);
-        //this.jPMapa.add(jPGoogleMaps);
-        //this.jPMapa.revalidate();
-        //this.jPMapa.repaint();
     }
 
     /**
@@ -57,35 +53,33 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         jLCrearEvento = new javax.swing.JLabel();
         jSeparator = new javax.swing.JSeparator();
         jBConfirmar = new javax.swing.JButton();
-        jLImagen = new javax.swing.JLabel();
         jTFnombreEvento = new javax.swing.JTextField();
         jSPDescripcion = new javax.swing.JScrollPane();
         jTADescripcion = new javax.swing.JTextArea();
-        jBElegirImagen = new javax.swing.JButton();
         jCBTematica = new javax.swing.JComboBox<>();
         jDCFecha = new datechooser.beans.DateChooserCombo();
         jCBCodigoQR = new javax.swing.JCheckBox();
         jTFCodigoPostal = new javax.swing.JTextField();
         jTFCalle = new javax.swing.JTextField();
-        jLMapa = new javax.swing.JLabel();
         jTPHoraInicio = new com.github.lgooddatepicker.components.TimePicker();
         jTPHoraFin = new com.github.lgooddatepicker.components.TimePicker();
         jLHora1 = new javax.swing.JLabel();
         jLHora2 = new javax.swing.JLabel();
         jLFecha = new javax.swing.JLabel();
         jLTematica = new javax.swing.JLabel();
-        jPMapa = new javax.swing.JPanel();
+        jLInfo1 = new javax.swing.JLabel();
+        jLInfo2 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(559, 625));
 
         jPPrincipal.setMinimumSize(new java.awt.Dimension(726, 625));
         jPPrincipal.setPreferredSize(new java.awt.Dimension(726, 625));
 
-        jLCrearEvento.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLCrearEvento.setText("Crear evento");
+        jLCrearEvento.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
 
-        jBConfirmar.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jBConfirmar.setText("Confirmar");
+        jBConfirmar.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jBConfirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBConfirmarActionPerformed(evt);
@@ -98,11 +92,13 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         jTADescripcion.setRows(5);
         jSPDescripcion.setViewportView(jTADescripcion);
 
-        jBElegirImagen.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        jBElegirImagen.setText("Elegir imagen");
-
         jCBTematica.setBorder(null);
         jCBTematica.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        jCBTematica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBTematicaActionPerformed(evt);
+            }
+        });
 
         jDCFecha.setCalendarBackground(new java.awt.Color(254, 254, 254));
         jDCFecha.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -115,9 +111,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         jTFCodigoPostal.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
 
         jTFCalle.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
-
-        jLMapa.setText("Buscar la ubicación en el mapa");
-        jLMapa.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
         jTPHoraInicio.setBorder(null);
         jTPHoraInicio.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
@@ -134,16 +127,11 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
 
         jLTematica.setText("Temática");
 
-        javax.swing.GroupLayout jPMapaLayout = new javax.swing.GroupLayout(jPMapa);
-        jPMapa.setLayout(jPMapaLayout);
-        jPMapaLayout.setHorizontalGroup(
-            jPMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPMapaLayout.setVerticalGroup(
-            jPMapaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 254, Short.MAX_VALUE)
-        );
+        jLInfo1.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLInfo1.setText("*Recuerda que desde nuestra aplicación móvil podrás tener una experiencia más cercana con los usuarios  ");
+
+        jLInfo2.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLInfo2.setText("asistentes mediante las publicaciones de evento y las valoraciones de los usuarios.");
 
         javax.swing.GroupLayout jPPrincipalLayout = new javax.swing.GroupLayout(jPPrincipal);
         jPPrincipal.setLayout(jPPrincipalLayout);
@@ -152,26 +140,12 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
             .addGroup(jPPrincipalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPMapa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSPDescripcion, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator)
-                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addComponent(jLCrearEvento)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPPrincipalLayout.createSequentialGroup()
                         .addComponent(jTFCalle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLImagen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jBElegirImagen, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSPDescripcion)
-                            .addGroup(jPPrincipalLayout.createSequentialGroup()
-                                .addComponent(jTFnombreEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPPrincipalLayout.createSequentialGroup()
                         .addComponent(jLTematica)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -188,41 +162,41 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
                         .addComponent(jLHora2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTPHoraFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                         .addComponent(jCBCodigoQR))
                     .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addComponent(jLMapa)
+                        .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLCrearEvento)
+                            .addComponent(jTFnombreEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLInfo1)
+                            .addComponent(jLInfo2))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPPrincipalLayout.createSequentialGroup()
+                .addGap(303, 303, 303)
+                .addComponent(jBConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPPrincipalLayout.setVerticalGroup(
             jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPPrincipalLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLCrearEvento)
-                    .addComponent(jBConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLCrearEvento)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addComponent(jTFnombreEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSPDescripcion))
-                    .addGroup(jPPrincipalLayout.createSequentialGroup()
-                        .addComponent(jLImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jBElegirImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jTFnombreEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSPDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFCodigoPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTFCalle, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGap(18, 21, Short.MAX_VALUE)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCBTematica, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLTematica))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTPHoraInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -232,18 +206,20 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
                     .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLHora1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLMapa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPMapa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(jBConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(jLInfo1)
+                .addGap(0, 0, 0)
+                .addComponent(jLInfo2)
+                .addGap(164, 164, 164))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE)
+            .addComponent(jPPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -273,9 +249,9 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
                 HashSet<Ubicacion> ubicaciones = new HashSet<Ubicacion>();
                 ubicaciones.add(ubicacion);
                 Evento evento = new Evento(
-                        0, this.jTFnombreEvento.getText(),this.jTADescripcion.getText(), null, this.jDCFecha.getSelectedDate().getTime(),
+                        0, this.jTFnombreEvento.getText(), this.jTADescripcion.getText(), null, this.jDCFecha.getSelectedDate().getTime(),
                         this.jTPHoraInicio.getTime(), this.jTPHoraFin.getTime(),
-                        ubicaciones,null, tematica, (UsuarioResponsable) this.parent.getUsuario(), true
+                        ubicaciones, null, tematica, (UsuarioResponsable) this.parent.getUsuario(), true
                 );
 
                 this.mensaje = this.parent.getGson().toJson(evento);
@@ -285,7 +261,7 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
                 if (this.parent.getEstadoSesion() == INSERTAR_EXITO) {
                     JOptionPane.showMessageDialog(null, "El evento se ha añadido con éxito.");
                     this.parent.setEstadoSesion(SESION_ABIERTA_RESPONSABLE);
-                    this.vistaSesionAbierta.vistaInicio();
+                    this.vistaSesionAbierta.vistaMisEventos();
                 } else if (this.parent.getEstadoSesion() == INSERTAR_FALLIDO) {
                     JOptionPane.showMessageDialog(null, "No se ha podido insertar el evento.");
                 }
@@ -294,6 +270,10 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
             }
         }
     }//GEN-LAST:event_jBConfirmarActionPerformed
+
+    private void jCBTematicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBTematicaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCBTematicaActionPerformed
 
     private void iniciarLayout() {
 
@@ -312,17 +292,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         this.jSeparator.setBackground(Color.decode("#d64d55"));
         this.jSeparator.setForeground(Color.decode("#d64d55"));
 
-        this.jLImagen.setOpaque(true);
-        this.jLImagen.setBorder(BorderFactory.createLineBorder(Color.decode("#94c8d6")));
-
-        this.jBElegirImagen.setBackground(Color.decode("#94c8d6"));
-        this.jBElegirImagen.setOpaque(true);
-        this.jBElegirImagen.setHorizontalAlignment(SwingConstants.CENTER);
-        this.jBElegirImagen.setBorder(BorderFactory.createLineBorder(Color.decode("#94c8d6")));
-        this.jBElegirImagen.setForeground(Color.decode("#f2f2f2"));
-        this.jBElegirImagen.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.jBElegirImagen.setFocusPainted(false);
-
         this.jLFecha.setForeground(Color.decode("#f2f2f2"));
         this.jLHora1.setForeground(Color.decode("#f2f2f2"));
         this.jLHora2.setForeground(Color.decode("#f2f2f2"));
@@ -335,6 +304,9 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         this.jCBCodigoQR.setBackground(Color.decode("#012e33"));
         this.jCBCodigoQR.setContentAreaFilled(false);
         this.jCBCodigoQR.setFocusPainted(false);
+        
+        this.jLInfo1.setForeground(Color.decode("#f2f2f2"));
+        this.jLInfo2.setForeground(Color.decode("#f2f2f2"));
 
         this.jDCFecha.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         this.jTPHoraInicio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -362,9 +334,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
         this.pHCodigoPostal = new TextPrompt("Código postal", this.jTFCodigoPostal);
         this.pHCodigoPostal.changeAlpha(0.75f);
         this.pHCodigoPostal.changeStyle(Font.ITALIC);
-
-        this.jLMapa.setForeground(Color.decode("#ffffff"));
-
     }
 
     public boolean textFieldsVacios() {
@@ -385,7 +354,18 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
     }
 
     public void llenarCBTematica() {
-
+        try {
+            Integer protocolo = CREAR_EDITAR_EVENTO;
+            this.mensaje = this.parent.getGson().toJson(protocolo);
+            this.parent.getSalida().writeUTF(this.mensaje);
+            this.mensaje = (String) this.parent.getEntrada().readUTF();
+        } catch (IOException ex) {
+            Logger.getLogger(JPCrearEvento.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.parent.setTematicas(
+                (ArrayList) this.parent.getGson().fromJson(
+                        this.mensaje, new TypeToken<ArrayList<Tematica>>() {
+                        }.getType()));
         for (int i = 0; i < this.parent.getTematicas().size(); i++) {
             this.jCBTematica.addItem((Tematica) this.parent.getTematicas().get(i));
         }
@@ -401,7 +381,6 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBConfirmar;
-    private javax.swing.JButton jBElegirImagen;
     private javax.swing.JCheckBox jCBCodigoQR;
     private javax.swing.JComboBox<Tematica> jCBTematica;
     private datechooser.beans.DateChooserCombo jDCFecha;
@@ -409,10 +388,9 @@ public class JPCrearEvento extends javax.swing.JPanel implements Protocolo {
     private javax.swing.JLabel jLFecha;
     private javax.swing.JLabel jLHora1;
     private javax.swing.JLabel jLHora2;
-    private javax.swing.JLabel jLImagen;
-    private javax.swing.JLabel jLMapa;
+    private javax.swing.JLabel jLInfo1;
+    private javax.swing.JLabel jLInfo2;
     private javax.swing.JLabel jLTematica;
-    private javax.swing.JPanel jPMapa;
     private javax.swing.JPanel jPPrincipal;
     private javax.swing.JScrollPane jSPDescripcion;
     private javax.swing.JSeparator jSeparator;
