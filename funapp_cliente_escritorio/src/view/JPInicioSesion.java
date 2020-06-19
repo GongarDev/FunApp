@@ -113,18 +113,18 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         jPPrincipalLayout.setHorizontalGroup(
             jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPPrincipalLayout.createSequentialGroup()
-                .addGap(67, 67, 67)
+                .addGap(80, 80, 80)
                 .addComponent(jBIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPPrincipalLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addGap(75, 75, 75)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
                             .addComponent(jCBRecuerdame)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLImagenSeparador, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGap(0, 0, 0)
                             .addComponent(jBRestContrasenia))
                         .addComponent(jTFUsuario, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPPrincipalLayout.createSequentialGroup()
@@ -143,26 +143,29 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
                             .addGroup(jPPrincipalLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                                .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPPrincipalLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPPrincipalLayout.createSequentialGroup()
+                                .addGap(42, 42, 42)
                                 .addComponent(jLGestion)
-                                .addGap(58, 58, 58))))))
+                                .addGap(0, 97, Short.MAX_VALUE))))))
         );
         jPPrincipalLayout.setVerticalGroup(
             jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPPrincipalLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPPrincipalLayout.createSequentialGroup()
                         .addGroup(jPPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jBCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPPrincipalLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(jLImagen2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLGestion)))
-                .addGap(27, 27, 27)
+                        .addComponent(jLGestion))
+                    .addGroup(jPPrincipalLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLImagen1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addComponent(jTFUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPFcontrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,7 +186,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
                         .addGap(18, 18, 18)
                         .addComponent(jBRegistrate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLImagen3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -199,7 +202,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBRestContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRestContraseniaActionPerformed
-        // TODO add your handling code here:
+            JOptionPane.showMessageDialog(null, "Envíanos un correo electrónico a gestiondecuentas@funapp.com \n con el asunto \"restablecer contraseña\" \n y te contestaremos a la mayor brevedad posible.");
     }//GEN-LAST:event_jBRestContraseniaActionPerformed
 
     private void jBRestContraseniaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBRestContraseniaMouseEntered
@@ -379,6 +382,7 @@ public class JPInicioSesion extends javax.swing.JPanel implements Protocolo {
         this.jLImagen3.setOpaque(true);
         this.jLImagen3.setHorizontalAlignment(SwingConstants.CENTER);
 
+        this.jCBRecuerdame.setVisible(false);
     }
 
     public void setParent(VentanaPrincipal parent) {

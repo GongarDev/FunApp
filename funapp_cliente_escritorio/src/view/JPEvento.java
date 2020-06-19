@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.BorderFactory;
@@ -58,7 +59,10 @@ public class JPEvento extends javax.swing.JPanel implements Protocolo {
         this.jLNumDias.setForeground(Color.decode("#F2F2F2"));
         this.jLNumDias.setForeground(Color.decode("#F2F2F2"));
         this.jLDias.setForeground(Color.decode("#F2F2F2"));
-        this.jLNumDiasEdit.setText(String.valueOf(this.evento.getFecha_evento_LocalDate().compareTo(LocalDate.now())));
+        //this.jLNumDiasEdit.setText(String.valueOf(this.evento.getFecha_evento_LocalDate().compareTo(LocalDate.now())));
+        this.jLNumDiasEdit.setText(String.valueOf(
+                Duration.between(LocalDate.now().atStartOfDay(),
+                        this.evento.getFecha_evento_LocalDate().atStartOfDay()).toDays()));
         this.jLNumDiasEdit.setForeground(Color.decode("#F2F2F2"));
 
         this.jLSuscritos.setForeground(Color.decode("#F2F2F2"));
@@ -340,9 +344,17 @@ public class JPEvento extends javax.swing.JPanel implements Protocolo {
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
 
-        int confirmado = JOptionPane.showConfirmDialog(
+        int confirmado;
+        if(evento.isActivo()){
+         confirmado = JOptionPane.showConfirmDialog(
                 this,
-                "¿Deseas suspender el evento?", "Atención", JOptionPane.YES_NO_OPTION);
+                "¿Deseas suspender el evento?", "Atención", JOptionPane.YES_NO_OPTION);            
+        }else{
+         confirmado = JOptionPane.showConfirmDialog(
+                this,
+                "¿Deseas activar el evento?", "Atención", JOptionPane.YES_NO_OPTION);            
+        }
+        
         if (JOptionPane.OK_OPTION == confirmado) {
             if (evento.isActivo()) {
                 evento.setActivo(false);

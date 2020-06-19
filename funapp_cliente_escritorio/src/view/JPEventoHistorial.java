@@ -53,8 +53,8 @@ public class JPEventoHistorial extends javax.swing.JPanel implements Protocolo {
         this.jLNumDias.setForeground(Color.decode("#F2F2F2"));
         this.jLDias.setForeground(Color.decode("#F2F2F2"));
         this.jLNumDiasEdit.setText(String.valueOf(
-                Duration.between(LocalDate.now().atStartOfDay(), 
-                        this.evento.getFecha_evento_LocalDate().atStartOfDay()).toDays()));
+                Duration.between(this.evento.getFecha_evento_LocalDate().atStartOfDay(),
+                        LocalDate.now().atStartOfDay()).toDays()));
         this.jLNumDiasEdit.setForeground(Color.decode("#F2F2F2"));
 
         this.jLSuscritos.setForeground(Color.decode("#F2F2F2"));

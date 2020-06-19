@@ -55,7 +55,6 @@ public class JPEventos extends javax.swing.JPanel implements Protocolo {
 
         this.jPPrincipal.setBackground(Color.decode("#012326"));
         this.jLMisEventos.setForeground(Color.decode("#F2F2F2"));
-        this.jTUsuarios.setForeground(Color.decode("#F2F2F2"));
         this.jSeparator.setBackground(Color.decode("#d64d55"));
         this.jSeparator.setForeground(Color.decode("#d64d55"));
         this.jBBorrarSeleccion.setBackground(Color.decode("#94c8d6"));
