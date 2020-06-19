@@ -193,8 +193,8 @@ public class HiloServidor extends Thread implements Protocolo {
                 }
             }
 
-        } catch (IOException ex) {
-            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) { 
+            System.out.println("Se ha desconectado un usuario.");
         }
     }
 
