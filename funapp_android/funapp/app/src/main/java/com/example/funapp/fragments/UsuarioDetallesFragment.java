@@ -60,6 +60,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
     TextView tvNombreUsuario;
     TextView tvFechaIngreso;
     TextView tvDesuscribirse;
+    TextView tvAmigoResponsable;
     private OnEventoSelected callback;
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
@@ -82,7 +83,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
         tvNombreUsuario = view.findViewById(R.id.tvUsuarioSeleccionadoNombre);
         tvFechaIngreso = view.findViewById(R.id.tvUsuarioSeleccionadoFechaIngreso);
         tvDesuscribirse = view.findViewById(R.id.tvEliminarAmigo);
-
+        tvAmigoResponsable = view.findViewById(R.id.tvAmigoResponsable);
         recyclerView = view.findViewById(R.id.rvEventosAmigos);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -98,6 +99,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void mostrarUsuario(final Usuario usuarioAmigo, Usuario usuario) {
 
+        tvAmigoResponsable.setVisibility(View.GONE);
         UsuarioResponsable usuarioResponsable = null;
         try {
             this.mensaje = this.gson.toJson(CONSULTAR_USUARIO_RESPONSABLE);
@@ -304,6 +306,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
     }
 
     public void cargarAtributosEstandar(View hView, Usuario usuarioAmigo) {
+        tvAmigoResponsable.setVisibility(View.GONE);
         estadisticasViewModel =
                 ViewModelProviders.of(this).get(EstadisticasViewModel.class);
         estadisticasViewModel.getAtributosList(usuarioAmigo.getId_usuario()).observe(this, new Observer<List<Atributo>>() {
@@ -322,7 +325,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                             pbCultural.setMax(100);
                             pbCultural.setProgress(culturaExp);
                             TextView tvEstadoCulturallvl = (TextView) hView.findViewById(R.id.tvEstadoCulturallvl3);
-                            tvEstadoCulturallvl.setText("lvl " + culturalLvl);
+                            tvEstadoCulturallvl.setText("Nivel " + culturalLvl);
                         }
                         //Gastronómico
                         else if (a.getId_atributo() == 2) {
@@ -332,7 +335,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                             pbGastronomico.setMax(100);
                             pbGastronomico.setProgress(gastronómicoExp);
                             TextView tvEstadoGastronomicolvl = (TextView) hView.findViewById(R.id.tvEstadoGastronomicolvl3);
-                            tvEstadoGastronomicolvl.setText("lvl " + gastronómicoLvl);
+                            tvEstadoGastronomicolvl.setText("Nivel " + gastronómicoLvl);
                         }
                         //Social
                         else if (a.getId_atributo() == 3) {
@@ -342,7 +345,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                             pbSocial.setMax(100);
                             pbSocial.setProgress(socialExp);
                             TextView tvEstadoSociallvl = (TextView) hView.findViewById(R.id.tvEstadoSociallvl3);
-                            tvEstadoSociallvl.setText("lvl " + socialLvl);
+                            tvEstadoSociallvl.setText("Nivel " + socialLvl);
                         }
                         //Deportivo
                         else if (a.getId_atributo() == 4) {
@@ -352,7 +355,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                             pbDeportivo.setMax(100);
                             pbDeportivo.setProgress(deportivoExp);
                             TextView tvEstadoDeportivolvl = (TextView) hView.findViewById(R.id.tvEstadoDeportivolvl3);
-                            tvEstadoDeportivolvl.setText("lvl " + deportivoLvl);
+                            tvEstadoDeportivolvl.setText("Nivel " + deportivoLvl);
                         }
                         //Entretenimiento
                         else if (a.getId_atributo() == 5) {
@@ -362,7 +365,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
                             pbEntretenimiento.setMax(100);
                             pbEntretenimiento.setProgress(entretenimientoExp);
                             TextView tvEstadoEntretenimientolvl = (TextView) hView.findViewById(R.id.tvEstadoEntretenimientolvl3);
-                            tvEstadoEntretenimientolvl.setText("lvl " + entretenimientoLvl);
+                            tvEstadoEntretenimientolvl.setText("Nivel " + entretenimientoLvl);
                         }
                     }
                     int nivelUsuario = (expTotal / 100)+1;
@@ -385,7 +388,7 @@ public class UsuarioDetallesFragment extends Fragment implements Protocolo {
         pbCultural.setVisibility(View.GONE);
         tvEstadoCulturallvl.setVisibility(View.GONE);
         tvEstadoCultural.setVisibility(View.GONE);
-
+        tvAmigoResponsable.setVisibility(View.VISIBLE);
         ProgressBar pbGastronomico = (ProgressBar) hView.findViewById(R.id.pBPerfilEstadoGastronomico3);
         TextView tvEstadoGastronomicolvl = (TextView) hView.findViewById(R.id.tvEstadoGastronomicolvl3);
         TextView tvEstadoGastronomico = (TextView) hView.findViewById(R.id.tvPerfilEstadoGastronomico3);

@@ -20,6 +20,7 @@ public class RegistrarseFragment extends Fragment {
     EditText etFechaNacimiento;
     Switch switchResponsable;
     Button bRegistrarse;
+    EditText etIPRegistrarse;
 
     public RegistrarseFragment() { }
 
@@ -35,6 +36,7 @@ public class RegistrarseFragment extends Fragment {
         etFechaNacimiento = view.findViewById(R.id.etFechaNacimiento);
         switchResponsable = view.findViewById(R.id.switchResponsable);
         bRegistrarse = view.findViewById(R.id.bRegistrarse);
+        etIPRegistrarse = view.findViewById(R.id.etIPRegistrarse);
 
         return view;
     }

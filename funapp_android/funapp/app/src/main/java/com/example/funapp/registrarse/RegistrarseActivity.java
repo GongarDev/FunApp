@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.funapp.R;
 import com.example.funapp.login.LoginActivity;
 import com.example.funapp.util.Protocolo;
+import com.example.funapp.util.SocketHandler;
 
 import java.util.Calendar;
 
@@ -49,6 +50,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
     ImageButton ibObtenerFecha;
 
     private RegistrarseViewModel registrarseViewModel;
+    private EditText etIPRegistrarse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
         loadingProgressBar = findViewById(R.id.loadingRegistrarse);
         final Switch switchResponsable = findViewById(R.id.switchResponsable);
         final Button bRegistrarse = findViewById(R.id.bRegistrarse);
+        etIPRegistrarse = findViewById(R.id.etIPRegistrarse);
         bRegistrarse.setOnClickListener(this);
 
 
@@ -169,7 +172,7 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-
+                SocketHandler.setIp(getIp());
                 confirmarRegistro(etSeudonimo.getText().toString(), etContrasenia.getText().toString(),
                         etConfirmarContrasenia.getText().toString(),etCorreo.getText().toString(),
                         etFecha.getText().toString(),switchResponsable.isChecked()
@@ -227,5 +230,9 @@ public class RegistrarseActivity extends AppCompatActivity implements Protocolo,
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    public EditText getIp(){
+        return etIPRegistrarse;
     }
 }

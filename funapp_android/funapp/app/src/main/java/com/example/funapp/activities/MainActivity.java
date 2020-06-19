@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
                             pbCultural.setMax(100);
                             pbCultural.setProgress(culturaExp);
                             TextView tvEstadoCulturallvl = (TextView) hView.findViewById(R.id.tvEstadoCulturallvl);
-                            tvEstadoCulturallvl.setText("lvl " + culturalLvl);
+                            tvEstadoCulturallvl.setText("Nivel " + culturalLvl);
                         }
                         //Gastronómico
                         else if (a.getId_atributo() == 2) {
@@ -334,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
                             pbGastronomico.setMax(100);
                             pbGastronomico.setProgress(gastronómicoExp);
                             TextView tvEstadoGastronomicolvl = (TextView) hView.findViewById(R.id.tvEstadoGastronomicolvl);
-                            tvEstadoGastronomicolvl.setText("lvl " + gastronómicoLvl);
+                            tvEstadoGastronomicolvl.setText("Nivel " + gastronómicoLvl);
                         }
                         //Social
                         else if (a.getId_atributo() == 3) {
@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
                             pbSocial.setMax(100);
                             pbSocial.setProgress(socialExp);
                             TextView tvEstadoSociallvl = (TextView) hView.findViewById(R.id.tvEstadoSociallvl);
-                            tvEstadoSociallvl.setText("lvl " + socialLvl);
+                            tvEstadoSociallvl.setText("Nivel " + socialLvl);
                         }
                         //Deportivo
                         else if (a.getId_atributo() == 4) {
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
                             pbDeportivo.setMax(100);
                             pbDeportivo.setProgress(deportivoExp);
                             TextView tvEstadoDeportivolvl = (TextView) hView.findViewById(R.id.tvEstadoDeportivolvl);
-                            tvEstadoDeportivolvl.setText("lvl " + deportivoLvl);
+                            tvEstadoDeportivolvl.setText("Nivel " + deportivoLvl);
                         }
                         //Entretenimiento
                         else if (a.getId_atributo() == 5) {
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements Protocolo, MisEve
                             pbEntretenimiento.setMax(100);
                             pbEntretenimiento.setProgress(entretenimientoExp);
                             TextView tvEstadoEntretenimientolvl = (TextView) hView.findViewById(R.id.tvEstadoEntretenimientolvl);
-                            tvEstadoEntretenimientolvl.setText("lvl " + entretenimientoLvl);
+                            tvEstadoEntretenimientolvl.setText("Nivel " + entretenimientoLvl);
                         }
                     }
                     int nivelUsuario = (expTotal / 100)+1;

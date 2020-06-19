@@ -36,7 +36,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
-            android:text="lvl 0"
+            android:text="Nivel 0"
             android:textColor="@color/color1"
             app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoEntretenimiento3"
             app:layout_constraintTop_toBottomOf="@+id/tvEstadoDeportivolvl3" />
@@ -48,7 +48,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
-            android:text="lvl 0"
+            android:text="Nivel 0"
             android:textColor="@color/color1"
             app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoDeportivo3"
             app:layout_constraintTop_toBottomOf="@+id/tvEstadoSociallvl3" />
@@ -60,7 +60,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
-            android:text="lvl 0"
+            android:text="Nivel 0"
             android:textColor="@color/color1"
             app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoSocial3"
             app:layout_constraintTop_toBottomOf="@+id/tvEstadoGastronomicolvl3" />
@@ -72,7 +72,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
-            android:text="lvl 0"
+            android:text="Nivel 0"
             android:textColor="@color/color1"
             app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoGastronomico3"
             app:layout_constraintTop_toBottomOf="@+id/tvEstadoCulturallvl3" />
@@ -84,7 +84,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="16dp"
-            android:text="lvl 0"
+            android:text="Nivel 0"
             android:textColor="@color/color1"
             app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoCultural3"
             app:layout_constraintTop_toBottomOf="@+id/divider4" />
@@ -309,6 +309,16 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imgvUsuarioSelecionado"
             app:layout_constraintTop_toBottomOf="@+id/tvUsuarioSeleccionadoNombre" />
+
+        <TextView
+            android:id="@+id/tvAmigoResponsable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Usuario responsable"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider4" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

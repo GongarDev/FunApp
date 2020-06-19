@@ -1,6 +1,7 @@
 package com.example.funapp.util;
 
 import android.content.Context;
+import android.widget.EditText;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,6 +14,7 @@ public class SocketHandler {
     private static DataOutputStream salida;
     private static DataInputStream entrada;
     private static Context context;
+    private static EditText ip;
 
     public static void abrirSocket(){
 
@@ -21,7 +23,14 @@ public class SocketHandler {
             ConfiguracionServidor c = new ConfiguracionServidor();
             c.importar(SocketHandler.context);
 
-            SocketHandler.socket = new Socket(c.getIp_servidor(), c.getPuerto_servidor());
+            if(ip.getText().toString().length()==11 ||
+                    ip.getText().toString().length()==12 ||
+                    ip.getText().toString().length()==13){
+                SocketHandler.socket = new Socket(ip.getText().toString(), c.getPuerto_servidor());
+            }else {
+                SocketHandler.socket = new Socket(c.getIp_servidor(), c.getPuerto_servidor());
+            }
+
             SocketHandler.salida = new DataOutputStream(SocketHandler.socket.getOutputStream());
             SocketHandler.entrada = new DataInputStream(SocketHandler.socket.getInputStream());
         } catch (IOException e) {
@@ -72,5 +81,13 @@ public class SocketHandler {
 
     public static synchronized void setContext(Context context) {
         SocketHandler.context = context;
+    }
+
+    public static EditText getIp() {
+        return ip;
+    }
+
+    public static void setIp(EditText ip) {
+        SocketHandler.ip = ip;
     }
 }

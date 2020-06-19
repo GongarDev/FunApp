@@ -162,4 +162,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/adorno_rojo" />
 
+    <EditText
+        android:id="@+id/etIP"
+        android:layout_width="135dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="IP"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewAdorno"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegistrate" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

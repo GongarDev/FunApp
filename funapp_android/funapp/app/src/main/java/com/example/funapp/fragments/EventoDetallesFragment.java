@@ -3,6 +3,7 @@ package com.example.funapp.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -194,10 +195,18 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
             bVerCodigoQR.setVisibility(View.GONE);
         } else if (tipoUsuario == SESION_ABIERTA_ESTANDAR && seccion != MIS_EVENTOS) {
             bVerCodigoQR.setVisibility(View.GONE);
+
+            if(existeSuscrito(evento.getId_evento(), usuario.getId_usuario())==EXISTE){
+                bSuscribirse.setEnabled(false);
+                bSuscribirse.setText("Suscrito");
+                bSuscribirse.setBackgroundColor(Color.GRAY);
+            }
+
             bSuscribirse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(existeSuscrito(evento.getId_evento(), usuario.getId_usuario())==EXISTE){
+
                         Snackbar.make(getView(), "Ya te suscribiste a este evento.", Snackbar.LENGTH_LONG)
                                 .setAction("Cerrar", new View.OnClickListener() {
                                     @Override
@@ -208,6 +217,9 @@ public class EventoDetallesFragment extends Fragment implements Protocolo {
                                 .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
                                 .show();
                     }else {
+                        bSuscribirse.setEnabled(false);
+                        bSuscribirse.setText("Suscrito");
+                        bSuscribirse.setBackgroundColor(Color.GRAY);
                         suscribirse(evento.getId_evento(), usuario.getId_usuario());
                         Snackbar.make(getView(), "Te has suscrito a este evento.", Snackbar.LENGTH_LONG)
                                 .setAction("Cerrar", new View.OnClickListener() {

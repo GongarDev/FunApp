@@ -177,7 +177,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
-        android:text="lvl 0"
+        android:text="Nivel 0"
         android:textColor="@color/color1"
         app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoCultural"
         app:layout_constraintTop_toBottomOf="@+id/divider3" />
@@ -189,7 +189,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:text="lvl 0"
+        android:text="Nivel 0"
         android:textColor="@color/color1"
         app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoGastronomico"
         app:layout_constraintTop_toBottomOf="@+id/tvEstadoCulturallvl" />
@@ -201,7 +201,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:text="lvl 0"
+        android:text="Nivel 0"
         android:textColor="@color/color1"
         app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoSocial"
         app:layout_constraintTop_toBottomOf="@+id/tvEstadoGastronomicolvl" />
@@ -213,7 +213,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:text="lvl 0"
+        android:text="Nivel 0"
         android:textColor="@color/color1"
         app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoDeportivo"
         app:layout_constraintTop_toBottomOf="@+id/tvEstadoSociallvl" />
@@ -225,7 +225,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
-        android:text="lvl 0"
+        android:text="Nivel 0"
         android:textColor="@color/color1"
         app:layout_constraintStart_toEndOf="@+id/pBPerfilEstadoEntretenimiento"
         app:layout_constraintTop_toBottomOf="@+id/tvEstadoDeportivolvl" />

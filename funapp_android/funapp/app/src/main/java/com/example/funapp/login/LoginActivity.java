@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
 
     private LoginViewModel loginViewModel;
     private Context context;
+    private EditText ip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,8 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
         final Button loginButton = findViewById(R.id.buttonIniciarSesion);
         final ProgressBar loadingProgressBar = findViewById(R.id.loadingLogin);
         final Button registrarseButton = findViewById(R.id.buttonRegistrate);
+        final TextView restablecer = findViewById(R.id.textViewRecuperarContraseña);
+        this.ip = findViewById(R.id.etIP);
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .permitNetwork().build());
@@ -135,6 +138,15 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
             }
         });
 
+        restablecer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(context)
+                        .setMessage("Para restablecer la contraseña, envíanos un correo electrónico a gestiondecuentas@funapp.com con el asunto \"restablecer contraseña\" y le contestaremos a la mayor brevedad posible.")
+                        .setNegativeButton("De acuerdo",null).show();
+            }
+        });
+
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,6 +181,7 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SocketHandler.setIp(getIp());
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
@@ -190,5 +203,9 @@ public class LoginActivity extends AppCompatActivity implements Protocolo {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    public EditText getIp(){
+        return ip;
     }
 }

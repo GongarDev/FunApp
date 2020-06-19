@@ -1,6 +1,7 @@
 package com.example.funapp.login.data;
 
 import android.util.Log;
+import android.widget.EditText;
 
 import com.example.funapp.login.LoginActivity;
 import com.example.funapp.login.data.model.LoggedInUser;
