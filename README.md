@@ -1,37 +1,46 @@
-## Welcome to GitHub Pages
+# FunApp
+Aplicación Android y escritorio que trata sobre una red social que 
+gestiona y publica eventos locales de la zona donde te encuentres.
 
-You can use the [editor on GitHub](https://github.com/Jesus-Melkart/FunApp/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+## Comenzando 🚀
+Puede ejecutarse el código para escritorio y Android. Realizado en el tiempo de dos meses y medio.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Tecnologías y herramientas utilizadas 📋
+-Escrito completamente en java.
+-GSON.
+-Sockets.
+-MySQL.
+-Multihilos a través de Executor en el servidor para cada cliente.
+-Protocolo en Cliente-Servidor para flujos de escritura/lectura.
+-Utilización de la API GoogleMaps.
+-Geolocalización.
+-Creación/lectura de CódigoQR.
+-Multihilos a través de Executor.
+-En android, uso de Fragments, activities, ViewModels y LifeData, RecyclewView, Adapters, etc.
+-Manejo de registro y sesiones de cada usuario.
 
-### Markdown
+### Instalación 🔧
+A través de Android Studio.
+A través de los .jar y .apk
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Construido con 🛠️
+* [AndroidStudio](https://developer.android.com/studio) - El IDE usado para android.
+* [NetBeans](https://netbeans.org/) - El IDE usado para escritorio y servidor.
+* [DBeaver](https://dbeaver.io/)- La interfaz para administrar la base de datos. 
 
-```markdown
-Syntax highlighted code block
+## Más información detallada y video resumen.
+* [Presentación] (https://docs.google.com/presentation/d/1jJEXxoJe_kng1qFVpOO7NpIxyeOFA9UX8FG7unPHNGA/edit?usp=sharing)
+* [Análisis](https://docs.google.com/document/d/1VM24B3BIw0ogX_03Qg352ZJuqWvc5YOHQESJgWaXbLo/edit?usp=sharing)
+* [VideoResumen] (https://drive.google.com/file/d/1LL-2CDvdAYmU5njqvEZBW4NktoStePYJ/view?usp=sharing)
+* [Diagrama ER] (https://drive.google.com/file/d/1EUHh3-EBUdgWHXgiQQXj0K9bYWApaGMb/view?usp=sharing)
 
-# Header 1
-## Header 2
-### Header 3
+## Autores ✒️
+* **Jesús González** - *Proyecto*
 
-- Bulleted
-- List
+## Licencia 📄
+-Licencia del proyecto de uso estándar.
+-Las imágenes son sacadas de [Flaticon](//www.flaticon.com)
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Jesus-Melkart/FunApp/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Expresiones de Gratitud 🎁
+* A mis profesores por el seguimiento y apoyo que me han dado.
+* A mi compañero de clase Sergio con quien he compartido la experiencia 🤓.
