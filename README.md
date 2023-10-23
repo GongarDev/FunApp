@@ -30,7 +30,6 @@ Puede ejecutarse el código para escritorio y Android. Realizado en el tiempo de
 
 ## Más información detallada y video resumen.
 * [Presentación](https://docs.google.com/presentation/d/1jJEXxoJe_kng1qFVpOO7NpIxyeOFA9UX8FG7unPHNGA/edit?usp=sharing)
-* [Análisis](https://docs.google.com/document/d/1VM24B3BIw0ogX_03Qg352ZJuqWvc5YOHQESJgWaXbLo/edit?usp=sharing)
 * [VideoResumen](https://drive.google.com/file/d/13E97PSvfI-7BVTCw9amE-Q4sZ681jPzr/view?usp=sharing)
 * [Diagrama ER](https://drive.google.com/file/d/1EUHh3-EBUdgWHXgiQQXj0K9bYWApaGMb/view?usp=sharing)
 
@@ -40,7 +39,3 @@ Puede ejecutarse el código para escritorio y Android. Realizado en el tiempo de
 ## Licencia 📄
 * Licencia del proyecto de uso estándar.
 * Las imágenes son sacadas de [Flaticon](//www.flaticon.com)
-
-## Expresiones de Gratitud 🎁
-* A mis profesores por el seguimiento y apoyo que me han dado.
-* A mi compañero de clase Sergio con quien he compartido la experiencia 🤓.
